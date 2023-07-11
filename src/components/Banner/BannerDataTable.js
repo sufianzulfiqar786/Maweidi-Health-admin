@@ -343,6 +343,7 @@ const DataTable = ({ searchQuery }) => {
                                 <TableCell align="left">Promo Type</TableCell>
                                 <TableCell align="left">Start Time</TableCell>
                                 <TableCell align="left">End Time</TableCell>
+                                <TableCell align="left">Link</TableCell>
                                 <TableCell align="left">Description</TableCell>
                                 <TableCell align="left">Image</TableCell>
                                 <TableCell align="left">Edit</TableCell>
@@ -381,6 +382,13 @@ const DataTable = ({ searchQuery }) => {
                                     <TableCell align="left">
                                         <div>{end?.slice(0, 12)} </div>
                                         <div>{end?.slice(12, 22)} </div>
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
+                                            {
+                                                "http://localhost:3000/bannerpromo".slice(0, 30)
+                                            }
+                                        </span>
                                     </TableCell>
                                     <TableCell align="left">Makeup & Selfcare Products - 70 % Discount </TableCell>
 

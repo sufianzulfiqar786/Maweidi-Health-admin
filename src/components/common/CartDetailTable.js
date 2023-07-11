@@ -42,9 +42,12 @@ const CartDetailTable = ({ rows, xraycarttable, testIcon }) => {
               <TableCell align="left">Test</TableCell>
             )}
 
+            <TableCell align="center">Lab Name</TableCell>
+            <TableCell align="center">Address</TableCell>
+            <TableCell align="center">Type</TableCell>
             <TableCell align="center">Price</TableCell>
-            <TableCell align="center">Qty</TableCell>
-            <TableCell align="center">Total</TableCell>
+            {/* <TableCell align="center">Qty</TableCell> */}
+            {/* <TableCell align="center">Total</TableCell> */}
           </TableRow>
         </TableHead>
 
@@ -112,13 +115,16 @@ const CartDetailTable = ({ rows, xraycarttable, testIcon }) => {
                 />
               </TableCell>
 
+              <TableCell align="center">{row.LabName}</TableCell>
+              <TableCell align="center">{row.Address}</TableCell>
+              <TableCell align="center">{row.type}</TableCell>
               <TableCell align="center">KWD 255.00</TableCell>
 
-              <TableCell align="center">
+              {/* <TableCell align="center">
                 <CartCounter onChange={handleCountChange} />
-              </TableCell>
+              </TableCell> */}
 
-              <TableCell align="center">KWD 255.00</TableCell>
+              {/* <TableCell align="center">KWD 255.00</TableCell> */}
             </TableRow>
           ))}
         </TableBody>

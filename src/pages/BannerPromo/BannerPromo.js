@@ -563,18 +563,25 @@ const Pharmacy = () => {
 
                                     <UploadFile />
                                 </div>
+
                             </div>
 
 
+                            <div className="row px-3 mt-4">
+                                <div className="col-lg-12 doc-setting-input">
+                                    <p className=" doc-add-filter-text">Link</p>
+
+                                    <input type="text" />
+                                </div>
+
+
+                            </div>
                             <div className="row px-3 mt-4">
                                 <div className="col-lg-12 pr-lg-0 doc-setting-input">
                                     <p className=" doc-add-filter-text">Description </p>
 
                                     <textarea id="w3review" name="w3review" rows="4" style={{ width: "98%" }} />
                                 </div>
-
-
-
 
                             </div>
                         </Modal>

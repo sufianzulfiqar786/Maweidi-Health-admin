@@ -32,6 +32,8 @@ const ValidateRoute = (currentPath) => {
         "/bloodtest/orderlist/bloodtestcartdetail",
         "/xray/orderlist/xraycartdetail",
         "/viewdoctor",
+        "/pharmacy/shop/detail",
+        "/pharmacy/detail"
     ];
     let LaboratoryAdmin = [
         "/laboratory",
@@ -40,17 +42,22 @@ const ValidateRoute = (currentPath) => {
         "/xray",
         "/xray/orderlist",
         "/bloodtest/orderlist/bloodtestcartdetail",
-        "/xray/orderlist/xraycartdetail"];
+        "/xray/orderlist/xraycartdetail",
+        "/laboratory/add"
+    ];
     let PharmacyAdmin = [
         "/pharmacy",
-        "/pharmacyshop",
+        "/pharmacy/shop",
         "/pharmacyshopdetail",
-        "/pharmacy/detail",];
+        "/pharmacy/shop/detail",
+        "/pharmacy/add",
+        "/pharmacy/detail",
+    ];
     let Doctor = [
         "/appointment",
-        "/alldoctors",
-        "/adddoctors",
-        "/viewdoctor"
+        "/doctors",
+        "/doctors/add",
+        "/doctors/detail"
     ]
 
     const userRole = JSON.parse(localStorage.getItem("userRole")) ?? "";

@@ -201,76 +201,78 @@ const Dashboard = () => {
                   className={`${menuRight} animation-dashboard `}
                   style={{ background: "#F8F9FA" }}
                 >
-                  {location.pathname === "/dashboard" ? (
+                  {
+                  
+                  (ValidateRoute(location.pathname)) === "/dashboard" ? (
                     <DashboardCom />
-                  ) : location.pathname === "/appointment" ? (
+                  ) : ValidateRoute(location.pathname) === "/appointment" ? (
                     <Appointments />
-                  ) : location.pathname === "/doctors" ? (
+                  ) : ValidateRoute(location.pathname) === "/doctors" ? (
                     <AllDoctor />
-                  ) : location.pathname === "/doctors/add" ? (
+                  ) : ValidateRoute(location.pathname) === "/doctors/add" ? (
                     <AddDoctor />
-                  ) : location.pathname === "/doctors/detail" ? (
+                  ) : ValidateRoute(location.pathname) === "/doctors/detail" ? (
                     <ViewDoctor />
-                  ) : location.pathname === "/hospitals" ? (
+                  ) : ValidateRoute(location.pathname) === "/hospitals" ? (
                     <Hospital />
-                  ) : location.pathname === "/hospitals/add" ? (
+                  ) : ValidateRoute(location.pathname) === "/hospitals/add" ? (
                     <AddHospital />
-                  ) : location.pathname === "/hospitals/edit" ? (
+                  ) : ValidateRoute(location.pathname) === "/hospitals/edit" ? (
                     <EditHospital />
-                  ) : location.pathname === "/patients" ? (
+                  ) : ValidateRoute(location.pathname) === "/patients" ? (
                     <AllPatients />
-                  ) : location.pathname === "/patients/add" ? (
+                  ) : ValidateRoute(location.pathname) === "/patients/add" ? (
                     <AddPatient />
-                  ) : location.pathname === "/patients/edit" ? (
+                  ) : ValidateRoute(location.pathname) === "/patients/edit" ? (
                     <EditPatient />
-                  ) : location.pathname === "/patientprofile" ? (
+                  ) : ValidateRoute(location.pathname) === "/patientprofile" ? (
                     <PatientProfile />
-                  ) : location.pathname === "/pharmacy" ? (
+                  ) : ValidateRoute(location.pathname) === "/pharmacy" ? (
                     <Pharmacy />
-                  ) : location.pathname === "/pharmacy/add" ? (
+                  ) : ValidateRoute(location.pathname) === "/pharmacy/add" ? (
                     <AddPharmacy />
-                  ) : location.pathname.startsWith("/pharmacy/update/") ? (
-                    <AddPharmacy Id={location.pathname.split("/")[3]} />
-                  ) :location.pathname === "/pharmacy/shop" ? (
+                  ) : ValidateRoute(location.pathname).startsWith("/pharmacy/update/") ? (
+                    <AddPharmacy Id={ValidateRoute(location.pathname).split("/")[3]} />
+                  ) :ValidateRoute(location.pathname) === "/pharmacy/shop" ? (
                     <PharmacyShop />
-                  ) : location.pathname === "/pharmacy/shop/detail" ? (
+                  ) : ValidateRoute(location.pathname) === "/pharmacy/shop/detail" ? (
                     <PharmacyShopDetail />
-                  ) : location.pathname === "/pharmacy/detail" ? (
+                  ) : ValidateRoute(location.pathname) === "/pharmacy/detail" ? (
                     <PharmacyViewOrderlistDetail />
-                  ): location.pathname === "/laboratory" ? (
+                  ): ValidateRoute(location.pathname) === "/laboratory" ? (
                     <LaboratoryList />
-                  )  : location.pathname === "/laboratory/add" ? (
+                  )  : ValidateRoute(location.pathname) === "/laboratory/add" ? (
                     <AddLab />
-                  ) : location.pathname === "/bloodtest" ? (
+                  ) : ValidateRoute(location.pathname) === "/bloodtest" ? (
                     <BloodTest />
-                  ) : location.pathname === "/bloodtest/orderlist" ? (
+                  ) : ValidateRoute(location.pathname) === "/bloodtest/orderlist" ? (
                     <BloodTestOrderedList />
-                  ) : location.pathname ===
+                  ) : ValidateRoute(location.pathname) ===
                     "/bloodtest/orderlist/bloodtestcartdetail" ? (
                     <TestCartDetails />
-                  ) : location.pathname === "/xray" ? (
+                  ) : ValidateRoute(location.pathname) === "/xray" ? (
                     <XRay />
-                  ) : location.pathname === "/xray/orderlist" ? (
+                  ) : ValidateRoute(location.pathname) === "/xray/orderlist" ? (
                     <XRayOrderedList />
-                  ) : location.pathname === "/xray/orderlist/xraycartdetail" ? (
+                  ) : ValidateRoute(location.pathname) === "/xray/orderlist/xraycartdetail" ? (
                     <XRayCartDetails />
-                  ) : location.pathname === "/blood-donation" ? (
+                  ) : ValidateRoute(location.pathname) === "/blood-donation" ? (
                     <BloodDonation />
-                  ) : location.pathname === "/bannerpromo" ? (
+                  ) : ValidateRoute(location.pathname) === "/bannerpromo" ? (
                     <BannerPromo />
-                  ) : location.pathname === "/manageroles" ? (
+                  ) : ValidateRoute(location.pathname) === "/manageroles" ? (
                     <ManageRoles />
-                  ) : location.pathname === "/rolepermission" ? (
+                  ) : ValidateRoute(location.pathname) === "/rolepermission" ? (
                     <RolePermission />
-                  ) : location.pathname === "/allroles" ? (
+                  ) : ValidateRoute(location.pathname) === "/allroles" ? (
                     <AllRoles />
-                  ) : location.pathname === "/home-service-provider" ? (
+                  ) : ValidateRoute(location.pathname) === "/home-service-provider" ? (
                     <HomeService />
-                  ) : location.pathname === "/treatment-sponsor" ? (
+                  ) : ValidateRoute(location.pathname) === "/treatment-sponsor" ? (
                     <AddNeedyPatient />
-                  ) : location.pathname === "/needy-patients" ? (
+                  ) : ValidateRoute(location.pathname) === "/needy-patients" ? (
                     <NeedyPatientsList />
-                  ) : location.pathname === "/sponsors-list" ? (
+                  ) : ValidateRoute(location.pathname) === "/sponsors-list" ? (
                     <SponsorsList />
                   ) :
                   ValidateRoute(location.pathname) === "/pharmacy/detail" ? (
