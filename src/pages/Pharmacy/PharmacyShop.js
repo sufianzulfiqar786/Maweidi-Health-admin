@@ -72,7 +72,7 @@ const PharmacyShop = () => {
     }
   ]
 
-  
+
 
   const [addProduct, setAddProduct] = useState(false);
 
@@ -335,77 +335,79 @@ const PharmacyShop = () => {
         </div>
 
 
-        <div className="row px-3">
+        <div className="row px-3 ">
 
-          <div className="col-4">
-            <div className='col-12 d-flex'>
-              <div className='col-5 ' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[0] ?
-                    <img src={remove} style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(0) }} /> : null
+          <div className="col-4 mt-2" >
+            <div >
+              <div className='col-12 d-flex' style={{ display: "flex", justifyContent: 'center' }}>
+                <div className='col-5 ' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[0] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(0) }} /> : null
 
-                }
+                  }
 
-                {
-                  fileName[0] ?
-                    <img src={fileName[0] ?? ""} style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
+                  {
+                    fileName[0] ?
+                      <img src={fileName[0] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
 
-                }
+                  }
 
 
 
+                </div>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[1] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(1) }} /> : null
+
+                  }
+                  {
+                    fileName[1] ?
+                      <img src={fileName[1] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
+
+                  }
+                </div>
               </div>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[1] ?
-                    <img src={remove} style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(1) }} /> : null
+              <div className='col-12 d-flex' style={{ display: "flex", justifyContent: 'center' }}>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[2] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(2) }} /> : null
 
-                }
-                {
-                  fileName[1] ?
-                    <img src={fileName[1] ?? ""} style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
+                  }
+                  {
+                    fileName[2] ?
+                      <img src={fileName[2] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
 
-                }
+                  }
+                </div>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[3] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(3) }} />
+                      : null
+                  }
+                  {
+                    fileName[3] ?
+                      <img src={fileName[3] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
+
+                  }
+                </div>
               </div>
+
+              {errorData === 1 ? (
+                <span className="error-message">
+                  Please select a valid image file (JPEG or PNG)
+                </span>
+              ) : (
+                ""
+              )}
             </div>
-            <div className='col-12 d-flex'>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[2] ?
-                    <img src={remove} style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(2) }} /> : null
-
-                }
-                {
-                  fileName[2] ?
-                    <img src={fileName[2] ?? ""} style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
-
-                }
-              </div>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[3] ?
-                    <img src={remove} style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(3) }} />
-                    : null
-                }
-                {
-                  fileName[3] ?
-                    <img src={fileName[3] ?? ""} style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
-
-                }
-              </div>
-            </div>
-
-            {errorData === 1 ? (
-              <span className="error-message">
-                Please select a valid image file (JPEG or PNG)
-              </span>
-            ) : (
-              ""
-            )}
             <button className='pharmacy-add-upload-img mt-3' onClick={handleDoctorImageClick} >Upload Image</button>
 
 
@@ -423,9 +425,7 @@ const PharmacyShop = () => {
 
 
               <div className="col-lg-6 mt-lg-0  mt-4  doc-setting-input">
-                <p className=" doc-add-filter-text">
-                  {/* Item Title */}
-                </p>
+
                 <p className=" doc-add-filter-text">
                   Category
                 </p>
@@ -457,12 +457,14 @@ const PharmacyShop = () => {
                 />
               </div>
 
-              <div className="col-6 doc-setting-input">
+              <div className="col-lg-6  doc-setting-input">
                 <p className=" doc-add-filter-text">
                   Add Title
                 </p>
                 <input type="text" />
               </div>
+
+
 
               <div className="col-12">
 
@@ -573,86 +575,77 @@ const PharmacyShop = () => {
 
         <div className="row px-3">
 
-          <div className="col-4 ">
-            <div className='col-12 d-flex'>
-              <div className='col-5 ' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[0] ?
-                    <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(0) }} /> : null
+        <div className="col-4 mt-2" >
+            <div >
+              <div className='col-12 d-flex' style={{ display: "flex", justifyContent: 'center' }}>
+                <div className='col-5 ' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[0] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(0) }} /> : null
 
-                }
+                  }
 
-                {
-                  fileName[0] ?
-                    <img src={fileName[0] ?? ""} alt='img' style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
+                  {
+                    fileName[0] ?
+                      <img src={fileName[0] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
 
-                }
+                  }
 
 
 
+                </div>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[1] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(1) }} /> : null
+
+                  }
+                  {
+                    fileName[1] ?
+                      <img src={fileName[1] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
+
+                  }
+                </div>
               </div>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[1] ?
-                    <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(1) }} /> : null
+              <div className='col-12 d-flex' style={{ display: "flex", justifyContent: 'center' }}>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[2] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(2) }} /> : null
 
-                }
-                {
-                  fileName[1] ?
-                    <img src={fileName[1] ?? ""} alt='img' style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
+                  }
+                  {
+                    fileName[2] ?
+                      <img src={fileName[2] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
 
-                }
+                  }
+                </div>
+                <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
+                  {
+                    fileName[3] ?
+                      <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(3) }} />
+                      : null
+                  }
+                  {
+                    fileName[3] ?
+                      <img src={fileName[3] ?? ""} alt='img' style={{ width: "100%", height: "100%", borderRadius: "8px" }} /> :
+                      <div className="loader-bar-null-for-add-product" />
+
+                  }
+                </div>
               </div>
+
+              {errorData === 1 ? (
+                <span className="error-message">
+                  Please select a valid image file (JPEG or PNG)
+                </span>
+              ) : (
+                ""
+              )}
             </div>
-            <div className='col-12 d-flex'>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[2] ?
-                    <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", left: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(2) }} /> : null
-
-                }
-                {
-                  fileName[2] ?
-                    <img src={fileName[2] ?? ""} alt='img' style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
-
-                }
-              </div>
-              <div className='col-5' style={{ width: "100px", height: "100px", padding: '0', margin: "2px", marginTop: "5px" }}>
-                {
-                  fileName[3] ?
-                    <img src={remove} alt='img' style={{ width: "15px", position: "absolute", zIndex: "1000", right: "-5px", top: "-4px", cursor: "pointer" }} onClick={() => { removeIndex(3) }} />
-                    : null
-                }
-                {
-                  fileName[3] ?
-                    <img src={fileName[3] ?? ""} alt='img' style={{ width: "100%", height: "100%", }} /> :
-                    <div className="loader-bar-null-for-add-product" />
-
-                }
-              </div>
-            </div>
-            {/* <p className='mb-0 pt-4 pb-3 pharmacy-add-text'>Upload your shop image here,
-              Please click “Upload Image” Button.</p> */}
-
-            {/* {loading ? (
-              <div className="loader-bar" />
-            ) : (
-              <div className="loader-bar-null" />
-            )}
-            {
-              !loading ? <div className='info-message pt-1'>{fileName}</div> : <div className='pt-1'></div>
-            } */}
-
-            {errorData === 1 ? (
-              <span className="error-message">
-                Please select a valid image file (JPEG or PNG)
-              </span>
-            ) : (
-              ""
-            )}
             <button className='pharmacy-add-upload-img mt-3' onClick={handleDoctorImageClick} >Upload Image</button>
 
 
