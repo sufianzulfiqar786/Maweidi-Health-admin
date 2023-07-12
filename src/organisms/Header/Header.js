@@ -77,11 +77,15 @@ const Header = ({
           <div className="col-9 d-flex align-items-center ">
             <div className="row " style={{ width: "100%" }}>
               <div className="col-12  px-0 d-flex justify-content-end ">
-                <Link to='/manageroles'>
-                  <div className=" cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center">
-                    <img src={SettingIcon} alt="" />
-                  </div>
-                </Link>
+              {
+                  ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ?
+                    <Link to='/manageroles'>
+                      <div className=" cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center">
+                        <img src={SettingIcon} alt="" />
+                      </div>
+                    </Link>
+                    : null
+                }
                 <NotificationDropDown />
                 <ProfileDropDown />
               </div>
