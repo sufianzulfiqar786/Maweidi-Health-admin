@@ -42,9 +42,12 @@ const CartDetailTable = ({ rows, xraycarttable, testIcon }) => {
               <TableCell align="left">Test</TableCell>
             )}
 
+            <TableCell align="center">Lab Name</TableCell>
+            <TableCell align="center">Address</TableCell>
+            <TableCell align="center">Type</TableCell>
             <TableCell align="center">Price</TableCell>
-            <TableCell align="center">Qty</TableCell>
-            <TableCell align="center">Total</TableCell>
+            {/* <TableCell align="center">Qty</TableCell> */}
+            {/* <TableCell align="center">Total</TableCell> */}
           </TableRow>
         </TableHead>
 
@@ -57,70 +60,76 @@ const CartDetailTable = ({ rows, xraycarttable, testIcon }) => {
             },
           }}
         >
-          {rows?.map((row, index) => (
-            <TableRow
-              key={index}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="left" className="number">
-                {row.number}
-              </TableCell>
-
-              <TableCell align="left">
-                <CardHeader
-                  sx={{ padding: "10px  0px" }}
-                  avatar={
-                    <Box
-                      sx={{
-                        margin: 0,
-                        filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
-                      }}
-                    >
-                      <Avatar
-                        src={testIcon}
-                        sx={{ borderRadius: 0, width: "39px", height: "39px" }}
-                      />
-                    </Box>
-                  }
-                  title={
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        flexDirection: "column", // Change flexDirection to "column"
-                        margin: 0,
-                        gap: "6px",
-                      }}
-                    >
+          {rows?.map((row, index) => {
+            console.log(row);
+            return (<>
+              <TableRow
+                key={index}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="left" className="number">
+                  {row.number}
+                </TableCell>
+                <TableCell align="left">
+                  <CardHeader
+                    sx={{ padding: "10px  0px" }}
+                    avatar={
                       <Box
                         sx={{
-                          color: "#193F52",
-                          fontSize: "14px",
-                          fontWeight: "600",
+                          margin: 0,
+                          filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
                         }}
                       >
-                        {row.name}
+                        <Avatar
+                          src={testIcon}
+                          sx={{ borderRadius: 0, width: "39px", height: "39px" }}
+                        />
                       </Box>
-
-                      {!xraycarttable ? (
-                        <Box sx={{ color: "#202020", fontSize: "12px" }}>
-                          {row.test}
+                    }
+                    title={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          flexDirection: "column", // Change flexDirection to "column"
+                          margin: 0,
+                          gap: "6px",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            color: "#193F52",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {row.name}
                         </Box>
-                      ) : null}
-                    </Box>
-                  }
-                />
-              </TableCell>
 
-              <TableCell align="center">KWD 255.00</TableCell>
+                        {!xraycarttable ? (
+                          <Box sx={{ color: "#202020", fontSize: "12px" }}>
+                            {row.test}
+                          </Box>
+                        ) : null}
+                      </Box>
+                    }
+                  />
+                </TableCell>
 
-              <TableCell align="center">
+                <TableCell align="center">{row.LabName}</TableCell>
+                <TableCell align="center">{row.Address}</TableCell>
+                <TableCell align="center">{row.type}</TableCell>
+                <TableCell align="center">KWD 255.00</TableCell>
+
+                {/* <TableCell align="center">
                 <CartCounter onChange={handleCountChange} />
-              </TableCell>
+              </TableCell> */}
 
-              <TableCell align="center">KWD 255.00</TableCell>
-            </TableRow>
-          ))}
+                {/* <TableCell align="center">KWD 255.00</TableCell> */}
+              </TableRow>
+            </>)
+          }
+          )}
         </TableBody>
       </Table>
     </TableContainer>

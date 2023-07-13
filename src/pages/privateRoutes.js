@@ -6,32 +6,36 @@ import Appointments from "../pages/Appointments";
 
 const ValidateRoute = (currentPath) => {
     let HospitalAdmin = [
-        "/appointment",
-        "/alldoctors",
-        "/adddoctors",
-        "/allpatients",
-        "/addpatient",
-        "/pharmacy",
-        "/pharmacyshop",
-        "/pharmacyshopdetail",
         "/laboratory",
         "/bloodtest",
         "/bloodtest/orderlist",
         "/xray",
         "/xray/orderlist",
+        "/bloodtest/orderlist/bloodtestcartdetail",
+        "/xray/orderlist/xraycartdetail",
+        "/laboratory/add",
+        // "/pharmacy",
+        // "/pharmacy/shop",
+        // "/pharmacyshopdetail",
+        // "/pharmacy/shop/detail",
+        // "/pharmacy/add",
+        // "/pharmacy/detail",
+        "/appointment",
+        "/doctors",
+        "/doctors/add",
+        "/doctors/detail",
+        "/patients",
+        "/patients/add",
+        "/patientprofile",
         "/blood-donation",
-        "/homeservice",
-        "/treatmentsponsor",
-        "/needypatientslist",
+        "/home-service-provider",
+        "/treatment-sponsor",
+        "/needy-patients",
         "/bannerpromo",
         "/manageroles",
         "/rolepermission",
         "/allroles",
-        "/dashboardcom",
-        "/pharmacyviewdetail",
-        "/bloodtest/orderlist/bloodtestcartdetail",
-        "/xray/orderlist/xraycartdetail",
-        "/viewdoctor",
+        // "/pharmacy/update/"
     ];
     let LaboratoryAdmin = [
         "/laboratory",
@@ -40,17 +44,22 @@ const ValidateRoute = (currentPath) => {
         "/xray",
         "/xray/orderlist",
         "/bloodtest/orderlist/bloodtestcartdetail",
-        "/xray/orderlist/xraycartdetail"];
+        "/xray/orderlist/xraycartdetail",
+        "/laboratory/add"
+    ];
     let PharmacyAdmin = [
         "/pharmacy",
-        "/pharmacyshop",
+        "/pharmacy/shop",
         "/pharmacyshopdetail",
-        "/pharmacy/detail",];
+        "/pharmacy/shop/detail",
+        "/pharmacy/add",
+        "/pharmacy/detail",
+    ];
     let Doctor = [
         "/appointment",
-        "/alldoctors",
-        "/adddoctors",
-        "/viewdoctor"
+        "/doctors",
+        "/doctors/add",
+        "/doctors/detail"
     ]
 
     const userRole = JSON.parse(localStorage.getItem("userRole")) ?? "";
