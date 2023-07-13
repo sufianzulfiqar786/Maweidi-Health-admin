@@ -12,6 +12,9 @@ const TestCartDetails = () => {
       price: "Price",
       counter: "counter",
       total: "KWD 510.00",
+      LabName: "Chughtai Lab",
+      Address: "opposite Chand Pan Shop, Block B Model Town, Gujranwala",
+      type: "Home sample"
     },
     {
       number: "2",
@@ -20,6 +23,11 @@ const TestCartDetails = () => {
       price: "Price",
       counter: "counter",
       total: "KWD 510.00",
+      LabName: "Chughtai Lab"
+      ,
+      Address: "opposite Chand Pan Shop, Block B Model Town, Gujranwala"
+      ,
+      type: "Onsite"
     },
     {
       number: "3",
@@ -28,6 +36,11 @@ const TestCartDetails = () => {
       price: "Price",
       counter: "counter",
       total: "KWD 510.00",
+      LabName: "Chughtai Lab"
+      ,
+      Address: "opposite Chand Pan Shop, Block B Model Town, Gujranwala"
+      ,
+      type: "Home sample"
     },
     {
       number: "4",
@@ -36,6 +49,11 @@ const TestCartDetails = () => {
       price: "Price",
       counter: "counter",
       total: "KWD 510.00",
+      LabName: "Chughtai Lab"
+      ,
+      Address: "opposite Chand Pan Shop, Block B Model Town, Gujranwala"
+      ,
+      type: "Onsite"
     },
   ];
 
@@ -60,12 +78,12 @@ const TestCartDetails = () => {
           </div>
         </div>
 
-        <div className="col-12">
-          <CartDetailTable rows={rows}  testIcon={labIcon} />
+        <div className="col-8">
+          <CartDetailTable rows={rows} testIcon={labIcon} />
         </div>
 
-        <div className="col-12 d-flex justify-content-end mb-5">
-          <div className="test-cart-container">
+        <div className="col-4 d-flex justify-content-end ">
+          <div className="test-cart-container" style={{marginTop:"0"}}>
             <div className="sub-total">
               <div>Subtotal</div>
               <div>KWD 2190</div>
