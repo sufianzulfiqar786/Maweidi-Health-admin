@@ -8,12 +8,46 @@ import Signup from "./pages/Signup";
 import Privacy from "./pages/Privacy/Privacy";
 import { useEffect } from "react";
 import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { increment } from "./redux/feature/counterSlice/counterSlice";
+import useFetch from "./customHook/useFetch";
+// import 'dotenv/config'
 
 function App() {
   let token = localStorage.getItem("token");
 
+  // const count = useSelector((state) => state.counter.value)
+  // const dispatch = useDispatch()
+  // console.log("env", process.env)
+  // const BaseURL = process.env.REACT_APP_BASE_URL;
+  // const getHospitalData = process.env.REACT_APP_GET_HOSPITAL_DATA;
+  // const { data, isLoading, error } = useFetch(`${BaseURL}/${getHospitalData}`);
+
+  // console.log("data", data)
+  // console.log("isLoading", isLoading)
+  // console.log("error", error)
+
   return (
     <>
+
+
+
+
+
+      {/* <button
+        aria-label="Increment value"
+        onClick={() => dispatch(increment(data))}
+      >
+        Increment
+      </button>
+      <span>{console.log('count', count)}</span> */}
+
+
+
+
+
+
+
       {/* <Privacy /> */}
       <BrowserRouter>
         {token ? (
