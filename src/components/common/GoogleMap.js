@@ -46,5 +46,5 @@ const LocationForm = ({ google, locationProp, setLocationProp}) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyAkhdWo1SX8xUPGcXbuzDHHT-gv_vUClKs',
+  apiKey: '',
 })(LocationForm);
