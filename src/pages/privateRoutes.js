@@ -35,6 +35,7 @@ const ValidateRoute = (currentPath) => {
         "/manageroles",
         "/rolepermission",
         "/allroles",
+        "/doctors/availability",
         // "/pharmacy/update/"
     ];
     let LaboratoryAdmin = [

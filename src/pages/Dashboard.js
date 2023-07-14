@@ -15,6 +15,8 @@ import AllDoctor from "./Doctor/AllDoctor";
 import AllPatients from "./Patients/AllPatients";
 import AddPatient from "./Patients/AddPatient";
 import AddDoctor from "./Doctor/AddDoctor";
+import Availability from "./Doctor/Availability";
+
 import ViewDoctor from "../components/doctors/ViewDoctor";
 import PatientProfile from "./Patients/patientprofile/PatientProfile";
 import Pharmacy from "./Pharmacy/pharmacy";
@@ -210,6 +212,8 @@ const Dashboard = () => {
                       <AllDoctor />
                     ) : ValidateRoute(location.pathname) === "/doctors/add" ? (
                       <AddDoctor />
+                    ) : ValidateRoute(location.pathname) === "/doctors/availability" ? (
+                      <Availability />
                     ) : ValidateRoute(location.pathname) === "/doctors/detail" ? (
                       <ViewDoctor />
                     ) : ValidateRoute(location.pathname) === "/hospitals" ? (

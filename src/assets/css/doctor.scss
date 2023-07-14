@@ -1055,3 +1055,6 @@
     font-size: 12px;
   }
 }
+.ant-picker-input > input {
+  display: none; /* Hide the input field */
+}
