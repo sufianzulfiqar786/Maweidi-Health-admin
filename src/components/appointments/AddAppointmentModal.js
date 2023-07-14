@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { Modal, Select, DatePicker, TimePicker } from "antd";
-import CustomSelect from "../../components/common/CustomSelect.js";
 import closeIcon from "../../assets/images/common/close.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import "../../assets/css/appointments/modal.scss";
-import Location from "../../atoms/Location/Location.js";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import GoogleMap from "../common/GoogleMap.js";
 import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
 import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import TimeTableMessageIcon from "../../assets/images/doctor/TimeTableMessageIcon.svg";
 import TimeTablePhoneIcon from "../../assets/images/doctor/TimeTablePhoneIcon.svg";
+import Phone from "../../atoms/phone";
 
 const AddAppointmentModal = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
@@ -20,6 +18,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
     patientId: "",
     visitDate: "",
     visitTime: "",
+    hospital: "",
     location: "",
     specialization: "",
     doctor_name: "",
@@ -31,51 +30,139 @@ const AddAppointmentModal = ({ open, onClose }) => {
   });
   const [showMap, setShowMap] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
-  const specialistOptions = [
-    {
-      value: "Cardiology",
-      label: "Cardiology",
-    },
-    {
-      value: "Neurology",
-      label: "Neurology",
-    },
-    {
-      value: "Gynaecology",
-      label: "Gynaecology",
-    },
-    {
-      value: "Ophthalmology",
-      label: "Ophthalmology",
-    },
-    {
-      value: "Urology",
-      label: "Urology",
-    },
-  ];
+  const [matchedSpecializations, setMatchedSpecializations] = useState([]);
+  const [matchedDoctors, setMatchedDoctors] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
 
+  const backendDates = ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25'];
   const doctors = [
     {
+      id: 1,
       value: "Dr. Drake Boeson",
       label: "Dr. Drake Boeson",
+      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
     {
+      id: 2,
       value: "Dr. Keegan Dach",
       label: "Dr. Keegan Dach",
+      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
     {
+      id: 3,
       value: "Dr. Delaney Mangino",
       label: "Dr. Delaney Mangino",
+      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
     {
+      id: 4,
       value: "Dr. Dustin Jurries",
       label: "Dr. Dustin Jurries",
+      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
     {
+      id: 5,
       value: "Dr. Kyleigh Drentlaw",
       label: "Dr. Kyleigh Drentlaw",
+      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
   ];
+  // Hospitals array
+const hospitals = [
+  {
+    id: 1,
+    value: "Badr AL Samaa Hospitals",
+    label: "Badr AL Samaa Hospitals",
+    specializations: [1, 2, 3] // IDs of specializations offered in this hospital
+  },
+  {
+    id: 2,
+    value: "Royale Hayat Hospital",
+    label: "Royale Hayat Hospital",
+    specializations: [2, 4] // IDs of specializations offered in this hospital
+  },
+  {
+    id: 3,
+    value: "New Mowasat Hospital",
+    label: "New Mowasat Hospital",
+    specializations: [1, 2, 5] // IDs of specializations offered in this hospital
+  },
+  {
+    id: 4,
+    value: "Taiba Hospital",
+    label: "Taiba Hospital",
+    specializations: [1, 5] // IDs of specializations offered in this hospital
+  },
+  // Add more hospitals as needed
+];
+const specialistOptions = [
+  {
+    id: 1,
+    value: "Cardiology",
+    label: "Cardiology",
+    doctors: [1, 2]
+  },
+  {
+    id: 2,
+    value: "Neurology",
+    label: "Neurology",
+    doctors: [2, 3]
+  },
+  {
+    id: 3,
+    value: "Gynaecology",
+    label: "Gynaecology",
+    doctors: [2, 3, 4]
+  },
+  {
+    id: 4,
+    value: "Ophthalmology",
+    label: "Ophthalmology",
+    doctors: [1, 2, 5]
+  },
+  {
+    id: 5,
+    value: "Urology",
+    label: "Urology",
+    doctors: [1, 3, 5]
+  },
+];
+
+
+const findSpecializations = (hospitalValue) => {
+  const selectedHospital = hospitals.find(hospital => hospital.value === hospitalValue);
+    if (selectedHospital) {
+      const specializationsForHospital = selectedHospital.specializations.map((specializationId) => {
+        return specialistOptions.find((specialization) => specialization.id === specializationId);
+      });
+      console.log("--matchedSpecialization---", specializationsForHospital);
+      setMatchedSpecializations(specializationsForHospital);
+    };
+};
+
+const findDoctors = (specializationValue) => {
+  const selectedSpecialization = matchedSpecializations.find(specialization => specialization.value === specializationValue);
+    if (selectedSpecialization) {
+      const doctorsForSpecialization = selectedSpecialization.doctors.map((doctorId) => {
+        return doctors.find((doctor) => doctor.id === doctorId);
+      });
+      console.log("--matchedDoctors---", doctorsForSpecialization);
+      setMatchedDoctors(doctorsForSpecialization);
+    };
+};
+
+const findAvailableDates = (doctorValue) => {
+  const selectedDoctor = matchedDoctors.find(doctor => doctor.value === doctorValue);
+  if(selectedDoctor) {
+    setAvailableDates(selectedDoctor.availableDates);
+  }
+}
+
+const isDisabledDate = (current) => {
+  const formattedDate = current.format('YYYY-MM-DD');
+  return !availableDates.includes(formattedDate);
+};
+
   const handleInputChange = (name, value) => {
     setFormData((prevValues) => ({
       ...prevValues,
@@ -87,25 +174,24 @@ const AddAppointmentModal = ({ open, onClose }) => {
     (value) => value === "" || value === undefined
   );
 
-  const handleLocationIconClick = () => {
-    !showMap ? setShowMap(true) : setShowMap(false);
-  };
-
-  const handleLocationChange = (value) => {
-    handleInputChange("location", value);
-    setShowMap(false);
+  const handleHospitalChange = (value) => {
+    findSpecializations(value);
+    handleInputChange("hospital", value);
   };
 
   const handleSpecializationChange = (value) => {
+    findDoctors(value);
     handleInputChange("specialization", value);
   };
 
   const handleDoctorsChange = (value) => {
+    findAvailableDates(value);
     handleInputChange("doctor_name", value);
   };
 
   const handleTimeChange = (value) => {
     handleInputChange("time", value);
+    console.log("--avilableDates---", availableDates);
   };
 
   const handleVisitTimeChange = (value) => {
@@ -184,7 +270,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                 <input
                   type="text"
                   name="kwdId"
-                  value={formData.kwdId}
+                  value={formData?.kwdId}
                   onChange={(e) =>
                     handleInputChange(e.target.name, e.target.value)
                   }
@@ -197,18 +283,18 @@ const AddAppointmentModal = ({ open, onClose }) => {
                   <input
                     type="text"
                     name="patient_name"
-                    value={formData.patient_name}
+                    value={formData?.patient_name}
                     onChange={(e) =>
                       handleInputChange(e.target.name, e.target.value)
                     }
                   />
                 </div>
                 <div class="form-group">
-                  <label>Patient ID no</label>
+                  <label>Patient ID</label>
                   <input
                     type="text"
                     name="patientId"
-                    value={formData.patientId}
+                    value={formData?.patientId}
                     onChange={(e) =>
                       handleInputChange(e.target.name, e.target.value)
                     }
@@ -224,7 +310,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       size="large"
                       style={{ border: "none", width: "100%" }}
                       onChange={handleVisitDateChange}
-                      value={formData.visitDate}
+                      value={formData?.visitDate}
                     />
                   </div>
                 </div>
@@ -235,24 +321,20 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       size="large"
                       style={{ border: "none", width: "100%" }}
                       onChange={handleVisitTimeChange}
-                      value={formData.visitTime}
+                      value={formData?.visitTime}
                     />
                   </div>
                 </div>
               </div>
 
               <div class="form-group full-width">
-                <label class="required">Location</label>
-                <Location
-                  handleLocation={handleLocationIconClick}
-                  locationProp={formData.location}
-                />
-                {showMap && (
-                  <GoogleMap
-                    locationProp={formData.location}
-                    setLocationProp={handleLocationChange}
+                <label>Hospital</label>
+                <CustomDropDown
+                    selectLabel="Select"
+                    option={hospitals}
+                    handleChangeSelect={handleHospitalChange}
+                    value={formData?.hospital}
                   />
-                )}
               </div>
 
               <div class="two-group">
@@ -260,18 +342,18 @@ const AddAppointmentModal = ({ open, onClose }) => {
                   <label>Specialization</label>
                   <CustomDropDown
                     selectLabel="Select"
-                    option={specialistOptions}
+                    option={matchedSpecializations}
                     handleChangeSelect={handleSpecializationChange}
-                    value={formData.specialization}
+                    value={formData?.specialization}
                   />
                 </div>
                 <div class="form-group">
                   <label>Doctor</label>
                   <CustomDropDown
                     selectLabel="Select"
-                    option={doctors}
+                    option={matchedDoctors}
                     handleChangeSelect={handleDoctorsChange}
-                    value={formData.doctor_name}
+                    value={formData?.doctor_name}
                   />
                   <label style={{ fontSize: "12px", marginBottom: "-15px" }}>
                     Please confirm the doctor's availability and{" "}
@@ -282,7 +364,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       {" "}
                       time table
                     </span>{" "}
-                    before booking an appointmen
+                    before booking an appointment
                   </label>
                 </div>
               </div>
@@ -446,10 +528,11 @@ const AddAppointmentModal = ({ open, onClose }) => {
                   <label>Date</label>
                   <div className="border" style={{ borderRadius: "5px" }}>
                     <DatePicker
+                      disabledDate={isDisabledDate}
                       size="large"
                       style={{ border: "none", width: "100%" }}
                       onChange={handleDateChange}
-                      value={formData.date}
+                      value={formData?.date}
                     />
                   </div>
                 </div>
@@ -463,7 +546,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       }}
                       bordered={true}
                       onChange={handleTimeChange}
-                      value={formData.time}
+                      value={formData?.time}
                       options={[
                         {
                           label: "9:00 AM",
@@ -508,7 +591,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                     type="text"
                     name="age"
                     id="phone-input"
-                    value={formData.age}
+                    value={formData?.age}
                     onChange={(e) =>
                       handleInputChange(e.target.name, e.target.value)
                     }
@@ -520,27 +603,14 @@ const AddAppointmentModal = ({ open, onClose }) => {
                     type="text"
                     name="email"
                     id="phone-input"
-                    value={formData.email}
+                    value={formData?.email}
                     onChange={(e) =>
                       handleInputChange(e.target.name, e.target.value)
                     }
                   />
                 </div>
-                <div class="form-group">
-                  <label>Phone no</label>
-                  <div
-                    className="border d-flex align-items-center justify-content-center"
-                    style={{ borderRadius: "5px", height: "36.6px" }}
-                  >
-                    <PhoneInput
-                      className=""
-                      style={{ border: "none" }}
-                      country="US"
-                      value={formData.phone}
-                      defaultCountry="KW"
-                      onChange={(value) => handleInputChange("phone", value)}
-                    />
-                  </div>
+                <div class="form-group" style={{marginTop: '11px'}}>
+                <Phone handleChange={(value) => handleInputChange("phone", value)} value={formData?.phone}/>
                 </div>
               </div>
 
@@ -550,7 +620,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
                   isFormEmpty ? "disabled" : ""
                 }`}
                 disabled={isFormEmpty}
-                onClick={console.log("------formData-----", formData)}
               >
                 Book An Appointment
               </button>

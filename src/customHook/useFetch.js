@@ -9,7 +9,6 @@ const useFetch = (url) => {
     useEffect(() => {
         fetchData();
     }, [url]);
-const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr"
     const fetchData = async () => {
         const config = {
             headers: {
