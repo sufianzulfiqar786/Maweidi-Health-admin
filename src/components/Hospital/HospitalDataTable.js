@@ -189,7 +189,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                     <TableCell align="left">{zipcode}</TableCell>
 
                                     <TableCell >
-                                        <Link to='/hospitals/edit'>
+                                        <Link to={`/hospitals/edit/${id}`}>
                                             <img className='' src={EditIcon} />
                                         </Link>
                                         <img className='' onClick={() => {
