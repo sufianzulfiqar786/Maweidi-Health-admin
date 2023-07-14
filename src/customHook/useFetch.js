@@ -6,10 +6,10 @@ const useFetch = (url) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr"
+    const BaseURL = process.env.REACT_APP_BASE_URL;
     useEffect(() => {
         fetchData();
     }, [url]);
-const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr"
     const fetchData = async () => {
         const config = {
             headers: {
@@ -17,7 +17,7 @@ const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr"
             },
         };
         try {
-            const response = await axios.get(url, config);
+            const response = await axios.get(`${BaseURL}/${url}`, config);
             setData(response.data);
             setIsLoading(false)
         } catch (error) {

@@ -26,9 +26,8 @@ import { useEffect } from "react";
 
 const Hospital = () => {
 
-  const BaseURL = process.env.REACT_APP_BASE_URL;
-  const getHospitalData = process.env.REACT_APP_GET_HOSPITAL_DATA;
-  const { data, isLoading, error } = useFetch(`${BaseURL}/${getHospitalData}`);
+
+  const { data, isLoading, error } = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
 
 
   const [searchQuery, setSearchQuery] = useState("");
