@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import {Select, DatePicker,  Checkbox } from "antd";
+import { Select, DatePicker, Checkbox } from "antd";
 import { Link } from 'react-router-dom';
 
 // css file
@@ -22,6 +22,9 @@ import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
 import { optionCountry, optionRoleType, optionState } from '../../Data/DoctorData';
 import CustomDropDown from '../../atoms/CustomDropDown/Index';
+import usePost from '../../customHook/usePost';
+import SelectCountry from '../../atoms/Country';
+import SelectState from '../../atoms/State';
 
 const AddHospital = () => {
 
@@ -40,19 +43,24 @@ const AddHospital = () => {
 
     const [items, setItems] = useState([]);
     const [newItem, setNewItem] = useState("");
+    const [addHospitalData, setAddHospitalData] = useState("");
 
     const [selectedOptions, setSelectedOptions] = useState(["john"]);
     const [dirty, setDirty] = useState(false);
+
+    const { data, isLoading, error, postData } = usePost()
+
     const handleChange = (value) => {
         setSelectedOptions(value);
         setDirty(true);
         console.log("Select Changed");
+        handleChangeSelect(value, 'specialization')
     };
     const [showMap, setShowMap] = useState(false);
     const [locationProp, setLocationProp] = useState("");
 
     const handleLocationIconClick = () => {
-        !showMap ? setShowMap(true): setShowMap(false)
+        !showMap ? setShowMap(true) : setShowMap(false)
     };
 
     const handleDoctorImageClick = () => {
@@ -94,6 +102,31 @@ const AddHospital = () => {
         newItems.splice(index, 1);
         setItems(newItems);
     };
+
+    const handleChangeHospital = (e) => {
+        const { name, value } = e.target
+        setAddHospitalData({ ...addHospitalData, [name]: value })
+        console.log("addHospitalData", addHospitalData)
+    }
+
+    const handleChangeSelect = (value, name) => {
+        setAddHospitalData({ ...addHospitalData, [name]: value })
+    }
+
+    const handleHospitalSubmit = () => {
+        const updatedPostData = {
+            ...addHospitalData,
+            working_hours: '08:00-16:00',
+            working_days: 'Monday,Wednesday,Friday',
+            lat: '3456789',
+            long: '456789',
+            experience_years: '2',
+        };
+        postData(`${process.env.REACT_APP_ADD_HOSPITAL_DATA}`, updatedPostData, () => {
+
+        })
+        console.log("handleHospitalSubmit", addHospitalData, locationProp)
+    }
 
     return (
         <div className='mb-5 pb-5'>
@@ -185,7 +218,10 @@ const AddHospital = () => {
                             <div className="row">
                                 <div className="col-12  doc-setting-input">
                                     <p className="mb-2">Name </p>
-                                    <input className="" type="text" onChange={(e)=>setNameData(e.target.value)} />
+                                    <input className="" type="text" name='name' value={addHospitalData.name} onChange={(e) => {
+                                        setNameData(e.target.value)
+                                        handleChangeHospital(e)
+                                    }} />
                                 </div>
 
 
@@ -194,24 +230,26 @@ const AddHospital = () => {
                             <div className="row mt-4">
                                 <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                     <p className="mb-2"> Your Email </p>
-                                    <input className="" type="text" />
+                                    <input className="" name='email' value={addHospitalData.email} onChange={handleChangeHospital} type="text" />
                                 </div>
 
                                 <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
                                     <p className="mb-2"> Phone No </p>
-                                    <input className="" type="text" />
+                                    <input className="" name='phone_no' value={addHospitalData?.phone_no} onChange={handleChangeHospital} type="text" />
                                 </div>
                             </div>
 
                             <div className="row mt-4">
                                 <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                                    <p className="mb-2"> Country </p>
-                                    <CustomDropDown selectLabel='Select' option={optionCountry} />
+                                    {/* <p className="mb-2"> Country </p> */}
+                                    <SelectCountry  handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} />
+                                    {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
                                 </div>
 
                                 <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
                                     <p className="mb-2"> State </p>
-                                    <CustomDropDown selectLabel='Select' option={optionState} />
+                                    <SelectState country={addHospitalData?.country} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect}/>
+                                    {/* <CustomDropDown selectLabel='Select' option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
                                 </div>
                             </div>
 
@@ -306,7 +344,6 @@ const AddHospital = () => {
                                             ]}
                                         />
 
-
                                         {/* <img className='pr-2' src={DownIcon} alt="" /> */}
 
                                     </div>
@@ -360,7 +397,7 @@ const AddHospital = () => {
                             </div>
 
                             <div className="row mt-4">
-                                <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                     <p className="mb-2"> Working Days </p>
 
                                     <div className="d-flex justify-content-between align-items-center datapicker-border">
@@ -381,9 +418,9 @@ const AddHospital = () => {
 
                                         <img className="pr-2" src={CalenderIcon} alt="" />
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+                                <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
                                     <p className="mb-2"> Facebook </p>
                                     <div className="d-flex  ">
                                         <img className="" src={FacebookInput} alt="" />
@@ -391,13 +428,12 @@ const AddHospital = () => {
                                             className="add-doc-social-input"
                                             type="text"
                                             placeholder="Username"
+                                            name='facebook' value={addHospitalData.facebook} onChange={handleChangeHospital}
                                         />
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="row mt-4">
-                                <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                <div className="col-lg-6 pl-lg-1 doc-setting-input">
                                     <p className="mb-2"> Instagram </p>
                                     <div className="d-flex  ">
                                         <img className="" src={InstaInput} alt="" />
@@ -405,11 +441,28 @@ const AddHospital = () => {
                                             className="add-doc-social-input"
                                             type="text"
                                             placeholder="Username"
+                                            name='instagram' value={addHospitalData.instagram} onChange={handleChangeHospital}
                                         />
                                     </div>
                                 </div>
 
-                                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+                            </div>
+
+                            <div className="row mt-4">
+                                {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                    <p className="mb-2"> Instagram </p>
+                                    <div className="d-flex  ">
+                                        <img className="" src={InstaInput} alt="" />
+                                        <input
+                                            className="add-doc-social-input"
+                                            type="text"
+                                            placeholder="Username"
+                                            name='instagram' value={addHospitalData.instagram} onChange={handleChangeHospital}
+                                        />
+                                    </div>
+                                </div> */}
+
+                                <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
                                     <p className="mb-2"> Linkedin </p>
                                     <div className="d-flex  ">
                                         <img className="" src={LinkedInInput} alt="" />
@@ -417,6 +470,7 @@ const AddHospital = () => {
                                             className="add-doc-social-input"
                                             type="text"
                                             placeholder="Username"
+                                            name='linkedin' value={addHospitalData.linkedin} onChange={handleChangeHospital}
                                         />
                                     </div>
                                 </div>
@@ -425,18 +479,18 @@ const AddHospital = () => {
 
 
                             <div className="row mt-4">
-                            <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
-                                <p className="mb-2"> Location </p>
-                    <Location handleLocation={handleLocationIconClick} locationProp={locationProp}/>
-                  {showMap && (
-                    <GoogleMap locationProp = {locationProp} setLocationProp={setLocationProp}/>
-                  )}
-                            </div>
+                                <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
+                                    <p className="mb-2"> Location </p>
+                                    <Location handleLocation={handleLocationIconClick} locationProp={locationProp} />
+                                    {showMap && (
+                                        <GoogleMap locationProp={locationProp} setLocationProp={setLocationProp} />
+                                    )}
+                                </div>
                             </div>
 
                             <div className="row my-5 pt-2 pb-3 ">
                                 <div className="col-lg-6">
-                                    <button className="apply-filter add-doc-changes">
+                                    <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
                                         Add Hospital
                                     </button>
                                 </div>
@@ -502,7 +556,7 @@ const AddHospital = () => {
 
                                                 <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
                                                     <p className="mb-2"> Name </p>
-                                                    <input type="text"  />
+                                                    <input type="text" />
                                                 </div>
 
                                             </div>

@@ -14,7 +14,7 @@ const CustomDropDown = ({ value ,selectLabel='Select', option, handleChangeSelec
          style={{
            width: "100%",
          }}
-        onChange={handleChangeSelect}
+        onChange={(val)=>handleChangeSelect(val, name)}
         optionFilterProp="children"
         filterOption={(input, option) =>
           option?.label.toLowerCase()?.indexOf(input?.toLowerCase()) >= 0
