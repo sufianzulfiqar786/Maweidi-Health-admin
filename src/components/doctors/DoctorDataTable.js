@@ -25,226 +25,226 @@ import pic3 from "../../assets/images/doctor/doc3.png";
 import pic4 from "../../assets/images/doctor/doc4.png";
 import { Link } from "react-router-dom";
 
-const rows = [
-  {
-    id: 1,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic3,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 1,
-    pic: pic4,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 1,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic4,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 1,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic4,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 1,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic2,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic4,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 1,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 2,
-    pic: pic3,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 3,
-    pic: pic3,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-  {
-    id: 4,
-    pic: pic1,
-    name: "Dr. Liam",
-    field: "Dentist",
-    rating: "4.5",
-    review: "Patient Reviews",
-    reviewNmber: "167",
-  },
-];
+// const rows = [
+//   {
+//     id: 1,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic3,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 1,
+//     pic: pic4,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 1,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic4,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 1,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic4,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 1,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic2,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic4,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 1,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 2,
+//     pic: pic3,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 3,
+//     pic: pic3,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+//   {
+//     id: 4,
+//     pic: pic1,
+//     name: "Dr. Liam",
+//     field: "Dentist",
+//     rating: "4.5",
+//     review: "Patient Reviews",
+//     reviewNmber: "167",
+//   },
+// ];
 
-const DataTable = () => {
+const DataTable = ({rows}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
 
@@ -252,44 +252,46 @@ const DataTable = () => {
     setPage(newPage);
   };
 
-  const totalRows = rows.length;
+  const totalRows = rows?.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  const visibleRows = rows.slice(startIndex, endIndex);
+  const visibleRows = rows?.slice(startIndex, endIndex);
 
   return (
     <>
       <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
-        {visibleRows.map(
-          ({ pic, name, field, rating, review, reviewNmber }) => {
+        {visibleRows?.map(
+          ({ pic,reviews, departments, rating, reviewNmber, user:{name} }) => {
             return (
               <>
                 <div className="col-md-3  col-12 px-2 mt-lg-5 pt-lg-3 mt-3">
                   <div className="doc-card pb-1 d-flex flex-column  align-items-center">
-                    <img className="doc-card-img" src={pic} alt="" />
+                    <img className="doc-card-img" src={pic1} alt="" />
 
                     <p className="mb-0 doc-card-text1 text-center pt-2 mt-1">
                       {name}
                     </p>
                     <p className="mb-0 doc-card-text2 text-center pt-1">
-                      {field}
+                      {departments}
                     </p>
                     <p className="mb-0 doc-card-text3 text-center pt-1 ">
-                      {rating}{" "}
+                      {4}{" "}
                       <i
                         class="fa-solid fa-star "
                         style={{ color: "#FFCA28", paddingLeft: "1.3px" }}
                       ></i>{" "}
                     </p>
                     <p className="mb-0 doc-card-text4 text-center pt-1">
-                      {review} <span className="pl-1">{reviewNmber}</span>{" "}
+                    Patient Reviews
+                      
+                       <span className="pl-1">{reviews?.length}</span>{" "}
                     </p>
 
                     <Link
                       to={"/doctors/detail"}
                       state={{
-                        data: { pic, name, field, rating, review, reviewNmber },
+                        data: { pic, name, departments, rating,  },
                       }}
                       className="d-flex justify-content-center"
                       style={{ width: "100%" }}
@@ -309,7 +311,7 @@ const DataTable = () => {
       <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
         <div className="pagination-detail">
           Showing {page * rowsPerPage + 1} -{" "}
-          {Math.min((page + 1) * rowsPerPage, rows.length)} of {rows.length}
+          {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
         </div>
         <CustomPagination
           page={page}
