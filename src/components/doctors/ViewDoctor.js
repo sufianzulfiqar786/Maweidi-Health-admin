@@ -21,6 +21,8 @@ import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import TimeTableMessageIcon from "../../assets/images/doctor/TimeTableMessageIcon.svg";
 import TimeTablePhoneIcon from "../../assets/images/doctor/TimeTablePhoneIcon.svg";
 import TimeTableAddBtn from "../../assets/images/doctor/TimeTableAddBtn.svg";
+import TimeTableRemoveBtn from "../../assets/images/doctor/dash-circle-fill-red.svg";
+
 import Group1175 from "../../assets/images/doctor/doc1.png";
 import Group1176 from "../../assets/images/doctor/doc2.png";
 import Group1177 from "../../assets/images/doctor/doc3.png";
@@ -28,12 +30,14 @@ import Group1178 from "../../assets/images/doctor/doc4.png";
 import CrouselCard from "../DashboardComponents/CrouselCard";
 import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
+import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
 
 const ViewDoctor = () => {
   const location = useLocation();
   const receivedData = location.state?.data;
 
   const [docBtn, setDocBtn] = useState(0);
+  const [docBtn1, setDocBtn1] = useState(0);
 
   const [modal2Open, setModal2Open] = useState(false);
 
@@ -67,34 +71,28 @@ const ViewDoctor = () => {
       count: 1,
     },
   });
-
-  function renderLoop(countDays, dayName) {
-    const items = [];
-    for (let i = 0; i < countDays; i++) {
-      items.push(
-        <>
-          <div className={`${countDays === 1 ? "" : "pb-3"} `}>
-            <TimeChanger />
-
-            <span className="px-lg-3 px-1 time-selector-to">To</span>
-
-            <TimeChanger />
-
-            <span className="pl-lg-3 pl-1">
-              <img
-                className="cursor-pointer"
-                onClick={() => increaseDayCount(dayName)}
-                src={TimeTableAddBtn}
-                alt=""
-              />
-            </span>
-          </div>
-        </>
-      );
-    }
-    return items;
-  }
-
+  const specialistOptions = [
+    {
+      value: "Cardiology",
+      label: "Cardiology",
+    },
+    {
+      value: "Neurology",
+      label: "Neurology",
+    },
+    {
+      value: "Gynaecology",
+      label: "Gynaecology",
+    },
+    {
+      value: "Ophthalmology",
+      label: "Ophthalmology",
+    },
+    {
+      value: "Urology",
+      label: "Urology",
+    },
+  ];
   const increaseDayCount = (day) => {
     setSelectDay((prevState) => ({
       ...prevState,
@@ -103,7 +101,76 @@ const ViewDoctor = () => {
         count: prevState[day].count + 1,
       },
     }));
+    setDocBtn1(docBtn1 + 1)
   };
+
+  const decreaseDayCount = (day) => {
+    setSelectDay((prevState) => ({
+      ...prevState,
+      [day]: {
+        ...prevState[day],
+        count: prevState[day].count - 1,
+      },
+    }));
+    setDocBtn1(docBtn1 - 1)
+
+  };
+  const handleChangeSelect = (val, name) => {
+    console.log(val, name);
+  }
+  function renderLoop(countDays, dayName) {
+
+    const items = [];
+    for (let i = 0; i < countDays; i++) {
+      const isLastElement = i === countDays - 1; // Check if it's the last iteration
+
+      items.push(
+        <>
+
+          <div className={`${countDays === 1 ? "" : "pb-3"} `} style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <div style={{ width: "141px" }}>
+                <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+              </div>
+
+              <TimeChanger />
+
+
+              <TimeChanger />
+
+            </div>
+            {
+              isLastElement ?
+                <span className="pl-lg-3 pl-1">
+                  <img
+                    className="cursor-pointer"
+                    onClick={() => increaseDayCount(dayName)}
+                    src={TimeTableAddBtn}
+                    alt=""
+                  />
+                </span> :
+                <span className="pl-lg-3 pl-1">
+                  <img
+                    className="cursor-pointer"
+                    onClick={() => decreaseDayCount(dayName)}
+                    src={TimeTableRemoveBtn}
+                    alt=""
+                    style={{ width: "20px" }}
+                  />
+                </span>
+
+            }
+
+
+          </div>
+        </>
+      );
+    }
+
+    return items;
+  }
+
+
 
   let settings = {
     arrows: true,
@@ -164,8 +231,8 @@ const ViewDoctor = () => {
 
         <div className=" col-12 mt-4 pt-1">
           <p className="mb-0 doctor-header-top-text">
-          <Link className="doc-link " to="/">
-            DASHBOARD
+            <Link className="doc-link " to="/">
+              DASHBOARD
             </Link>
             <img
               className="mx-lg-3 ml-2 pr-1 pb-1"
@@ -205,11 +272,10 @@ const ViewDoctor = () => {
                   onClick={() => {
                     setDocBtn(0);
                   }}
-                  className={`${
-                    docBtn === 0
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 0
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                   style={{ borderRadius: "6px 0px 0px 6px" }}
                 >
                   Overview
@@ -218,11 +284,10 @@ const ViewDoctor = () => {
                   onClick={() => {
                     setDocBtn(1);
                   }}
-                  className={`${
-                    docBtn === 1
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 1
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                 >
                   Reviews
                 </button>
@@ -230,11 +295,10 @@ const ViewDoctor = () => {
                   onClick={() => {
                     setDocBtn(2);
                   }}
-                  className={`${
-                    docBtn === 2
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 2
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                 >
                   Time Table
                 </button>
@@ -242,11 +306,10 @@ const ViewDoctor = () => {
                   onClick={() => {
                     setDocBtn(3);
                   }}
-                  className={`${
-                    docBtn === 3
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 3
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                   style={{ borderRadius: "0px 6px 6px 0px" }}
                 >
                   Settings
@@ -285,7 +348,7 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> Pregnancy care{" "}</span>
+                      <span className='view-doc-sub-special'> Pregnancy care{" "}</span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -303,7 +366,7 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                    <span className='view-doc-sub-special'>  Specialty care{" "}</span>
+                      <span className='view-doc-sub-special'>  Specialty care{" "}</span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -312,14 +375,14 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> Conclusion{" "}</span>
+                      <span className='view-doc-sub-special'> Conclusion{" "}</span>
                     </p>
                   </div>
 
                   <div className="col-12 pt-2 mt-4">
                     <p className="mb-0 view-doc-special">
                       {" "}
-                     <span className='view-doc-special'> Consultancy Charges:{" "}</span>
+                      <span className='view-doc-special'> Consultancy Charges:{" "}</span>
                     </p>
                     <p className="mb-0 pt-2">
                       {" "}
@@ -328,7 +391,7 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> $50/Patient{" "}</span>
+                      <span className='view-doc-sub-special'> $50/Patient{" "}</span>
                     </p>
                   </div>
                 </>
@@ -336,7 +399,7 @@ const ViewDoctor = () => {
 
               {docBtn === 1 && (
                 <>
-                <ReviewPagination/>
+                  <ReviewPagination />
                   {/* <div className="col-12  my-4 pt-lg-3 px-md-5 ">
                     <p className="mb-0 doc-review-detail mx-5 px-lg-5 text-center">
                       " There is now an abundance of readable dummy texts. These
@@ -387,7 +450,7 @@ const ViewDoctor = () => {
                         open={modal2Open}
                         onOk={() => setModal2Open(false)}
                         onCancel={() => setModal2Open(false)}
-                        width={735}
+                        width={"60%"}
                         footer={
                           <div className="row px-3 mt-4 mb-2">
                             <div className="col-6"></div>
@@ -426,7 +489,7 @@ const ViewDoctor = () => {
                                   size={300}
                                   defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
+
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       sunday: {
