@@ -35,11 +35,14 @@ import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
 import { optionDepartments, optionSpecialization } from "../../Data/DoctorData";
 import GoogleMap from "../../components/common/GoogleMap";
+import PhoneInput from "react-phone-number-input";
+import Phone from "../../atoms/phone";
 
 const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY", "DD-MM-YYYY", "DD-MM-YY"];
 
 const AddDoctor = () => {
   const [errorData, setErrorData] = useState(0);
+  const [formDataState, setFormDataState] = useState({});
   const { RangePicker } = DatePicker;
 
   const inputRef = useRef();
@@ -52,7 +55,14 @@ const AddDoctor = () => {
   const [locationProp, setLocationProp] = useState("");
 
   const handleLocationIconClick = () => {
-    !showMap ? setShowMap(true): setShowMap(false)
+    !showMap ? setShowMap(true) : setShowMap(false);
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataState({ ...formDataState, [name]: value });
+  };
+  const handleSelect = (value,name) => {
+    setFormDataState({ ...formDataState, [name]: value });
   };
 
   const handleAddItem = () => {
@@ -89,13 +99,12 @@ const AddDoctor = () => {
       } else {
         setErrorData(0);
       }
+      setFormDataState({ ...formDataState, 'profile_image': file });
       // Set the selected image as the state of the component
       setImage(URL.createObjectURL(file));
     };
     input.click();
   };
-
-  
 
   return (
     <>
@@ -110,24 +119,14 @@ const AddDoctor = () => {
             firstText="DOCTORS"
             secondText="ADD DOCTOR"
           />
-          {/* <p className="mb-0 doctor-header-top-text">
-            <Link className="doc-link " to="/">
-            DASHBOARD
-            </Link>
-            <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
-            <Link className="doc-link " to="alldoctors">
-              <span>DOCTORS</span>{" "}
-            </Link>
-            <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
-            <span style={{ color: "#4FA6D1" }}>ADD DOCTOR</span>{" "}
-          </p> */}
 
           <div className="row mt-5 pt-3">
             <div className="col-lg-8   ">
               <div className="row mx-0 px-2 add-doc-left-col">
                 <div className="col-md-6 pt-2 d-flex align-items-center doc-cam">
                   <div
-                    className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content-center add-doc-camera-upload cursor-pointer"
+                    className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content-center add- 
+                     doc-camera-upload cursor-pointer"
                     onClick={handleDoctorImageClick}
                   >
                     {image ? (
@@ -170,43 +169,77 @@ const AddDoctor = () => {
                 <div className="col-12 mt-3">
                   <div className="row">
                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                      <p className="mb-2"> First Name </p>
+                      <p
+                        className="mb-2"
+                        name="first_name"
+                        value={formDataState?.first_name}
+                        onchange={handleChange}
+                      >
+                        First Name
+                      </p>
                       <input className="" type="text" />
                     </div>
 
                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
                       <p className="mb-2"> Last Name </p>
-                      <input className="" type="text" />
+                      <input
+                        className=""
+                        type="text"
+                        name="last_name"
+                        value={formDataState?.last_name}
+                        onchange={handleChange}
+                      />
                     </div>
                   </div>
 
                   <div className="row mt-4">
                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                       <p className="mb-2"> Email </p>
-                      <input className="" type="text" />
+                      <input
+                        className=""
+                        type="email"
+                        name="email"
+                        value={formDataState?.email}
+                        onchange={handleChange}
+                      />
                     </div>
 
                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                      <p className="mb-2"> Phone No </p>
-                      <input className="" type="text" />
+                     
+                       
+                        <Phone handleChange={handleSelect} value={formDataState?.phone}/>
+                        {/* <div */}
+                          {/* className=" d-flex align-items-center justify-content-center" */}
+                          {/* // style={{ borderRadius: "5px", height: "36.6px" }} */}
+                        {/* // > */}
+                          
+                          {/* <PhoneInput
+                            className="w-100 pl-1"
+                            style={{ border: "none" }}
+                            country="US"
+                            value={formDataState?.phone}
+                            defaultCountry="KW"
+                            onChange={(value) => handlePhonechange(value)}
+                          /> */}
+                       
+                       {/* </div>{" "} */}
                     </div>
                   </div>
 
                   <div className="row mt-4">
                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                       <p className="mb-2"> Departments </p>
-                      <CustomDropDown selectLabel='Select' option={optionDepartments} />
+                      <CustomDropDown
+                        selectLabel="Select"
+                        option={optionDepartments}
+                      />
                     </div>
 
                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
                       <p className="mb-2"> Gender </p>
-                      <Select
-                        // defaultValue="lucy"
-                        style={{
-                          width: "100%",
-                        }}
-                        onChange={() => { }}
-                        options={[
+                      <CustomDropDown
+                        onChange={() => {}}
+                        option={[
                           {
                             label: "Male​​",
                             value: "Male​​",
@@ -223,12 +256,15 @@ const AddDoctor = () => {
                   <div className="row mt-4">
                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                       <p className="mb-2"> Specialization </p>
-                      <CustomDropDown selectLabel='Select' option={optionSpecialization} />
+                      <CustomDropDown
+                        selectLabel="Select"
+                        option={optionSpecialization}
+                      />
                     </div>
 
                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
                       <p className="mb-2">Experience in years </p>
-                      <IncreDecreBtn />
+                      <IncreDecreBtn formDataState={formDataState} setFormDataState={setFormDataState} />
                     </div>
                   </div>
 
@@ -341,10 +377,16 @@ const AddDoctor = () => {
                   <div className="row mt-4">
                     <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
                       <p className="mb-2"> Location </p>
-                      <Location handleLocation={handleLocationIconClick} locationProp={locationProp}/>
-                  {showMap && (
-                    <GoogleMap locationProp = {locationProp} setLocationProp={setLocationProp}/>
-                  )}
+                      <Location
+                        handleLocation={handleLocationIconClick}
+                        locationProp={locationProp}
+                      />
+                      {showMap && (
+                        <GoogleMap
+                          locationProp={locationProp}
+                          setLocationProp={setLocationProp}
+                        />
+                      )}
                     </div>
                   </div>
 
@@ -449,7 +491,10 @@ const AddDoctor = () => {
                                 {" "}
                                 Country{" "}
                               </p>
-                              <CustomDropDown selectLabel='Kuwait' option={optionSpecialization} />
+                              <CustomDropDown
+                                selectLabel="Kuwait"
+                                option={optionSpecialization}
+                              />
                             </div>
                           </div>
 
@@ -470,7 +515,10 @@ const AddDoctor = () => {
                                 {" "}
                                 State{" "}
                               </p>
-                              <CustomDropDown selectLabel='Al Jahra' option={optionSpecialization} />
+                              <CustomDropDown
+                                selectLabel="Al Jahra"
+                                option={optionSpecialization}
+                              />
                             </div>
                           </div>
 

@@ -4,7 +4,7 @@ import CustomDropDown from "../CustomDropDown/Index";
 
 const Countries = Country.getAllCountries();
 
-const SelectCountry = ({ value, handleChange }) => {
+const SelectCountry = ({ value, name, handleChange }) => {
   const Cont = () => {
     const res = Countries.map((val) => ({
       label: val.name,
@@ -21,7 +21,7 @@ const SelectCountry = ({ value, handleChange }) => {
         <p className=" doc-add-filter-text">Country </p>
         <CustomDropDown
           option={option}
-          handleChangeSelect={handleChange}
+          handleChangeSelect={(val) => handleChange( val, name)}
           value={value}
         />
       </div>
