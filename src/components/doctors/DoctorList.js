@@ -6,10 +6,21 @@ import IncorrectIcon from "../../assets/images/dashboard/IncorrectIcon.svg";
 
 // css
 import "../../assets/css/dashboard.scss";
+import useFetch from "../../customHook/useFetch";
 
 const App = () => {
+  const BaseURL = process.env.REACT_APP_BASE_URL;
+  const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
+  const { data, isLoading, error } = useFetch(`${BaseURL}/${GetDoctor}`);
+
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [docdata, setDocData] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setDocData(data?.data);
+    }
+  }, [data]);
+
   const loadMoreData = () => {
     if (loading) {
       return;
@@ -20,7 +31,7 @@ const App = () => {
     )
       .then((res) => res.json())
       .then((body) => {
-        setData([...data, ...body.results]);
+        setDocData([...docdata, ...body.results]);
         setLoading(false);
       })
       .catch(() => {
@@ -30,6 +41,7 @@ const App = () => {
   useEffect(() => {
     loadMoreData();
   }, []);
+
   return (
     <>
       <div className="row px-4 py-3 my-1 ">
@@ -51,9 +63,9 @@ const App = () => {
         }}
       >
         <InfiniteScroll
-          dataLength={data.length}
+          dataLength={docdata?.length}
           next={loadMoreData}
-          hasMore={data.length < 50}
+          hasMore={docdata?.length < 50}
           loader={
             <Skeleton
               avatar
@@ -67,7 +79,7 @@ const App = () => {
           scrollableTarget="scrollableDiv"
         >
           <List
-            dataSource={data}
+            dataSource={docdata}
             renderItem={(item) => (
               <>
                 <div className="row  pt-1 pb-3">
@@ -75,19 +87,19 @@ const App = () => {
                     <div className="d-flex appoinment-detail align-items-center">
                       <img
                         className="add-doctor-detail-img cursor-pointer"
-                        src={item.picture.large}
+                        src="https://www.moh.gov.bh/Content/Upload/Image/636724319772210000-%D8%AF.-%D8%AE%D8%A7%D8%AA%D9%88%D9%86-%D9%83%D8%A7%D8%B8%D9%85.jpg"
                         alt=""
                       />
 
                       <div className="appoinment-detail-text pl-4 d-flex justify-content-center flex-column">
                         <p className="mb-0 add-doc-detail-text-1">
-                          {item.name.last}
+                          {item?.user?.name}
                         </p>
                         <p className="mb-0 add-doc-detail-text-2">
-                          Cardiologist
+                          {item?.departments}
                         </p>
                         <p className="mb-0 add-doc-detail-text-2">
-                          3 Years Experienced
+                          {item?.experience_years} Years Experienced
                         </p>
                       </div>
                     </div>

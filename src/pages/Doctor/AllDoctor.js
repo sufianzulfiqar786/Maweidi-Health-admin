@@ -12,11 +12,16 @@ import { Link } from "react-router-dom";
 import CustomCheckbox from "../../components/common/CustomCheckbox";
 
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
+import useFetch from "../../customHook/useFetch";
 
 const AllDoctor = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
+  const BaseURL = process.env.REACT_APP_BASE_URL;
+  const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
+  const { data, isLoading, error } = useFetch(`${BaseURL}/${GetDoctor}`);
+  
   const handleChange = (value) => {
     setSelectedOptions(value);
     setDirty(true);
@@ -461,7 +466,7 @@ const AllDoctor = () => {
         </div>
 
         <div className="col-12 mb-5 pb-5 px-0">
-          <DoctorDataTable />
+          <DoctorDataTable rows={data?.data}/>
         </div>
       </div>
     </>
