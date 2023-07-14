@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import { Button, Modal, Rate, Select, Slider } from "antd";
 import sohaibavatar from "../../assets/images/dashboard/sohaibavatar.png";
 import "../../assets/css/common/datatable.scss";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import CustomPagination from "../common/CustomPagination";
 import prescriptionSVG from "../../assets/images/common/prescription.svg";
 import Edit from "../common/Edit.js";
@@ -25,20 +25,40 @@ import EditIcon from "../../assets/images/pharmacy/EditIcon.svg";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
 
 import { Link } from "react-router-dom";
+import useDeleteData from "../../customHook/useDelete";
+import { useMemo } from "react";
+import { useEffect } from "react";
+import { LoadingOutlined } from "@ant-design/icons";
+import ButtonLoader from "../../atoms/buttonLoader";
 
-const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
+const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, loading }) => {
+    console.log("roesss", rows)
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const { isLoading, error, deleteData } = useDeleteData();
+
+   
 
     const [modal1Open, setModal1Open] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
 
     const [errorData, setErrorData] = useState(0);
+    const [deleteState, setDeleteState] = useState(0);
 
     const [image, setImage] = useState(null);
 
     const handleChangePage = (newPage) => {
         setPage(newPage);
+    };
+
+    const handleDelete = (id) => {
+
+        deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${id}`, () => {
+            setDeleteModal(false)
+            const filter = rows.filter(val => val.id !== deleteState)
+            setRows(filter)
+        });
     };
 
     const handleDoctorImageClick = () => {
@@ -67,11 +87,11 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
         input.click();
     };
 
-    const totalRows = rows.length;
+    const totalRows = rows?.length;
     const totalPages = Math.ceil(totalRows / rowsPerPage);
     const startIndex = page * rowsPerPage;
     const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-    const visibleRows = rows.filter((item) => {
+    const visibleRows = rows?.filter((item) => {
         var lcInfo = searchQuery.toLocaleLowerCase();
         return lcInfo === ""
             ? item
@@ -82,6 +102,9 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
             item.zipcode.toLocaleLowerCase().includes(lcInfo) ||
             item.state.toLocaleLowerCase().includes(lcInfo)
     })?.slice(startIndex, endIndex);
+
+    const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+    const isMediumScreen = useMediaQuery('(min-width: 484px)');
 
     return (
         <>
@@ -120,7 +143,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                             </TableRow>
                         </TableHead>
 
-                        <TableBody
+                        <TableBody className="w-100"
                             sx={{
                                 "& td": {
                                     color: "#767676",
@@ -130,9 +153,13 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                             }}
                         >
 
+                            {/* {
+                                !loading  && <div className="w-100 d-flex justify-content-center align-items-center" style={{height:"15rem"}}>
+                                    <ButtonLoader/>
+                                </div>
+                            } */}
 
-
-                            {visibleRows.map(({ id, pic, name, email, address, mobile, country, state, zipcode }, index) => (
+                            {!loading ? visibleRows?.map(({ id, profile_picture, name, email, address, phone_no, country, state, zipcode }, index) => (
                                 <TableRow
                                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                 >
@@ -148,7 +175,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                                                         filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
                                                     }}
                                                 >
-                                                    <Avatar alt="sohaib" src={pic} />
+                                                    <Avatar alt="sohaib" src={profile_picture} />
                                                 </Box>
                                             }
                                             title={name}
@@ -156,7 +183,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                                     </TableCell>
                                     <TableCell align="left">{email}</TableCell>
                                     <TableCell align="left">{address}</TableCell>
-                                    <TableCell align="left">{mobile}</TableCell>
+                                    <TableCell align="left">{phone_no}</TableCell>
                                     <TableCell align="left">{country}</TableCell>
                                     <TableCell align="left">{state}</TableCell>
                                     <TableCell align="left">{zipcode}</TableCell>
@@ -165,10 +192,20 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                                         <Link to='/hospitals/edit'>
                                             <img className='' src={EditIcon} />
                                         </Link>
-                                        <img className='' onClick={() => setDeleteModal(true)} src={DeleteIcon} />
+                                        <img className='' onClick={() => {
+                                            setDeleteModal(true)
+                                            setDeleteState(id)
+                                        }} src={DeleteIcon} />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )) :   
+                            <TableRow>
+                                <TableCell colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5} className="number" align="center" style={{height:"15rem"}}>
+                                <ButtonLoader />
+                                </TableCell>
+                            </TableRow>
+}
+
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -298,7 +335,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
                     <div className="row pb-1">
                         <div className="col-12 d-flex flex-column align-items-center justify-content-center pharmacy-delete">
                             <p className='mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3'>Are you sure you want to delete?</p>
-                            <button className='mt-lg-4 mt-1 mb-lg-5 mb-2'>Delete</button>
+                            <button className='mt-lg-4 mt-1 mb-lg-5 mb-2' disabled={isLoading} onClick={() => handleDelete(deleteState)}> {!isLoading ? "Delete" : <ButtonLoader />}</button>
                         </div>
                     </div>
                 </Modal>
@@ -308,7 +345,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows }) => {
             <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
                 <div className="pagination-detail">
                     Showing {page * rowsPerPage + 1} -{" "}
-                    {Math.min((page + 1) * rowsPerPage, rows.length)} of {rows.length}
+                    {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
                 </div>
                 <CustomPagination
                     page={page}

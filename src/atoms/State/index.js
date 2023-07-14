@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Country, State } from "country-state-city";
 import CustomDropDown from "../CustomDropDown/Index";
 
-const SelectState = ({ value, handleChange, country }) => {
+const SelectState = ({ value, handleChange, country,name }) => {
   const Countries = Country.getAllCountries();
 
   const selectedCountry = () => {
@@ -27,7 +27,7 @@ const SelectState = ({ value, handleChange, country }) => {
         <p className=" doc-add-filter-text">State </p>
         <CustomDropDown
           option={option}
-          handleChangeSelect={handleChange}
+          handleChangeSelect={(val)=>handleChange(val,name)}
           value={value}
         />
       </div>
