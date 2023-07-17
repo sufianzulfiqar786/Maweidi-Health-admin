@@ -3,12 +3,8 @@ import { Modal, Select, DatePicker, TimePicker } from "antd";
 import closeIcon from "../../assets/images/common/close.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import "../../assets/css/appointments/modal.scss";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
 import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
-import TimeTableMessageIcon from "../../assets/images/doctor/TimeTableMessageIcon.svg";
-import TimeTablePhoneIcon from "../../assets/images/doctor/TimeTablePhoneIcon.svg";
 import Phone from "../../atoms/phone";
 
 const AddAppointmentModal = ({ open, onClose }) => {
@@ -16,8 +12,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
     kwdId: "",
     patient_name: "",
     patientId: "",
-    visitDate: "",
-    visitTime: "",
     hospital: "",
     location: "",
     specialization: "",
@@ -194,16 +188,8 @@ const isDisabledDate = (current) => {
     console.log("--avilableDates---", availableDates);
   };
 
-  const handleVisitTimeChange = (value) => {
-    handleInputChange("visitTime", value);
-  };
-
   const handleDateChange = (value) => {
     handleInputChange("date", value);
-  };
-
-  const handleVisitDateChange = (value) => {
-    handleInputChange("visitDate", value);
   };
 
   const handleSubmit = (event) => {
@@ -212,8 +198,6 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
-      visitDate: "",
-      visitTime: "",
       location: "",
       specialization: "",
       doctor_name: "",
@@ -231,8 +215,6 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
-      visitDate: "",
-      visitTime: "",
       location: "",
       specialization: "",
       doctor_name: "",
@@ -299,31 +281,6 @@ const isDisabledDate = (current) => {
                       handleInputChange(e.target.name, e.target.value)
                     }
                   />
-                </div>
-              </div>
-
-              <div class="two-group">
-                <div class="form-group">
-                  <label>Visit Date</label>
-                  <div className="border" style={{ borderRadius: "5px" }}>
-                    <DatePicker
-                      size="large"
-                      style={{ border: "none", width: "100%" }}
-                      onChange={handleVisitDateChange}
-                      value={formData?.visitDate}
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Visit Time</label>
-                  <div className="border" style={{ borderRadius: "5px" }}>
-                    <TimePicker
-                      size="large"
-                      style={{ border: "none", width: "100%" }}
-                      onChange={handleVisitTimeChange}
-                      value={formData?.visitTime}
-                    />
-                  </div>
                 </div>
               </div>
 
