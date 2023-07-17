@@ -18,9 +18,8 @@ const AllDoctor = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
-  const BaseURL = process.env.REACT_APP_BASE_URL;
-  const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
-  const { data, isLoading, error } = useFetch(`${BaseURL}/${GetDoctor}`);
+
+  const { data, isLoading, error } = useFetch(`${process.env.REACT_APP_GET_DOCTORS}`);
   
   const handleChange = (value) => {
     setSelectedOptions(value);

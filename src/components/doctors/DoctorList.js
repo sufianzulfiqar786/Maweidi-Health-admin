@@ -9,9 +9,9 @@ import "../../assets/css/dashboard.scss";
 import useFetch from "../../customHook/useFetch";
 
 const App = () => {
-  const BaseURL = process.env.REACT_APP_BASE_URL;
+  
   const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
-  const { data, isLoading, error } = useFetch(`${BaseURL}/${GetDoctor}`);
+  const { data, isLoading, error } = useFetch(`${GetDoctor}`);
 
   const [loading, setLoading] = useState(false);
   const [docdata, setDocData] = useState([]);
