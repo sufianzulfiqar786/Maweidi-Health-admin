@@ -1647,3 +1647,135 @@ export const optionHospital1 = [
     }
   ]
   
+
+  export const language = [
+    {
+      "label": "Kuwaiti Arabic",
+      "value": "Kuwaiti Arabic"
+    },
+    {
+      "label": "English",
+      "value": "English"
+    },
+    {
+      "label": "Mandarin Chinese",
+      "value": "Mandarin Chinese"
+    },
+    {
+      "label": "Spanish",
+      "value": "Spanish"
+    },
+    {
+      "label": "French",
+      "value": "French"
+    },
+    {
+      "label": "Arabic",
+      "value": "Arabic"
+    },
+    {
+      "label": "Hindi",
+      "value": "Hindi"
+    },
+    {
+      "label": "Bengali",
+      "value": "Bengali"
+    },
+    {
+      "label": "Russian",
+      "value": "Russian"
+    },
+    {
+      "label": "Portuguese",
+      "value": "Portuguese"
+    },
+    {
+      "label": "Indonesian",
+      "value": "Indonesian"
+    },
+    {
+      "label": "Urdu",
+      "value": "Urdu"
+    },
+    {
+      "label": "German",
+      "value": "German"
+    },
+    {
+      "label": "Japanese",
+      "value": "Japanese"
+    },
+    {
+      "label": "Swahili",
+      "value": "Swahili"
+    },
+    {
+      "label": "Korean",
+      "value": "Korean"
+    },
+    {
+      "label": "Italian",
+      "value": "Italian"
+    },
+    {
+      "label": "Dutch",
+      "value": "Dutch"
+    },
+    {
+      "label": "Polish",
+      "value": "Polish"
+    },
+    {
+      "label": "Thai",
+      "value": "Thai"
+    },
+    {
+      "label": "Turkish",
+      "value": "Turkish"
+    },
+    {
+      "label": "Vietnamese",
+      "value": "Vietnamese"
+    },
+    {
+      "label": "Persian",
+      "value": "Persian"
+    },
+    {
+      "label": "Greek",
+      "value": "Greek"
+    },
+    {
+      "label": "Danish",
+      "value": "Danish"
+    },
+    {
+      "label": "Czech",
+      "value": "Czech"
+    },
+    {
+      "label": "Norwegian",
+      "value": "Norwegian"
+    },
+    {
+      "label": "Swedish",
+      "value": "Swedish"
+    },
+    {
+      "label": "Finnish",
+      "value": "Finnish"
+    },
+    {
+      "label": "Hungarian",
+      "value": "Hungarian"
+    },
+    {
+      "label": "Romanian",
+      "value": "Romanian"
+    },
+    {
+      "label": "Slovak",
+      "value": "Slovak"
+    }
+  ]
+  
