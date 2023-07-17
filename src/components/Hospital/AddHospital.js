@@ -25,8 +25,12 @@ import CustomDropDown from '../../atoms/CustomDropDown/Index';
 import usePost from '../../customHook/usePost';
 import SelectCountry from '../../atoms/Country';
 import SelectState from '../../atoms/State';
+import useDeleteData from '../../customHook/useDelete';
+import { useEffect } from 'react';
+import Phone from '../../atoms/phone';
 
-const AddHospital = () => {
+const AddHospital = ({ Id }) => {
+    const customData = useDeleteData()
 
     const [errorData, setErrorData] = useState(0);
     const [nameData, setNameData] = useState('');
@@ -122,11 +126,20 @@ const AddHospital = () => {
             long: '456789',
             experience_years: '2',
         };
-        postData(`${process.env.REACT_APP_ADD_HOSPITAL_DATA}`, updatedPostData, () => {
+        postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), updatedPostData, () => {
 
         })
-        console.log("handleHospitalSubmit", addHospitalData, locationProp)
+
     }
+    useEffect(() => {
+        if (Id) {
+            customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
+                console.log("value", val)
+                setAddHospitalData(val?.data)
+            })
+        }
+    }, [Id])
+
 
     return (
         <div className='mb-5 pb-5'>
@@ -234,21 +247,22 @@ const AddHospital = () => {
                                 </div>
 
                                 <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                    <p className="mb-2"> Phone No </p>
-                                    <input className="" name='phone_no' value={addHospitalData?.phone_no} onChange={handleChangeHospital} type="text" />
+                                    {/* <p className="mb-2"> Phone No </p> */}
+                                    <Phone value={addHospitalData?.phone_no} handleChange={handleChangeSelect} name='phone_no'/>
+                                    {/* <input className="" name='phone_no' value={addHospitalData?.phone_no} onChange={handleChangeHospital} type="text" /> */}
                                 </div>
                             </div>
 
                             <div className="row mt-4">
                                 <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                     {/* <p className="mb-2"> Country </p> */}
-                                    <SelectCountry  handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} />
+                                    <SelectCountry handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} />
                                     {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
                                 </div>
 
                                 <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                    <p className="mb-2"> State </p>
-                                    <SelectState country={addHospitalData?.country} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect}/>
+                                    {/* <p className="mb-2"> State </p> */}
+                                    <SelectState country={addHospitalData?.country} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
                                     {/* <CustomDropDown selectLabel='Select' option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
                                 </div>
                             </div>

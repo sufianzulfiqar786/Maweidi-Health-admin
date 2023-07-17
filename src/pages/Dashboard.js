@@ -220,8 +220,8 @@ const Dashboard = () => {
                       <Hospital />
                     ) : ValidateRoute(location.pathname) === "/hospitals/add" ? (
                       <AddHospital />
-                    ) : ValidateRoute(location.pathname) === "/hospitals/edit" ? (
-                      <EditHospital />
+                    ) : (location.pathname).startsWith("/hospitals/edit/") ? (
+                      <AddHospital Id={ValidateRoute(location.pathname).split("/")[3]} />
                     ) : ValidateRoute(location.pathname) === "/patients" ? (
                       <AllPatients />
                     ) : ValidateRoute(location.pathname) === "/patients/add" ? (
