@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 // img svg
 import AddDocUploadImgeIcon from "../../assets/images/doctor/AddDocUploadImgeIcon.svg";
 
-const UploadFile = () => {
+const UploadFile = ({setFormDataState, formDataState}) => {
 
     const [infoData, setInfoData] = useState("");
     const inputCertiRef = useRef();
@@ -14,8 +14,8 @@ const UploadFile = () => {
 
     const handleCertificatesUpload = (event) => {
         const file = event.target.files[0].name;
-
         setInfoData(file);
+        setFormDataState({...formDataState, 'certificates': event.target.files[0]})
     };
 
     return (

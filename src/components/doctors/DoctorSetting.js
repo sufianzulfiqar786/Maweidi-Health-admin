@@ -4,6 +4,7 @@ import { Button, Modal, Rate, Select, Slider } from "antd";
 import IncreDecreBtn from "./IncreDecreBtn";
 import { optionConsultancyPeriod, optionSpecialization } from "../../Data/DoctorData";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import DoctorForm from "../../organisms/addDoctor";
 
 const DoctorSetting = () => {
   return (
@@ -22,8 +23,8 @@ const DoctorSetting = () => {
               </div>
 
               <hr className="my-1" />
-
-              <div className="col-12 mt-3">
+              <DoctorForm />
+              {/* <div className="col-12 mt-3">
                 <div className="row">
                   <div className="col-lg-6 pr-lg-1 doc-setting-input">
                     <p className="mb-2"> First Name </p>
@@ -121,7 +122,7 @@ const DoctorSetting = () => {
 
                   <div className="col-lg-6"></div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

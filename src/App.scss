@@ -181,3 +181,10 @@ $font-size48: 48px;
   border-top: none !important;
   border-bottom: none !important;
 }
+
+.custom-dropDown{
+  &::placeholder{
+    background-color: red !important;
+    color: blue !important;
+  }
+}

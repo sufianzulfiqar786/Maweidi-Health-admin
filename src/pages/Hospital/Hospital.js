@@ -201,6 +201,7 @@ const Hospital = () => {
 
 
   // const { data, isLoading, error } = useFetch(`https://api.maweidi.com.kw/api/admin/get_hostpitals`);
+ 
   console.log('data', data)
   return (
     <>
