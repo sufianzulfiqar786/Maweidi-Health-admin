@@ -128,7 +128,6 @@ const findSpecializations = (hospitalValue) => {
       const specializationsForHospital = selectedHospital.specializations.map((specializationId) => {
         return specialistOptions.find((specialization) => specialization.id === specializationId);
       });
-      console.log("--matchedSpecialization---", specializationsForHospital);
       setMatchedSpecializations(specializationsForHospital);
     };
 };
@@ -139,7 +138,6 @@ const findDoctors = (specializationValue) => {
       const doctorsForSpecialization = selectedSpecialization.doctors.map((doctorId) => {
         return doctors.find((doctor) => doctor.id === doctorId);
       });
-      console.log("--matchedDoctors---", doctorsForSpecialization);
       setMatchedDoctors(doctorsForSpecialization);
     };
 };
@@ -184,7 +182,6 @@ const isDisabledDate = (current) => {
 
   const handleTimeChange = (value) => {
     handleInputChange("time", value);
-    console.log("--avilableDates---", availableDates);
   };
 
   const handleDateChange = (value) => {
