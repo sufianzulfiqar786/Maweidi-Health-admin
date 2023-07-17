@@ -13,7 +13,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
     patient_name: "",
     patientId: "",
     hospital: "",
-    location: "",
     specialization: "",
     doctor_name: "",
     date: "",
@@ -198,7 +197,6 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
-      location: "",
       specialization: "",
       doctor_name: "",
       date: "",
@@ -215,7 +213,6 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
-      location: "",
       specialization: "",
       doctor_name: "",
       date: "",
@@ -577,6 +574,7 @@ const isDisabledDate = (current) => {
                   isFormEmpty ? "disabled" : ""
                 }`}
                 disabled={isFormEmpty}
+                onClick={console.log("------formData-------", formData)}
               >
                 Book An Appointment
               </button>
