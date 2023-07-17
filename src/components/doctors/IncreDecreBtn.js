@@ -38,7 +38,7 @@ const IncreDecreBtn = ({ setFormDataState, formDataState }) => {
         <input
           className="doc-setting-input-count text-center"
           type="text"
-          value={formDataState?.experience_years}
+          value={formDataState?.experience_years ?? 0}
           onChange={(e) => setNumber(e.target.value)}
         />
         <button

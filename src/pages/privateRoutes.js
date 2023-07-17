@@ -3,7 +3,6 @@ import LaboratoryList from "./Laboratory/LaboratoryList";
 import Pharmacy from "./Pharmacy/pharmacy";
 import Appointments from "../pages/Appointments";
 
-
 const ValidateRoute = (currentPath) => {
     let HospitalAdmin = [
         "/laboratory",
