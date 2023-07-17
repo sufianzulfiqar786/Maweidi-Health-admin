@@ -197,6 +197,7 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
+      hospital: "",
       specialization: "",
       doctor_name: "",
       date: "",
@@ -213,6 +214,7 @@ const isDisabledDate = (current) => {
       kwdId: "",
       patient_name: "",
       patientId: "",
+      hospital: "",
       specialization: "",
       doctor_name: "",
       date: "",
@@ -574,7 +576,6 @@ const isDisabledDate = (current) => {
                   isFormEmpty ? "disabled" : ""
                 }`}
                 disabled={isFormEmpty}
-                onClick={console.log("------formData-------", formData)}
               >
                 Book An Appointment
               </button>
