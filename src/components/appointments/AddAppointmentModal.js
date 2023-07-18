@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Select, DatePicker, TimePicker } from "antd";
 import closeIcon from "../../assets/images/common/close.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
@@ -7,8 +7,11 @@ import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
 import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import Phone from "../../atoms/phone";
 import { Controller, useForm } from "react-hook-form";
+import useFetch from "../../customHook/useFetch";
 
 const AddAppointmentModal = ({ open, onClose }) => {
+  const { data, isLoading, error } = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
+
   const [formData, setFormData] = useState({
     kwdId: "",
     patient_name: "",
@@ -26,6 +29,20 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const [matchedSpecializations, setMatchedSpecializations] = useState([]);
   const [matchedDoctors, setMatchedDoctors] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
+  const [hospitalData, setHospitalData] = useState([]);
+
+  useEffect(() => {
+    console.log("----data-----", data?.data);
+    if (data) {
+      setHospitalData(data?.data.map(({ id, name, specialities }) => ({
+        id,
+        value: name,
+        label: name,
+        specialities,
+      })))
+    }
+  }, [data])
+
   const {
     register,
     handleSubmit,
@@ -66,33 +83,40 @@ const AddAppointmentModal = ({ open, onClose }) => {
     },
   ];
   // Hospitals array
-const hospitals = [
-  {
-    id: 1,
-    value: "Badr AL Samaa Hospitals",
-    label: "Badr AL Samaa Hospitals",
-    specializations: [1, 2, 3] // IDs of specializations offered in this hospital
-  },
-  {
-    id: 2,
-    value: "Royale Hayat Hospital",
-    label: "Royale Hayat Hospital",
-    specializations: [2, 4] // IDs of specializations offered in this hospital
-  },
-  {
-    id: 3,
-    value: "New Mowasat Hospital",
-    label: "New Mowasat Hospital",
-    specializations: [1, 2, 5] // IDs of specializations offered in this hospital
-  },
-  {
-    id: 4,
-    value: "Taiba Hospital",
-    label: "Taiba Hospital",
-    specializations: [1, 5] // IDs of specializations offered in this hospital
-  },
-  // Add more hospitals as needed
-];
+  const hospitals = data?.data.map(({ id, name, specialities }) => ({
+    id,
+    value: name,
+    label: name,
+    specialities,
+  }));
+  console.log("-----hospitals-----", hospitalData)
+// const hospitals = [
+//   {
+//     id: 1,
+//     value: "Badr AL Samaa Hospitals",
+//     label: "Badr AL Samaa Hospitals",
+//     specializations: [1, 2, 3] // IDs of specializations offered in this hospital
+//   },
+//   {
+//     id: 2,
+//     value: "Royale Hayat Hospital",
+//     label: "Royale Hayat Hospital",
+//     specializations: [2, 4] // IDs of specializations offered in this hospital
+//   },
+//   {
+//     id: 3,
+//     value: "New Mowasat Hospital",
+//     label: "New Mowasat Hospital",
+//     specializations: [1, 2, 5] // IDs of specializations offered in this hospital
+//   },
+//   {
+//     id: 4,
+//     value: "Taiba Hospital",
+//     label: "Taiba Hospital",
+//     specializations: [1, 5] // IDs of specializations offered in this hospital
+//   },
+//   // Add more hospitals as needed
+// ];
 const specialistOptions = [
   {
     id: 1,
@@ -352,7 +376,7 @@ const isDisabledDate = (current) => {
                           field.onChange(value);
                           handleHospitalChange(value);
                         }}
-                        option={hospitals}
+                        option={hospitalData}
                         field={field}
                         value={field.value}
                         onBlur={field.onBlur}
