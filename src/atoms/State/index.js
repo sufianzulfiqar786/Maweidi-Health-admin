@@ -23,7 +23,7 @@ const SelectState = ({ value, handleChange, country,name }) => {
 
   return (
     <>
-      <div class="form-group">
+      <div class="">
         <p className=" doc-add-filter-text">State </p>
         <CustomDropDown
           option={option}
