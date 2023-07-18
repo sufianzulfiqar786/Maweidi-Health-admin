@@ -1,0 +1,31 @@
+.image-preview-modal {
+    background: rgba(0, 0, 0, 0.6);
+
+    /* Set transparent background */
+    button {
+        display: none;
+    }
+}
+
+.image-preview-modal .ant-modal-content {
+    background: transparent !important;
+    box-shadow: none !important;
+    /* Set transparent background for modal content */
+}
+
+.image-preview-modal .ant-modal-body {
+    padding: 0 !important;
+    /* Remove padding from modal body */
+}
+.image_container{
+    width: 100%;
+    height: 30rem;
+    border: 3px solid #193F52;
+    border-radius: 14px;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+}

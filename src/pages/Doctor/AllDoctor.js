@@ -13,14 +13,17 @@ import CustomCheckbox from "../../components/common/CustomCheckbox";
 
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import useFetch from "../../customHook/useFetch";
+import PageLoader from "../../atoms/pageLoader";
 
 const AllDoctor = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
 
-  const { data, isLoading, error } = useFetch(`${process.env.REACT_APP_GET_DOCTORS}`);
-  
+  const { data, isLoading, error } = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS}`
+  );
+
   const handleChange = (value) => {
     setSelectedOptions(value);
     setDirty(true);
@@ -47,6 +50,7 @@ const AllDoctor = () => {
       },
     },
   };
+  if (isLoading) return <PageLoader />;
 
   return (
     <>
@@ -63,21 +67,7 @@ const AllDoctor = () => {
                 firstText="DOCTORS"
                 secondText="ALL DOCTORS"
               />
-              {/* <p className="mb-0 doctor-header-top-text">
-                <Link className="doc-link " to="/">
-                  DASHBOARD
-                </Link>
-                <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
-                <Link className="doc-link " to="alldoctors">
-                  <span>DOCTORS</span>{" "}
-                </Link>
-                <img
-                  className="mx-lg-3 ml-2 pr-1 pb-1"
-                  src={RightArrow}
-                  alt=""
-                />{" "}
-                <span style={{ color: "#4FA6D1" }}>ALL DOCTORS</span>{" "}
-              </p> */}
+             
             </div>
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
@@ -205,7 +195,7 @@ const AllDoctor = () => {
                           value: "Allergists/Immunologists",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Allergists/Immunologists"
                               )}
@@ -218,7 +208,7 @@ const AllDoctor = () => {
                           value: "Anesthesiologists",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Anesthesiologists"
                               )}
@@ -231,7 +221,7 @@ const AllDoctor = () => {
                           value: "Cardiologists​",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Cardiologists​"
                               )}
@@ -244,7 +234,7 @@ const AllDoctor = () => {
                           value: "Colon and Rectal Surgeons​",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Colon and Rectal Surgeons​"
                               )}
@@ -257,7 +247,7 @@ const AllDoctor = () => {
                           value: "Dermatologists​",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Dermatologists​"
                               )}
@@ -270,7 +260,7 @@ const AllDoctor = () => {
                           value: "Endocrinology​",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Endocrinology​"
                               )}
@@ -283,7 +273,7 @@ const AllDoctor = () => {
                           value: "Gastroenterologists​",
                           label: (
                             <Checkbox
-                            style={{height: '20px' , paddingBottom:"3px" }}
+                              style={{ height: "20px", paddingBottom: "3px" }}
                               checked={selectedOptions.includes(
                                 "Gastroenterologists​"
                               )}
@@ -294,7 +284,6 @@ const AllDoctor = () => {
                         },
                       ]}
                     />
-
                   </div>
                 </div>
               </div>
@@ -465,7 +454,7 @@ const AllDoctor = () => {
         </div>
 
         <div className="col-12 mb-5 pb-5 px-0">
-          <DoctorDataTable rows={data?.data}/>
+          <DoctorDataTable rows={data?.data} />
         </div>
       </div>
     </>

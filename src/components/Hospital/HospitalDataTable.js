@@ -30,6 +30,9 @@ import { useMemo } from "react";
 import { useEffect } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 import ButtonLoader from "../../atoms/buttonLoader";
+import ImagePreview from "../../atoms/ImagePreview";
+import DeletConfirmation from "../../atoms/deletConfirmation";
+import { CustomToast } from "../../atoms/toastMessage";
 
 const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, loading }) => {
     console.log("roesss", rows)
@@ -38,10 +41,13 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
 
     const { isLoading, error, deleteData } = useDeleteData();
 
-   
+
 
     const [modal1Open, setModal1Open] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+
+    const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const [errorData, setErrorData] = useState(0);
     const [deleteState, setDeleteState] = useState(0);
@@ -52,11 +58,15 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
         setPage(newPage);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = () => {
 
-        deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${id}`, () => {
+        deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${deleteState}`, () => {
             setDeleteModal(false)
             const filter = rows.filter(val => val.id !== deleteState)
+            CustomToast({
+                type: "success",
+                message: "Hospital Delete Successfuly!",
+              });
             setRows(filter)
         });
     };
@@ -106,13 +116,27 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
     const isLargeScreen = useMediaQuery('(min-width: 1024px)');
     const isMediumScreen = useMediaQuery('(min-width: 484px)');
 
+    const handleImageClick = (imageUrl) => {
+        setImagePreviewUrl(imageUrl);
+        setIsPreviewOpen(true);
+    };
+    // Function to close the preview
+    const closeImagePreview = () => {
+        setIsPreviewOpen(false);
+    };
+
     return (
         <>
 
             <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
 
-
-
+                <ImagePreview imagePreviewUrl={imagePreviewUrl} closeImagePreview={closeImagePreview} isPreviewOpen={isPreviewOpen} />
+                <DeletConfirmation
+                    deleteModal={deleteModal}
+                    setDeleteModal={setDeleteModal}
+                    handleDelete={handleDelete}
+                    isLoading={isLoading}
+                />
                 <TableContainer
                     component={Paper}
                     sx={{ backgroundColor: "#FFFFFF" }}
@@ -133,13 +157,13 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                     #
                                 </TableCell>
                                 <TableCell align="left">Name</TableCell>
-                                <TableCell align="left">Email</TableCell>
-                                <TableCell align="left">Address</TableCell>
-                                <TableCell align="left">Mobile No.</TableCell>
-                                <TableCell align="left">Country</TableCell>
-                                <TableCell align="left">State</TableCell>
-                                <TableCell align="left">Zip Code</TableCell>
-                                <TableCell align="left">Edit</TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Address</TableCell>
+                                <TableCell align="center">Mobile No.</TableCell>
+                                <TableCell align="center">Country</TableCell>
+                                <TableCell align="center">State</TableCell>
+                                <TableCell align="center">Zip Code</TableCell>
+                                <TableCell align="center">Edit</TableCell>
                             </TableRow>
                         </TableHead>
 
@@ -175,36 +199,36 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                                         filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
                                                     }}
                                                 >
-                                                    <Avatar alt="sohaib" src={profile_picture} />
+                                                    <Avatar alt="Hospital Pic" src={`${process.env.REACT_APP_IMAGE_URL + profile_picture}`} onClick={() => handleImageClick(process.env.REACT_APP_IMAGE_URL + profile_picture)} />
                                                 </Box>
                                             }
                                             title={name}
                                         />
                                     </TableCell>
-                                    <TableCell align="left">{email}</TableCell>
-                                    <TableCell align="left">{address}</TableCell>
-                                    <TableCell align="left">{phone_no}</TableCell>
-                                    <TableCell align="left">{country}</TableCell>
-                                    <TableCell align="left">{state}</TableCell>
-                                    <TableCell align="left">{zipcode}</TableCell>
+                                    <TableCell align="center">{email}</TableCell>
+                                    <TableCell align="center">{address}</TableCell>
+                                    <TableCell align="center">{phone_no}</TableCell>
+                                    <TableCell align="center">{country}</TableCell>
+                                    <TableCell align="center">{state}</TableCell>
+                                    <TableCell align="center">{zipcode}</TableCell>
 
                                     <TableCell >
                                         <Link to={`/hospitals/edit/${id}`}>
                                             <img className='' src={EditIcon} />
                                         </Link>
-                                        <img className='' onClick={() => {
+                                        <img className='cursor-pointer' onClick={() => {
                                             setDeleteModal(true)
                                             setDeleteState(id)
                                         }} src={DeleteIcon} />
                                     </TableCell>
                                 </TableRow>
-                            )) :   
-                            <TableRow>
-                                <TableCell colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5} className="number" align="center" style={{height:"15rem"}}>
-                                <ButtonLoader />
-                                </TableCell>
-                            </TableRow>
-}
+                            )) :
+                                <TableRow>
+                                    <TableCell colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5} className="number" align="center" style={{ height: "15rem" }}>
+                                        <ButtonLoader />
+                                    </TableCell>
+                                </TableRow>
+                            }
 
                         </TableBody>
                     </Table>
@@ -320,25 +344,8 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                     </div>
                 </Modal> */}
 
-                <Modal
-                    className="doctor-filter-modal"
-                    centered
-                    open={deleteModal}
-                    // onOk={() => setModal2Open(false)}
-                    onCancel={() => setDeleteModal(false)}
-                    width={514}
-                    footer={null}
-                    closable={false}
 
-                >
 
-                    <div className="row pb-1">
-                        <div className="col-12 d-flex flex-column align-items-center justify-content-center pharmacy-delete">
-                            <p className='mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3'>Are you sure you want to delete?</p>
-                            <button className='mt-lg-4 mt-1 mb-lg-5 mb-2' disabled={isLoading} onClick={() => handleDelete(deleteState)}> {!isLoading ? "Delete" : <ButtonLoader />}</button>
-                        </div>
-                    </div>
-                </Modal>
 
             </div>
 

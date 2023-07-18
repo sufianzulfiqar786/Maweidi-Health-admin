@@ -8,12 +8,17 @@ import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './redux/app/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <Provider store={store}>
   <PersistGate loading={null} persistor={persistor}>
-    <App />
+  <QueryClientProvider client={new QueryClient()}>
+  <App />
+    </QueryClientProvider>
+ 
   </PersistGate>
 </Provider>
 );

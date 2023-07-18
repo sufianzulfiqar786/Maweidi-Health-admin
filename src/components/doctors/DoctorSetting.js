@@ -1,12 +1,29 @@
 import React, { useState } from "react";
-import { Button, Modal, Rate, Select, Slider } from "antd";
 
-import IncreDecreBtn from "./IncreDecreBtn";
-import { optionConsultancyPeriod, optionSpecialization } from "../../Data/DoctorData";
-import CustomDropDown from "../../atoms/CustomDropDown/Index";
 import DoctorForm from "../../organisms/addDoctor";
+import DeletConfirmation from "../../atoms/deletConfirmation";
+import useDeleteData from "../../customHook/useDelete";
+import { useNavigate } from "react-router-dom";
+import {CustomToast} from "../../atoms/toastMessage";
 
-const DoctorSetting = () => {
+const DoctorSetting = ({ rawData, id }) => {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const { isLoading, error, deleteData } = useDeleteData();
+  const navigate = useNavigate();
+
+  const handleDelete = () => {
+    deleteData(`${process.env.REACT_APP_DELETE_DOCTOR}/${id}`, () => {
+    
+      setDeleteModal(false);
+      navigate("/doctors");
+      CustomToast({
+        type: 'success',
+        message: 'Doctor Deleted Successfuly!',
+      });
+      // const filter = rows.filter((val) => val.id !== deleteState);
+      // setRows(filter);
+    });
+  };
   return (
     <>
       <div className="col-12 px-3 my-4 pt-lg-3">
@@ -23,7 +40,7 @@ const DoctorSetting = () => {
               </div>
 
               <hr className="my-1" />
-              <DoctorForm />
+              <DoctorForm id={id} rawData={rawData} />
               {/* <div className="col-12 mt-3">
                 <div className="row">
                   <div className="col-lg-6 pr-lg-1 doc-setting-input">
@@ -224,7 +241,10 @@ const DoctorSetting = () => {
 
                 <div className="col-12">
                   <div className="row mt-lg-5 my-lg-2 my-3 pb-lg-2">
-                    <button className="apply-filter save-changes dlt-doc-setting-btn">
+                    <button
+                      className="apply-filter save-changes dlt-doc-setting-btn"
+                      onClick={() => setDeleteModal(true)}
+                    >
                       Delete Account
                     </button>
                   </div>
@@ -270,8 +290,13 @@ const DoctorSetting = () => {
 
                 <div className="row my-4 ">
                   <div className="col-6">
-                    <button className="apply-filter save-changes">
-                    Save Password
+                    <button className="apply-filter save-changes" onClick={()=>{
+                       CustomToast({
+                        type: 'success',
+                        message: 'Doctor Deleted Successfuly!',
+                      });
+                    }}>
+                      Save Password
                     </button>
                   </div>
 
@@ -284,6 +309,12 @@ const DoctorSetting = () => {
           <div className="col-lg-6"></div>
         </div>
       </div>
+      <DeletConfirmation
+        deleteModal={deleteModal}
+        setDeleteModal={setDeleteModal}
+        handleDelete={handleDelete}
+        isLoading={isLoading}
+      />
     </>
   );
 };

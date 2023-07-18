@@ -17,8 +17,8 @@ const SelectCountry = ({ value, name, handleChange }) => {
 
   return (
     <>
-      <div class="form-group">
-        <p className=" doc-add-filter-text">Country </p>
+      <div class="">
+        <p className=" doc-add-filter-text">Country<span className='error-message'>*</span> </p>
         <CustomDropDown
           option={option}
           handleChangeSelect={(val) => handleChange( val, name)}

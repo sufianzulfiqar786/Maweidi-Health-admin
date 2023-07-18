@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react'
 import { Select, DatePicker, Checkbox } from "antd";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 // css file
 import "../../assets/css/doctor.scss";
-import "../../assets/css/pharmacy.scss";
+import '../../assets/css/pharmacy.scss'
+import '../../App.scss'
 
 // img svg
 import RightArrow from "../../assets/images/doctor/RightArrow.svg";
@@ -20,178 +21,336 @@ import GoogleMap from "../common/GoogleMap.js";
 import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
-import {
-  optionCountry,
-  optionRoleType,
-  optionState,
-} from "../../Data/DoctorData";
-import CustomDropDown from "../../atoms/CustomDropDown/Index";
-import usePost from "../../customHook/usePost";
-import SelectCountry from "../../atoms/Country";
-import SelectState from "../../atoms/State";
+import { optionCountry, optionRoleType, optionSpecialization, optionState } from '../../Data/DoctorData';
+import CustomDropDown from '../../atoms/CustomDropDown/Index';
+import usePost from '../../customHook/usePost';
+import SelectCountry from '../../atoms/Country';
+import SelectState from '../../atoms/State';
+import useDeleteData from '../../customHook/useDelete';
+import { useEffect } from 'react';
+import Phone from '../../atoms/phone';
+import { Controller, useForm } from "react-hook-form";
+import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import ButtonLoader from '../../atoms/buttonLoader';
+import { CustomToast } from '../../atoms/toastMessage';
 
-const AddHospital = () => {
-  const [errorData, setErrorData] = useState(0);
-  const [nameData, setNameData] = useState("");
-  const [time, setTime] = useState("00:00");
-  const [time1, setTime1] = useState("00:00");
-  const { RangePicker } = DatePicker;
+const AddHospital = ({ Id }) => {
+    const customData = useDeleteData()
 
-  const [infoData, setInfoData] = useState("");
+    const [errorData, setErrorData] = useState(0);
+    const [errorMessage, setErrorMessage] = useState(0);
+    const [nameData, setNameData] = useState('');
+    const [time, setTime] = useState("00:00");
+    const [time1, setTime1] = useState("00:00");
+    const { RangePicker } = DatePicker;
 
-  const inputRef = useRef();
-  const inputCertiRef = useRef();
+    const [infoData, setInfoData] = useState("");
 
-  const [image, setImage] = useState(null);
+    const inputRef = useRef();
+    const inputCertiRef = useRef();
 
-  const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState("");
-  const [addHospitalData, setAddHospitalData] = useState("");
+    const [image, setImage] = useState(null);
 
-  const [selectedOptions, setSelectedOptions] = useState(["john"]);
-  const [dirty, setDirty] = useState(false);
+    const [items, setItems] = useState([]);
+    const [newItem, setNewItem] = useState("");
+    const [addHospitalData, setAddHospitalData] = useState("");
 
-  const { data, isLoading, error, postData } = usePost();
+    const [selectedOptions, setSelectedOptions] = useState(["john"]);
+    const [dirty, setDirty] = useState(false);
 
-  const handleChange = (value) => {
-    setSelectedOptions(value);
-    setDirty(true);
-    console.log("Select Changed");
-    handleChangeSelect(value, "specialization");
-  };
-  const [showMap, setShowMap] = useState(false);
-  const [locationProp, setLocationProp] = useState("");
+    const specializationData = useSelector((state) => state.specialization.specializationData);
+    const { data, isLoading, error, postData } = usePost()
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm();
 
-  const handleLocationIconClick = () => {
-    !showMap ? setShowMap(true) : setShowMap(false);
-  };
+    const specialization = useMemo(() => {
+        return specializationData?.data?.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }));
+    }, [specializationData]);
 
-  const handleDoctorImageClick = () => {
-    // Create a file input element and trigger a click event
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
-    input.onchange = (event) => {
-      const file = event.target.files[0];
-      if (!file) {
-        setErrorData(0);
-        return;
-      }
-      const fileType = file.type;
-      if (fileType !== "image/png" && fileType !== "image/jpeg") {
-        // alert('Please select a PNG or JPEG file');
-        setErrorData(1);
-        return;
-      } else {
-        setErrorData(0);
-      }
-      // Set the selected image as the state of the component
-      setImage(URL.createObjectURL(file));
+    const handleChange = (value) => {
+        setSelectedOptions(value);
+        setDirty(true);
+        console.log("Select Changed");
+        handleChangeSelect(value, 'specialization')
     };
-    input.click();
-  };
+    const [showMap, setShowMap] = useState(false);
+    const [locationProp, setLocationProp] = useState("");
 
-  const handleAddItem = () => {
-    const newItemObject = {
-      id: items.length + 1,
+    const handleLocationIconClick = () => {
+        !showMap ? setShowMap(true) : setShowMap(false)
     };
-    setItems([...items, newItemObject]);
-    setNewItem("");
-  };
 
-  const handleRemoveItem = (index) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
-    setItems(newItems);
-  };
+    const handleDoctorImageClick = () => {
+        // Create a file input element and trigger a click event
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                setErrorData(0);
+                return;
+            }
+            const fileType = file.type;
+            if (fileType !== "image/png" && fileType !== "image/jpeg") {
+                // alert('Please select a PNG or JPEG file');
+                setErrorData(1);
+                return;
+            } else {
+                setErrorData(0);
+            }
+            // Set the selected image as the state of the component
+            setAddHospitalData({ ...addHospitalData, 'profile_picture': file })
+            setImage(URL.createObjectURL(file));
+        };
+        input.click();
+    };
 
-  const handleChangeHospital = (e) => {
-    const { name, value } = e.target;
-    setAddHospitalData({ ...addHospitalData, [name]: value });
+    const handleAddItem = () => {
+        const newItemObject = {
+            id: items.length + 1,
+        };
+        setItems([...items, newItemObject]);
+        setNewItem("");
+    };
+
+    const handleRemoveItem = (index) => {
+        const newItems = [...items];
+        newItems.splice(index, 1);
+        setItems(newItems);
+    };
+    const formatTimeTo24Hour = (time) => {
+        if (!time) return ''; // Handle the case when the time is empty or null
+
+        // Split the time into hours and minutes
+        const [hours, minutes] = time.split(':');
+
+        // Create a new date object to parse the time
+        const parsedTime = new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
+
+        // Convert the parsed time to a string in 24-hour format
+        const formattedTime = parsedTime.toTimeString().slice(0, 5);
+
+        return formattedTime;
+    };
+
+    const handleChangeHospital = (e) => {
+
+        const { name, value } = e.target;
+        if (name === "start_time" || name === "end_time") {
+            setAddHospitalData((prevData) => ({
+                ...prevData,
+                [name]: formatTimeTo24Hour(value),
+            }));
+        } else {
+            setAddHospitalData({ ...addHospitalData, [name]: value });
+        }
+
+    };
+
     console.log("addHospitalData", addHospitalData);
-  };
+    const handleChangeSelect = (value, name) => {
+        setAddHospitalData({ ...addHospitalData, [name]: value })
 
-  const handleChangeSelect = (value, name) => {
-    setAddHospitalData({ ...addHospitalData, [name]: value });
-  };
+    }
 
-  const handleHospitalSubmit = () => {
-    const updatedPostData = {
-      ...addHospitalData,
-      working_hours: "08:00-16:00",
-      working_days: "Monday,Wednesday,Friday",
-      lat: "3456789",
-      long: "456789",
-      experience_years: "2",
-    };
-    postData(
-      `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`,
-      updatedPostData,
-      () => {}
-    );
-    console.log("handleHospitalSubmit", addHospitalData, locationProp);
-  };
+    const validation = () => {
+        if (!addHospitalData.profile_picture) {
+            setErrorMessage(-1)
+        }
+        // else if (!addHospitalData.name) {
+        //     setErrorMessage(1)
+        // }
+        // else if (!addHospitalData.email) {
+        //     setErrorMessage(2)
+        // }
+        // else if (!addHospitalData.email.match(/[@]/)) {
+        //     setErrorMessage(3)
+        // }
+        // else if (!addHospitalData.phone_no) {
+        //     setErrorMessage(4)
+        // } else if (!addHospitalData.country) {
+        //     setErrorMessage(5)
+        // }
+        // else if (!addHospitalData.start_time) {
+        //     setErrorMessage(6)
+        // } else if (!addHospitalData.end_time) {
+        //     setErrorMessage(7)
+        // }
+        // else if (!addHospitalData.zipcode) {
+        //     setErrorMessage(8)
+        // }
+        // else if (!locationProp) {
+        //     setErrorMessage(9)
+        // }
+        else {
+            setErrorMessage('No Error')
+        }
 
-  return (
-    <div className="mb-5 pb-5">
-      <div className="row  px-2 pt-4 pb-5 ">
-        <div className="col-12  ">
-          <p className="mb-0 dashboard-com-top-text">Hospitals List</p>
-        </div>
 
-        <div className="col-12  ">
-          <div className="row d-flex align-items-end">
-            <div className="col-lg-6 col-12 mt-lg-1 mt-2 pt-4">
-              <p className="mb-0 doctor-header-top-text">
-                DASHBOARD
-                <img
-                  className="mx-lg-3 ml-2 pr-1 pb-1"
-                  src={RightArrow}
-                  alt=""
-                />{" "}
-                <span style={{ color: "#4FA6D1" }}>HOSPITALS LIST</span>{" "}
-              </p>
-            </div>
+    }
 
-            <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-              {" "}
-              {/* <button className="btn-add-new-doc">
+    const handleHospitalSubmit = () => {
+
+
+        validation()
+        console.log("name", addHospitalData)
+
+
+
+        const updatedPostData = {
+            ...addHospitalData,
+            working_hours: '08:00-16:00',
+            working_days: 'Monday,Wednesday,Friday',
+            lat: '3456789',
+            long: '456789',
+            experience_years: '2',
+        };
+
+
+        const updatedPostData1 = {
+            ...addHospitalData,
+            // 'name': 'John Doe',
+            // 'email': 'johndoe@example.com',
+            'address': '123 Main Street',
+            // 'zipcode': '12345',
+            // 'country': 'United States',
+            // 'state': 'California',
+            // 'phone_no': '123-456-7890',
+            // 'facebook': 'https://www.facebook.com/johndoe',
+            // 'linkedin': 'https://www.linkedin.com/in/johndoe',
+            // 'instagram': 'https://www.instagram.com/johndoe',
+            // 'start_time': '09:00 AM',
+            // 'end_time': '05:00 PM',
+            // 'specialties[]': 2,
+            // 'specialties[]': 4,
+            // 'specialties[]': 5,
+            'lat': '34.56789',
+            'long': '45.6789',
+            // 'profile_picture': 'https://example.com/johndoe/profile.jpg',
+            'updated_at': '2023-07-17 10:30:00',
+            'created_at': '2023-07-16 14:20:00'
+        }
+
+
+        const formData = new FormData();
+        for (const key in updatedPostData1) {
+            if (
+                (key === "specialties") &&
+                Array.isArray(updatedPostData1[key])
+            ) {
+                updatedPostData1[key].forEach((value) => {
+                    formData.append(`${key}[]`, value);
+                });
+            } else {
+                formData.append(key, updatedPostData1[key]);
+            }
+        }
+
+        if (errorMessage === 'No Error') {
+            postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), formData, () => {
+                CustomToast({
+                    type: "success",
+                    message: `${Id? 'Edit Hospital Successfuly!': 'Add Hospital Successfuly!'}`,
+                  });
+            })
+        }
+
+
+    }
+    useEffect(() => {
+        if (Id) {
+            customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
+                console.log("value", val?.data)
+                setAddHospitalData(val?.data)
+                Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
+                    setValue(fieldName, fieldValue);
+                });
+                setValue("specialties", val?.data?.specialities?.map(l => (l.id)))
+            })
+        }
+    }, [Id])
+
+    return (
+        <div className='mb-5 pb-5'>
+
+            <div className="row  px-2 pt-4 pb-5 ">
+                <div className="col-12  ">
+                    <p className="mb-0 dashboard-com-top-text">Hospitals List</p>
+                </div>
+
+                <div className="col-12  ">
+                    <div className="row d-flex align-items-end">
+                        <div className="col-lg-6 col-12 mt-lg-1 mt-2 pt-4">
+                            <p className="mb-0 doctor-header-top-text">
+                                DASHBOARD
+                                <img
+                                    className="mx-lg-3 ml-2 pr-1 pb-1"
+                                    src={RightArrow}
+                                    alt=""
+                                />
+                                <span style={{ color: "#4FA6D1" }}>HOSPITALS LIST</span>{" "}
+                            </p>
+                        </div>
+
+                        <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+
+                            {/* <button className="btn-add-new-doc">
                                 <Link className="add-doc-link-color" to="/hospitals/add" > Add </Link>
                             </button>{" "} */}
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className="col-12">
+
+                </div>
+
             </div>
-          </div>
-        </div>
+            <form onSubmit={handleSubmit(handleHospitalSubmit)}>
+                <div className="row  pt-lg-3 ">
+                    <div className="col-lg-12   ">
+                        <div className="row mx-0 px-2 add-doc-left-col">
+                            <div className="col-md-6 pt-2 d-flex align-items-center doc-cam">
+                                <div
+                                    className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content-center add-doc-camera-upload cursor-pointer"
+                                    onClick={handleDoctorImageClick}
+                                >
+                                    {image ? (
+                                        <img
+                                            className="add-doc-camera-upload-1st"
+                                            src={image}
+                                            alt="Uploaded image"
+                                        />
+                                    ) : (
+                                        addHospitalData.profile_picture ?
+                                            <div className='add-doc-camera-upload'>
+                                                <img className='w-100 h-100 add-doc-camera-upload-1st' src={process.env.REACT_APP_IMAGE_URL+addHospitalData.profile_picture} alt="" />
+                                            </div>
+                                            : <img src={CameraIcon} alt="" />
 
-        <div className="col-12"></div>
-      </div>
+                                    )}
+                                </div>
 
-      <div className="row  pt-lg-3 ">
-        <div className="col-lg-12   ">
-          <div className="row mx-0 px-2 add-doc-left-col">
-            <div className="col-md-6 pt-2 d-flex align-items-center doc-cam">
-              <div
-                className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content-center add-doc-camera-upload cursor-pointer"
-                onClick={handleDoctorImageClick}
-              >
-                {image ? (
-                  <img
-                    className="add-doc-camera-upload-1st"
-                    src={image}
-                    alt="Uploaded image"
-                  />
-                ) : (
-                  <img src={CameraIcon} alt="" />
-                )}
-              </div>
+                                <span className="pl-4 ml-2 pt-lg-0 pt-4 doc-cam-text">
+                                    Profile Picture
+                                </span>
+                            </div>
 
-              <span className="pl-4 ml-2 pt-lg-0 pt-4 doc-cam-text">
-                Profile Picture
-              </span>
-            </div>
-
-            <div className="col-md-6 pt-2 d-flex justify-content-md-end justify-content-center align-items-center ">
-              {/* <div>
+                            <div className="col-md-6 pt-2 d-flex justify-content-md-end justify-content-center align-items-center ">
+                                {/* <div>
                                 <span
                                     className="doc-upload-pic cursor-pointer"
                                     onClick={handleDoctorImageClick}
@@ -199,238 +358,419 @@ const AddHospital = () => {
                                     Upload Picture
                                 </span>
                             </div> */}
-            </div>
+                            </div>
+                            {
+                                errorMessage === -1 ? <p className=' mb-0 pl-3 error-message'>Please upload image</p> : null
+                            }
+                            <div className="col-12" style={{ marginTop: "-20px" }}>
+                                {errorData === 1 ? (
+                                    <span className="error-message">
+                                        Please select a valid image file (JPEG or PNG)
+                                    </span>
+                                ) : (
+                                    ""
+                                )}
+                            </div>
 
-            <div className="col-12" style={{ marginTop: "-20px" }}>
-              {errorData === 1 ? (
-                <span className="error-message">
-                  Please select a valid image file (JPEG or PNG)
-                </span>
-              ) : (
-                ""
-              )}
-            </div>
+                            <div className="col-12 mt-3">
+                                <div className="row">
+                                    <div className="col-12  doc-setting-input">
+                                        <p className="mb-2">Name<span className='error-message'>*</span> </p>
+                                        {/* <input className="" type="text" name='name' value={addHospitalData.name} onChange={(e) => {
+                                            setNameData(e.target.value)
+                                            handleChangeHospital(e)
+                                        }} /> */}
 
-            <div className="col-12 mt-3">
-              <div className="row">
-                <div className="col-12  doc-setting-input">
-                  <p className="mb-2">Name </p>
-                  <input
-                    className=""
-                    type="text"
-                    name="name"
-                    value={addHospitalData.name}
-                    onChange={(e) => {
-                      setNameData(e.target.value);
-                      handleChangeHospital(e);
-                    }}
-                  />
-                </div>
-              </div>
 
-              <div className="row mt-4">
-                <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                  <p className="mb-2"> Your Email </p>
-                  <input
-                    className=""
-                    name="email"
-                    value={addHospitalData.email}
-                    onChange={handleChangeHospital}
-                    type="text"
-                  />
-                </div>
 
-                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                  <p className="mb-2"> Phone No </p>
-                  <input
-                    className=""
-                    name="phone_no"
-                    value={addHospitalData?.phone_no}
-                    onChange={handleChangeHospital}
-                    type="text"
-                  />
-                </div>
-              </div>
+                                        <Controller
+                                            name="name"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <input
+                                                        type="text"
+                                                        name="name"
+                                                        {...field}
+                                                        value={field.value}
+                                                        onChange={(e) => {
+                                                            field.onChange(e.target.value);
+                                                            setNameData(e.target.value)
+                                                            handleChangeHospital(e)
+                                                        }}
+                                                    />
 
-              <div className="row mt-4">
-                <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                  {/* <p className="mb-2"> Country </p> */}
-                  <SelectCountry
-                    handleChange={handleChangeSelect}
-                    name="country"
-                    value={addHospitalData?.country}
-                  />
-                  {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
-                </div>
+                                                    {errors.name && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
 
-                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                  <p className="mb-2"> State </p>
-                  <SelectState
-                    country={addHospitalData?.country}
-                    name="state"
-                    value={addHospitalData?.state}
-                    handleChange={handleChangeSelect}
-                  />
-                  {/* <CustomDropDown selectLabel='Select' option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
-                </div>
-              </div>
 
-              <div className="row mt-4">
-                <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                  <p className="mb-2"> Specialization </p>
-                  <div className="all-doc-filter-multi-select d-flex justify-content-between ">
-                    <Select
-                      // mode="tags"
-                      onChange={handleChange}
-                      onMouseDown={(e) => {
-                        setDirty(false);
-                        console.log("Select Clicked");
-                        e.stopPropagation();
-                      }}
-                      style={{ width: "100%", minHeight: "36.6px" }}
-                      mode="multiple"
-                      options={[
-                        {
-                          value: "Allergists/Immunologists",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Allergists/Immunologists"
-                              )}
-                            >
-                              Allergists/Immunologists
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Anesthesiologists",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Anesthesiologists"
-                              )}
-                            >
-                              Anesthesiologists
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Cardiologists​",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Cardiologists​"
-                              )}
-                            >
-                              Cardiologists
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Colon and Rectal Surgeons​",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Colon and Rectal Surgeons​"
-                              )}
-                            >
-                              Colon and Rectal Surgeons
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Dermatologists​",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Dermatologists​"
-                              )}
-                            >
-                              Dermatologists
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Endocrinology​",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Endocrinology​"
-                              )}
-                            >
-                              Endocrinology
-                            </Checkbox>
-                          ),
-                        },
-                        {
-                          value: "Gastroenterologists​",
-                          label: (
-                            <Checkbox
-                              checked={selectedOptions.includes(
-                                "Gastroenterologists​"
-                              )}
-                            >
-                              Gastroenterologists
-                            </Checkbox>
-                          ),
-                        },
-                      ]}
-                    />
+                                    </div>
 
-                    {/* <img className='pr-2' src={DownIcon} alt="" /> */}
-                  </div>
-                </div>
 
-                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                  <p className="mb-2"> Working Hours </p>
+                                </div>
 
-                  <div className="d-flex justify-content-between align-items-center datapicker-border">
-                    <div
-                      className="border-right d-flex align-items-center"
-                      style={{ height: "36.6px" }}
-                    >
-                      <img className="px-2 " src={ClockIcon} alt="" />
-                    </div>
+                                <div className="row mt-4">
+                                    <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                        <p className="mb-2"> Your Email<span className='error-message'>*</span> </p>
+                                        {/* <input className="" name='email' value={addHospitalData.email} onChange={handleChangeHospital} type="text" /> */}
+                                        <Controller
+                                            name="email"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                                pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                                            }}
+                                            render={({ field }) => (
+                                                <input
+                                                    className=""
+                                                    type="text"
+                                                    name="email"
+                                                    {...field}
+                                                    value={field.value}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        handleChangeHospital(e);
+                                                    }}
+                                                />
+                                            )}
+                                        />
+                                        {errors.email && errors.email.type === "required" && (
+                                            <span className="error-message">This field is required</span>
+                                        )}
+                                        {errors.email && errors.email.type === "pattern" && (
+                                            <span className="error-message">Invalid email address</span>
+                                        )}
+                                    </div>
 
-                    {/* <TimeChanger borderInp={'none'} imgHide='none' /> */}
-                    <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
-                      <input
-                        className=" pl-1"
-                        type="time"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        min="00:00"
-                        max="23:59"
-                        step="60"
-                      />
-                    </div>
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                                        {/* <p className="mb-2"> Phone No </p> */}
+                                        {/* <Phone value={addHospitalData?.phone_no} handleChange={handleChangeSelect} name='phone_no' /> */}
+                                        <Controller
+                                            name="phone_no"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <Phone
 
-                    <span className="datapicker-to">To</span>
+                                                        name="phone_no"
+                                                        field={field}
+                                                        value={field.value}
+                                                        handleChange={(e) => {
 
-                    <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
-                      <input
-                        className=" pl-1"
-                        type="time"
-                        value={time1}
-                        onChange={(e) => setTime1(e.target.value)}
-                        min="00:00"
-                        max="23:59"
-                        step="60"
-                      />
-                    </div>
+                                                            field.onChange(e);
+                                                            handleChangeHospital(e);
+                                                        }}
+                                                    />
+                                                    {errors.phone_no && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
 
-                    <div
-                      className="border-left d-flex align-items-center"
-                      style={{ height: "36.6px" }}
-                    >
-                      <img className="px-2 " src={ClockIcon} alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                                <div className="row mt-4">
+                                    <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                        {/* <p className="mb-2"> Country </p> */}
+                                        {/* <SelectCountry handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} /> */}
 
-              <div className="row mt-4">
-                {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                        <Controller
+                                            name="country"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <SelectCountry handleChange={(value, name) => {
+                                                        field.onChange(value);
+                                                        handleChangeSelect(value, name);
+                                                    }} name="country"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur} />
+
+                                                    {errors.country && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
+
+                                        {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
+                                        {
+                                            errorMessage === 5 ? <p className=' mb-0 error-message'>Please select country</p> : null
+                                        }
+                                    </div>
+
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+
+                                        <SelectState country={addHospitalData?.country} disabled={!addHospitalData?.country && true} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
+
+
+                                        {/* <p className="mb-3"> State </p> */}
+
+
+                                        {/* <Controller
+                                            name="state"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <SelectState country={addHospitalData?.country} name="state"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur} handleChange={(value, name) => {
+                                                            field.onChange(value);
+                                                            handleChangeSelect(value, name);
+                                                        }} />
+                                                    {errors.state && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        /> */}
+                                        {/* <CustomDropDown selectLabel='Select'  option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
+                                    </div>
+                                </div>
+
+                                <div className="row mt-4">
+                                    <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                        <p className="mb-2"> Specialization </p>
+                                        <Controller
+                                            name="specialties"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <CustomDropDown
+                                                        handleChangeSelect={(value, name) => {
+                                                            field.onChange(value);
+                                                            handleChangeSelect(value, name);
+                                                        }}
+                                                        option={specialization}
+                                                        name="specialties"
+                                                        mode="multiple"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur}
+                                                    />
+
+                                                    {errors.specialties && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
+                                        {/* <div className='all-doc-filter-multi-select d-flex justify-content-between '>
+
+                                            <Select
+                                                onChange={handleChange}
+                                                onMouseDown={(e) => {
+                                                    setDirty(false);
+                                                    console.log("Select Clicked");
+                                                    e.stopPropagation();
+                                                }}
+                                                style={{ width: "100%", minHeight: "36.6px" }}
+                                                mode="multiple"
+                                                options={[
+                                                    {
+                                                        value: "Allergists/Immunologists",
+                                                        label: (
+                                                            <Checkbox
+
+                                                                checked={selectedOptions.includes("Allergists/Immunologists")}
+                                                            >
+                                                                Allergists/Immunologists
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Anesthesiologists",
+                                                        label: (
+                                                            <Checkbox
+
+                                                                checked={selectedOptions.includes("Anesthesiologists")}
+                                                            >
+                                                                Anesthesiologists
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Cardiologists​",
+                                                        label: (
+                                                            <Checkbox
+                                                                checked={selectedOptions.includes("Cardiologists​")}
+                                                            >
+                                                                Cardiologists
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Colon and Rectal Surgeons​",
+                                                        label: (
+                                                            <Checkbox
+                                                                checked={selectedOptions.includes("Colon and Rectal Surgeons​")}
+                                                            >
+                                                                Colon and Rectal Surgeons
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Dermatologists​",
+                                                        label: (
+                                                            <Checkbox
+                                                                checked={selectedOptions.includes("Dermatologists​")}
+                                                            >
+                                                                Dermatologists
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Endocrinology​",
+                                                        label: (
+                                                            <Checkbox
+                                                                checked={selectedOptions.includes("Endocrinology​")}
+                                                            >
+                                                                Endocrinology
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                    {
+                                                        value: "Gastroenterologists​",
+                                                        label: (
+                                                            <Checkbox
+                                                                checked={selectedOptions.includes("Gastroenterologists​")}
+                                                            >
+                                                                Gastroenterologists
+                                                            </Checkbox>
+                                                        )
+                                                    },
+                                                ]}
+                                            />
+
+                                            
+                                        </div> */}
+                                    </div>
+
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                                        <p className="mb-2"> Operational Hours<span className='error-message'>*</span> </p>
+
+                                        <div className="d-flex justify-content-between align-items-center datapicker-border">
+                                            <div className='border-right d-flex align-items-center' style={{ height: "36.6px" }}>
+                                                <img className="px-2 " src={ClockIcon} alt="" />
+                                            </div>
+
+                                            {/* <TimeChanger borderInp={'none'} imgHide='none' /> */}
+                                            <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
+
+                                                <Controller
+                                                    name="start_time"
+                                                    control={control}
+                                                    rules={{
+                                                        required: true,
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <>
+                                                            <input
+                                                                className=" pl-1"
+                                                                type="time"
+                                                                name="start_time"
+                                                                {...field}
+                                                                value={field.value}
+                                                                onChange={(e) => {
+                                                                    field.onChange(e.target.value);
+                                                                    setNameData(e.target.value)
+                                                                    handleChangeHospital(e)
+                                                                }}
+                                                                min="00:00"
+                                                                max="23:59"
+                                                                step="60"
+                                                                timeFormat="HH:mm"
+                                                            />
+                                                        </>
+                                                    )}
+                                                />
+
+
+                                            </div>
+
+                                            <span className="datapicker-to">To</span>
+
+
+                                            <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
+
+
+                                                <Controller
+                                                    name="end_time"
+                                                    control={control}
+                                                    rules={{
+                                                        required: true,
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <>
+                                                            <input
+                                                                className=" pl-1"
+                                                                type="time"
+                                                                name="end_time"
+                                                                {...field}
+                                                                value={field.value}
+                                                                onChange={(e) => {
+                                                                    field.onChange(e.target.value);
+                                                                    setNameData(e.target.value)
+                                                                    handleChangeHospital(e)
+                                                                }}
+                                                                min="00:00"
+                                                                max="23:59"
+                                                                step="60"
+                                                                timeFormat="HH:mm"
+                                                            />
+                                                        </>
+                                                    )}
+                                                />
+
+                                            </div>
+
+                                            <div className='border-left d-flex align-items-center' style={{ height: "36.6px" }}>
+                                                <img className="px-2 " src={ClockIcon} alt="" />
+                                            </div>
+                                        </div>
+                                        {errors.start_time || errors.end_time ? (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        ) : null}
+
+                                    </div>
+                                </div>
+
+                                <div className="row mt-4">
+                                    {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                     <p className="mb-2"> Working Days </p>
 
                                     <div className="d-flex justify-content-between align-items-center datapicker-border">
@@ -453,39 +793,36 @@ const AddHospital = () => {
                                     </div>
                                 </div> */}
 
-                <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
-                  <p className="mb-2"> Facebook </p>
-                  <div className="d-flex  ">
-                    <img className="" src={FacebookInput} alt="" />
-                    <input
-                      className="add-doc-social-input"
-                      type="text"
-                      placeholder="Username"
-                      name="facebook"
-                      value={addHospitalData.facebook}
-                      onChange={handleChangeHospital}
-                    />
-                  </div>
-                </div>
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
+                                        <p className="mb-2"> Facebook </p>
+                                        <div className="d-flex  ">
+                                            <img className="" src={FacebookInput} alt="" />
+                                            <input
+                                                className="add-doc-social-input"
+                                                type="text"
+                                                placeholder="Username"
+                                                name='facebook' value={addHospitalData.facebook} onChange={handleChangeHospital}
+                                            />
+                                        </div>
+                                    </div>
 
-                <div className="col-lg-6 pl-lg-1 doc-setting-input">
-                  <p className="mb-2"> Instagram </p>
-                  <div className="d-flex  ">
-                    <img className="" src={InstaInput} alt="" />
-                    <input
-                      className="add-doc-social-input"
-                      type="text"
-                      placeholder="Username"
-                      name="instagram"
-                      value={addHospitalData.instagram}
-                      onChange={handleChangeHospital}
-                    />
-                  </div>
-                </div>
-              </div>
+                                    <div className="col-lg-6 pl-lg-1 doc-setting-input">
+                                        <p className="mb-2"> Instagram </p>
+                                        <div className="d-flex  ">
+                                            <img className="" src={InstaInput} alt="" />
+                                            <input
+                                                className="add-doc-social-input"
+                                                type="text"
+                                                placeholder="Username"
+                                                name='instagram' value={addHospitalData.instagram} onChange={handleChangeHospital}
+                                            />
+                                        </div>
+                                    </div>
 
-              <div className="row mt-4">
-                {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                </div>
+
+                                <div className="row mt-4">
+                                    {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                     <p className="mb-2"> Instagram </p>
                                     <div className="d-flex  ">
                                         <img className="" src={InstaInput} alt="" />
@@ -498,188 +835,231 @@ const AddHospital = () => {
                                     </div>
                                 </div> */}
 
-                <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
-                  <p className="mb-2"> Linkedin </p>
-                  <div className="d-flex  ">
-                    <img className="" src={LinkedInInput} alt="" />
-                    <input
-                      className="add-doc-social-input"
-                      type="text"
-                      placeholder="Username"
-                      name="linkedin"
-                      value={addHospitalData.linkedin}
-                      onChange={handleChangeHospital}
-                    />
-                  </div>
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
+                                        <p className="mb-2"> Linkedin </p>
+                                        <div className="d-flex  ">
+                                            <img className="" src={LinkedInInput} alt="" />
+                                            <input
+                                                className="add-doc-social-input"
+                                                type="text"
+                                                placeholder="Username"
+                                                name='linkedin' value={addHospitalData.linkedin} onChange={handleChangeHospital}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+                                        <p className="mb-2"> Zip Code<span className='error-message'>*</span> </p>
+                                        <div className="d-flex  ">
+                                            {/* <input
+                                                className=""
+                                                type="text"
+                                                placeholder="Zip Code"
+                                                name='zipcode' value={addHospitalData.zipcode} onChange={handleChangeHospital}
+                                            /> */}
+
+                                            <Controller
+                                                name="zipcode"
+                                                control={control}
+                                                rules={{
+                                                    required: true,
+                                                }}
+                                                render={({ field }) => (
+                                                    <>
+
+                                                        <input
+                                                            type="text"
+                                                            name="zipcode"
+                                                            {...field}
+                                                            value={field.value}
+                                                            onChange={(e) => {
+                                                                field.onChange(e.target.value);
+                                                                handleChangeHospital(e)
+                                                            }}
+                                                        />
+
+                                                    </>
+                                                )}
+                                            />
+
+                                        </div>
+                                        {errors.zipcode && (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+
+
+                                <div className="row mt-4">
+                                    <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
+                                        <p className="mb-2"> Location </p>
+                                        <Location handleLocation={handleLocationIconClick} locationProp={locationProp} />
+                                        {showMap && (
+                                            <GoogleMap locationProp={locationProp} setLocationProp={setLocationProp} />
+                                        )}
+                                        {
+                                            errorMessage === 9 ? <p className=' mb-0 error-message'>Please select location</p> : null
+                                        }
+                                    </div>
+                                </div>
+
+                                <div className="row my-5 pt-2 pb-3 ">
+                                    <div className="col-lg-6">
+                                        <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
+                                          {
+                                            !isLoading? addHospitalData.id? 'Edit Hospital' : 'Add Hospital' : <ButtonLoader/> 
+                                          }  
+                                        </button>
+                                    </div>
+
+                                    <div className="col-lg-6"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-lg-4 mt-lg-0 mt-4 ">
+
+                    </div>
                 </div>
-              </div>
+            </form>
 
-              <div className="row mt-4">
-                <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
-                  <p className="mb-2"> Location </p>
-                  <Location
-                    handleLocation={handleLocationIconClick}
-                    locationProp={locationProp}
-                  />
-                  {showMap && (
-                    <GoogleMap
-                      locationProp={locationProp}
-                      setLocationProp={setLocationProp}
-                    />
-                  )}
-                </div>
-              </div>
+            <div className="row  py-lg-3">
+                {items.map((item, index) => {
+                    return (
+                        <>
+                            <div className={`col-lg-8 mt-lg-0 mt-4 pb-lg-3 `}>
+                                <div className="row mx-0  add-doc-left-col">
+                                    <div className="col-12 px-4 py-3 my-1">
+                                        <div className=" d-flex justify-content-between align-items-center ">
+                                            <p className="mb-0  add-doc-role-text">Add a Role </p>
+                                            <img
+                                                onClick={() => {
+                                                    handleRemoveItem(index);
+                                                }}
+                                                src={DocRoleCrossIcon}
+                                                alt=""
+                                            />
+                                        </div>
+                                    </div>
 
-              <div className="row my-5 pt-2 pb-3 ">
-                <div className="col-lg-6">
-                  <button
-                    className="apply-filter add-doc-changes"
-                    onClick={handleHospitalSubmit}
-                  >
-                    Add Hospital
-                  </button>
-                </div>
+                                    <div
+                                        className="border-top pt-3"
+                                        id="scrollableDiv"
+                                        style={{
+                                            width: "100%",
+                                            // height: 580,
+                                            overflow: "auto",
+                                            padding: "0 16px",
+                                            // border: '1px solid rgba(0, 0, 0, 0)',
+                                        }}
+                                    >
+                                        <div className="col-12 px-2">
 
-                <div className="col-lg-6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="col-lg-4 mt-lg-0 mt-4 "></div>
-      </div>
+                                            <div className="row pt-2">
+                                                <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                                                    <p className="mb-2"> Role Type </p>
+                                                    <CustomDropDown disabled={true} selectLabel='Hospital Admin' option={optionRoleType} />
+                                                </div>
 
-      <div className="row  py-lg-3">
-        {items.map((item, index) => {
-          return (
-            <>
-              <div className={`col-lg-8 mt-lg-0 mt-4 pb-lg-3 `}>
-                <div className="row mx-0  add-doc-left-col">
-                  <div className="col-12 px-4 py-3 my-1">
-                    <div className=" d-flex justify-content-between align-items-center ">
-                      <p className="mb-0  add-doc-role-text">Add a Role </p>
-                      <img
-                        onClick={() => {
-                          handleRemoveItem(index);
-                        }}
-                        src={DocRoleCrossIcon}
+                                                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                                                    <p className="mb-2"> Hospital </p>
+                                                    <input type="text" disabled value={nameData} />
+                                                </div>
+                                            </div>
+
+                                            <div className="row pt-4">
+
+                                                <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
+                                                    <p className="mb-2"> Name </p>
+                                                    <input type="text" />
+                                                </div>
+
+                                            </div>
+
+                                            <div className="row pt-4">
+
+                                                <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
+                                                    <p className="mb-2"> Email </p>
+                                                    <input type="text" />
+                                                </div>
+
+                                            </div>
+
+                                            <div className="row  mt-4">
+                                                <div className="col-lg-12   doc-setting-input">
+                                                    <p className="mb-2 add-doc-role-type-detail">
+                                                        {" "}
+                                                        Country{" "}
+                                                    </p>
+                                                    <CustomDropDown selectLabel='Select' option={optionCountry} />
+                                                </div>
+                                            </div>
+
+                                            <div className="row mt-4">
+                                                <div className="col-lg-6 pr-lg-1 doc-setting-input role-input-placeholder">
+                                                    <p className="mb-2 add-doc-role-type-detail">
+                                                        {" "}
+                                                        Contact{" "}
+                                                    </p>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="+91-955-555-4751"
+                                                    />
+                                                </div>
+
+                                                <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                                                    <p className="mb-2 add-doc-role-type-detail">
+                                                        {" "}
+                                                        State{" "}
+                                                    </p>
+                                                    <CustomDropDown selectLabel='Select' option={optionState} />
+                                                </div>
+                                            </div>
+
+                                            <div className="row my-5 pt-2 pb-3 ">
+                                                <div className="col-lg-6">
+                                                    <button className="apply-filter add-doc-changes">
+                                                        Save Changes
+                                                    </button>
+                                                </div>
+
+                                                <div className="col-lg-6"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={`col-4  `}></div>
+                        </>
+                    );
+                })}
+
+                <div className="col-12 py-4 d-flex align-items-center">
+                    <img
+                        className="cursor-pointer"
+                        onClick={handleAddItem}
+                        src={AddRoleIcon}
                         alt=""
-                      />
-                    </div>
-                  </div>
-
-                  <div
-                    className="border-top pt-3"
-                    id="scrollableDiv"
-                    style={{
-                      width: "100%",
-                      // height: 580,
-                      overflow: "auto",
-                      padding: "0 16px",
-                      // border: '1px solid rgba(0, 0, 0, 0)',
-                    }}
-                  >
-                    <div className="col-12 px-2">
-                      <div className="row pt-2">
-                        <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                          <p className="mb-2"> Role Type </p>
-                          <CustomDropDown
-                            disabled={true}
-                            selectLabel="Hospital Admin"
-                            option={optionRoleType}
-                          />
-                        </div>
-
-                        <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                          <p className="mb-2"> Hospital </p>
-                          <input type="text" disabled value={nameData} />
-                        </div>
-                      </div>
-
-                      <div className="row pt-4">
-                        <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
-                          <p className="mb-2"> Name </p>
-                          <input type="text" />
-                        </div>
-                      </div>
-
-                      <div className="row pt-4">
-                        <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
-                          <p className="mb-2"> Email </p>
-                          <input type="text" />
-                        </div>
-                      </div>
-
-                      <div className="row  mt-4">
-                        <div className="col-lg-12   doc-setting-input">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            Country{" "}
-                          </p>
-                          <CustomDropDown
-                            selectLabel="Select"
-                            option={optionCountry}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row mt-4">
-                        <div className="col-lg-6 pr-lg-1 doc-setting-input role-input-placeholder">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            Contact{" "}
-                          </p>
-                          <input type="text" placeholder="+91-955-555-4751" />
-                        </div>
-
-                        <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            State{" "}
-                          </p>
-                          <CustomDropDown
-                            selectLabel="Select"
-                            option={optionState}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row my-5 pt-2 pb-3 ">
-                        <div className="col-lg-6">
-                          <button className="apply-filter add-doc-changes">
-                            Save Changes
-                          </button>
-                        </div>
-
-                        <div className="col-lg-6"></div>
-                      </div>
-                    </div>
-                  </div>
+                    />{" "}
+                    <span
+                        onClick={handleAddItem}
+                        className="cursor-pointer add-doc-role pl-3 "
+                    >
+                        Add a Role
+                    </span>
                 </div>
-              </div>
+            </div>
 
-              <div className={`col-4  `}></div>
-            </>
-          );
-        })}
 
-        <div className="col-12 py-4 d-flex align-items-center">
-          <img
-            className="cursor-pointer"
-            onClick={handleAddItem}
-            src={AddRoleIcon}
-            alt=""
-          />{" "}
-          <span
-            onClick={handleAddItem}
-            className="cursor-pointer add-doc-role pl-3 "
-          >
-            Add a Role
-          </span>
+
         </div>
-      </div>
-    </div>
-  );
-};
+    )
+}
 
-export default AddHospital;
+export default AddHospital
