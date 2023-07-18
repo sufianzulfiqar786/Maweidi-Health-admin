@@ -190,7 +190,7 @@ const DoctorForm = ({ id, rawData }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row px-1">
+        <div className="row px-2">
           <div className="col-md-12 pt-2 d-flex align-items-center doc-cam">
             <div
               className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content- 
@@ -205,7 +205,9 @@ const DoctorForm = ({ id, rawData }) => {
                   alt="Uploaded image"
                 />
               ) : (
-                <img src={CameraIcon} alt="" />
+                <div className="d-flex text-center justify-content-center w-100">
+                <img src={CameraIcon} alt="upload" />
+                </div>
               )}
             </div>
 
