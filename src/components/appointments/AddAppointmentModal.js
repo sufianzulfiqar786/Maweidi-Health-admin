@@ -29,12 +29,11 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const [matchedSpecializations, setMatchedSpecializations] = useState([]);
   const [matchedDoctors, setMatchedDoctors] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
-  const [hospitalData, setHospitalData] = useState([]);
+  const [hospitals, setHospitals] = useState([]);
 
   useEffect(() => {
-    console.log("----data-----", data?.data);
     if (data) {
-      setHospitalData(data?.data.map(({ id, name, specialities }) => ({
+      setHospitals(data?.data.map(({ id, name, specialities }) => ({
         id,
         value: name,
         label: name,
@@ -82,41 +81,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
       availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
     },
   ];
-  // Hospitals array
-  const hospitals = data?.data.map(({ id, name, specialities }) => ({
-    id,
-    value: name,
-    label: name,
-    specialities,
-  }));
-  console.log("-----hospitals-----", hospitalData)
-// const hospitals = [
-//   {
-//     id: 1,
-//     value: "Badr AL Samaa Hospitals",
-//     label: "Badr AL Samaa Hospitals",
-//     specializations: [1, 2, 3] // IDs of specializations offered in this hospital
-//   },
-//   {
-//     id: 2,
-//     value: "Royale Hayat Hospital",
-//     label: "Royale Hayat Hospital",
-//     specializations: [2, 4] // IDs of specializations offered in this hospital
-//   },
-//   {
-//     id: 3,
-//     value: "New Mowasat Hospital",
-//     label: "New Mowasat Hospital",
-//     specializations: [1, 2, 5] // IDs of specializations offered in this hospital
-//   },
-//   {
-//     id: 4,
-//     value: "Taiba Hospital",
-//     label: "Taiba Hospital",
-//     specializations: [1, 5] // IDs of specializations offered in this hospital
-//   },
-//   // Add more hospitals as needed
-// ];
 const specialistOptions = [
   {
     id: 1,
@@ -376,7 +340,7 @@ const isDisabledDate = (current) => {
                           field.onChange(value);
                           handleHospitalChange(value);
                         }}
-                        option={hospitalData}
+                        option={hospitals}
                         field={field}
                         value={field.value}
                         onBlur={field.onBlur}
