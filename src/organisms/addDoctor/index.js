@@ -20,12 +20,15 @@ import "../../assets/css/doctor.scss";
 import { Controller, useForm } from "react-hook-form";
 import ButtonLoader from "../../atoms/buttonLoader";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { CustomToast } from "../../atoms/toastMessage";
 
-const DoctorForm = ({ id = null }) => {
+const DoctorForm = ({ id, rawData }) => {
   const [errorData, setErrorData] = useState(0);
   const [formDataState, setFormDataState] = useState({});
   const [hospitalOption, setHospitalOption] = useState([]);
   const [image, setImage] = useState(null);
+  const navigate = useNavigate();
   const realHospitalData = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
   const lang = useFetch(process.env.REACT_APP_GET_LANGUAGES);
   const specializationData = useSelector(
@@ -33,7 +36,7 @@ const DoctorForm = ({ id = null }) => {
   );
 
   const { data, isLoading, error, postData } = usePost();
-  console.log("specializationData", specializationData?.data);
+
   const language = useMemo(() => {
     return lang?.data?.data?.map((l) => ({ label: l.name, value: l.id }));
   }, [lang]);
@@ -46,6 +49,7 @@ const DoctorForm = ({ id = null }) => {
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -72,6 +76,25 @@ const DoctorForm = ({ id = null }) => {
 
   const onSubmit = () => {
     const formData = new FormData();
+
+    const propertiesToRemove = [
+      "id",
+      "name",
+      "email_verified_at",
+      "age",
+      "longitude",
+      "longitude",
+      "device_token",
+      "user_type",
+      "session_id",
+      "updated_at",
+      "created_at",
+      "",
+    ];
+
+    for (const property of propertiesToRemove) {
+      delete formDataState[property];
+    }
     for (const key in formDataState) {
       if (
         (key === "hospitals" || key === "languages") &&
@@ -84,7 +107,20 @@ const DoctorForm = ({ id = null }) => {
         formData.append(key, formDataState[key]);
       }
     }
-    postData(`${process.env.REACT_APP_ADD_DOCTORS}`, formData, () => {});
+
+    postData(
+      id
+        ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
+        : `${process.env.REACT_APP_ADD_DOCTORS}`,
+      formData,
+      () => {
+        CustomToast({
+          type: "success",
+          message: "Doctor Saved Successfuly!",
+        });
+        navigate("/doctors");
+      }
+    );
   };
 
   const handleDoctorImageClick = () => {
@@ -110,10 +146,51 @@ const DoctorForm = ({ id = null }) => {
     input.click();
   };
 
+  useEffect(() => {
+    if (id && rawData) {
+      const nameParts = rawData?.user?.name.split(" ");
+      setFormDataState({
+        ...formDataState,
+        profile_pic: `${process.env.REACT_APP_IMAGE_URL}/${rawData?.user?.profile_pic}`,
+      });
+      setImage(
+        `${process.env.REACT_APP_IMAGE_URL}/${rawData?.user?.profile_pic}`
+      );
+      setFormDataState({
+        ...formDataState,
+        ...rawData?.user,
+        first_name: nameParts[0],
+        last_name: nameParts[1],
+        experience_years: rawData?.experience_years,
+        facebook: rawData?.facebook,
+        linkedin: rawData?.linkedin,
+        instagram: rawData?.instagram,
+        council_registration_no: rawData?.council_registration_no,
+      });
+
+      Object.entries(rawData?.user).forEach(([fieldName, fieldValue]) => {
+        setValue(fieldName, fieldValue);
+      });
+      setValue("first_name", nameParts[0]);
+      setValue("last_name", nameParts[1]);
+      setValue("specialization_id", rawData?.specialization_id);
+      setValue("council_registration_no", rawData?.council_registration_no);
+      setValue("gender", rawData?.user?.gender === 1 ? "Male" : "Female");
+      setValue(
+        "hospitals",
+        rawData?.hospitals?.map((hospital) => hospital?.id)
+      );
+      setValue(
+        "languages",
+        rawData?.languages?.map((language) => language?.id)
+      );
+    }
+  }, [id, rawData]);
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
+        <div className="row px-1">
           <div className="col-md-12 pt-2 d-flex align-items-center doc-cam">
             <div
               className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content- 
@@ -284,32 +361,43 @@ const DoctorForm = ({ id = null }) => {
                   }}
                   render={({ field }) => (
                     <>
-                      <CustomDropDown
-                        handleChangeSelect={(value, name) => {
-                          field.onChange(value);
-                          handleSelect(value, name);
-                        }}
-                        option={[
-                          {
-                            label: "Male​​",
-                            value: "1",
-                          },
-                          {
-                            label: "Female",
-                            value: "0",
-                          },
-                        ]}
+                      <Controller
                         name="gender"
-                        field={field}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                      />
+                        control={control}
+                        rules={{
+                          required: true,
+                        }}
+                        render={({ field }) => (
+                          <>
+                            <CustomDropDown
+                              handleChangeSelect={(value, name) => {
+                                field.onChange(value);
+                                handleSelect(value, name);
+                              }}
+                              option={[
+                                {
+                                  label: "Male​​",
+                                  value: "1",
+                                },
+                                {
+                                  label: "Female",
+                                  value: "0",
+                                },
+                              ]}
+                              name="gender"
+                              field={field}
+                              value={field.value}
+                              onBlur={field.onBlur}
+                            />
 
-                      {errors.gender && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
+                            {errors.gender && (
+                              <span className="error-message">
+                                This field is required
+                              </span>
+                            )}
+                          </>
+                        )}
+                      />
                     </>
                   )}
                 />

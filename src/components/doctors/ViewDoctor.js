@@ -30,7 +30,7 @@ import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
 import useFetch from "../../customHook/useFetch";
 
-const ViewDoctor = ({Id}) => {
+const ViewDoctor = ({ Id }) => {
   const location = useLocation();
   const receivedData = location.state?.data;
   const [docBtn, setDocBtn] = useState(0);
@@ -65,8 +65,10 @@ const ViewDoctor = ({Id}) => {
       count: 1,
     },
   });
- 
-  const { data, isLoading, error } = useFetch(`${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`);
+
+  const { data, isLoading, error } = useFetch(
+    `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
+  );
   function renderLoop(countDays, dayName) {
     const items = [];
     for (let i = 0; i < countDays; i++) {
@@ -163,17 +165,15 @@ const ViewDoctor = ({Id}) => {
 
         <div className=" col-12 mt-4 pt-1">
           <p className="mb-0 doctor-header-top-text">
-          <Link className="doc-link " to="/">
-            DASHBOARD
+            <Link className="doc-link " to="/">
+              DASHBOARD
             </Link>
-            <img
-              className="mx-lg-3 ml-2 pr-1 pb-1"
-              src={RightArrow}
-              alt=""
-            />{" "}
-            <span><Link className="doc-link " to="alldoctors">
-              <span>DOCTORS</span>{" "}
-            </Link></span>{" "}
+            <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
+            <span>
+              <Link className="doc-link " to="doctors">
+                <span>DOCTORS</span>{" "}
+              </Link>
+            </span>{" "}
             <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
             <span style={{ color: "#4FA6D1" }}>ALL DOCTORS</span>{" "}
           </p>
@@ -185,15 +185,15 @@ const ViewDoctor = ({Id}) => {
               <div className="col-12 view-doctor-profile-div1 "></div>
               <div className="col-12  view-doctor-profile-div2 ">
                 <p className="mb-0 view-doctor-profile-div2-text1 pt-2">
-                  {data?.data?.name}
+                  {data?.data?.user?.name}
                 </p>
                 <p className="mb-0 view-doctor-profile-div2-text2">
-                  {receivedData?.field}
+                  {data?.data?.specialization?.name}
                 </p>
               </div>
               <img
                 className="position-absolute view-doctor-profile-img ml-4 "
-                src={receivedData?.pic}
+                src={`${process.env.REACT_APP_IMAGE_URL}/${data?.data?.user?.profile_pic}`}
                 alt=""
               />
             </div>
@@ -275,7 +275,9 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'>Women's health services</span>{" "}
+                      <span className="view-doc-sub-special">
+                        Women's health services
+                      </span>{" "}
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -284,7 +286,10 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> Pregnancy care{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        Pregnancy care{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -293,7 +298,9 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'>Surgical procedures{" "}</span>
+                      <span className="view-doc-sub-special">
+                        Surgical procedures{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -302,7 +309,10 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                    <span className='view-doc-sub-special'>  Specialty care{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        Specialty care{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -311,14 +321,17 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> Conclusion{" "}</span>
+                      <span className="view-doc-sub-special"> Conclusion </span>
                     </p>
                   </div>
 
                   <div className="col-12 pt-2 mt-4">
                     <p className="mb-0 view-doc-special">
                       {" "}
-                     <span className='view-doc-special'> Consultancy Charges:{" "}</span>
+                      <span className="view-doc-special">
+                        {" "}
+                        Consultancy Charges:{" "}
+                      </span>
                     </p>
                     <p className="mb-0 pt-2">
                       {" "}
@@ -327,7 +340,10 @@ const ViewDoctor = ({Id}) => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                     <span className='view-doc-sub-special'> $50/Patient{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        $50/Patient{" "}
+                      </span>
                     </p>
                   </div>
                 </>
@@ -335,7 +351,7 @@ const ViewDoctor = ({Id}) => {
 
               {docBtn === 1 && (
                 <>
-                <ReviewPagination/>
+                  <ReviewPagination />
                   {/* <div className="col-12  my-4 pt-lg-3 px-md-5 ">
                     <p className="mb-0 doc-review-detail mx-5 px-lg-5 text-center">
                       " There is now an abundance of readable dummy texts. These
@@ -848,7 +864,7 @@ const ViewDoctor = ({Id}) => {
 
               {docBtn === 3 && (
                 <>
-                  <DoctorSetting />
+                  <DoctorSetting id={Id} rawData={data?.data}/>
                 </>
               )}
             </div>

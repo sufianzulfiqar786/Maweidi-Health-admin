@@ -6,11 +6,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Privacy from "./pages/Privacy/Privacy";
-import { useEffect } from "react";
-import { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { increment } from "./redux/feature/counterSlice/counterSlice";
-import useFetch from "./customHook/useFetch";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import 'dotenv/config'
 
 function App() {
@@ -29,10 +26,7 @@ function App() {
 
   return (
     <>
-
-
-
-
+      <ToastContainer />
 
       {/* <button
         aria-label="Increment value"
@@ -41,12 +35,6 @@ function App() {
         Increment
       </button>
       <span>{console.log('count', count)}</span> */}
-
-
-
-
-
-
 
       {/* <Privacy /> */}
       <BrowserRouter>

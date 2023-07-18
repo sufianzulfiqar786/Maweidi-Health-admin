@@ -1,5 +1,7 @@
 import React from "react";
-import { Select } from "antd";
+import { Select, Input } from "antd";
+
+const { Option } = Select;
 
 const CustomDropDown = ({
   mode,
@@ -30,9 +32,9 @@ const CustomDropDown = ({
   const renderOptions = updatedOptions.map((opt) => {
     if (opt && opt.label) {
       return (
-        <Select.Option key={opt.value} value={opt.value}>
+        <Option key={opt.value} value={opt.value}>
           {opt.label}
-        </Select.Option>
+        </Option>
       );
     }
     return null;
@@ -47,6 +49,10 @@ const CustomDropDown = ({
         mode={mode}
         value={value}
         showSearch
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
         disabled={disabled}
         field={field}
         allowClear
@@ -55,13 +61,6 @@ const CustomDropDown = ({
           width: "100%",
         }}
         onChange={handleSelectChange}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          option?.label?.toLowerCase()?.indexOf(input?.toLowerCase()) >= 0
-        }
-        filterSort={(optionA, optionB) =>
-          optionA?.label?.toLowerCase()?.localeCompare(optionB?.label?.toLowerCase())
-        }
         rules={{
           required: {
             value: true,
@@ -69,6 +68,11 @@ const CustomDropDown = ({
           },
         }}
       >
+        {/* {mode === "multiple" && (
+          <Option key={selectAllOption.value} value={selectAllOption.value}>
+            {selectAllOption.label}
+          </Option>
+        )} */}
         {renderOptions}
       </Select>
     </div>
