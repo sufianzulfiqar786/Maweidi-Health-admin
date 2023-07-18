@@ -166,8 +166,8 @@ $font-size48: 48px;
 }
 
 .error-message {
-  font-size: 11.5px;
-  color: red;
+  font-size: 11.5px !important;
+  color: red !important;
   font-family: Poppins Regular;
 }
 
@@ -182,6 +182,14 @@ $font-size48: 48px;
   border-bottom: none !important;
 }
 
+.form-control:focus {
+  border-color: #E4E3E4;
+  box-shadow: none !important;
+}
+
+.form-control {
+  border-color: #E4E3E4 !important;
+}
 .loader-overlay {
   position: fixed;
   top: 0;

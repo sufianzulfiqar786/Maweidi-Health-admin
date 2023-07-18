@@ -30,214 +30,212 @@ import { useMemo } from "react";
 import { useEffect } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 import ButtonLoader from "../../atoms/buttonLoader";
+import ImagePreview from "../../atoms/ImagePreview";
+import DeletConfirmation from "../../atoms/deletConfirmation";
+import { CustomToast } from "../../atoms/toastMessage";
 
-const DataTable = ({
-  searchQuery,
-  title = "Edit a Pharmacy",
-  rows,
-  setRows,
-  loading,
-}) => {
-  console.log("roesss", rows);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, loading }) => {
+    console.log("roesss", rows)
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const { isLoading, error, deleteData } = useDeleteData();
+    const { isLoading, error, deleteData } = useDeleteData();
 
-  const [modal1Open, setModal1Open] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
 
-  const [errorData, setErrorData] = useState(0);
-  const [deleteState, setDeleteState] = useState(0);
 
-  const [image, setImage] = useState(null);
+    const [modal1Open, setModal1Open] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
 
-  const handleChangePage = (newPage) => {
-    setPage(newPage);
-  };
+    const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const handleDelete = (id) => {
-    deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${id}`, () => {
-      setDeleteModal(false);
-      const filter = rows.filter((val) => val.id !== deleteState);
-      setRows(filter);
-    });
-  };
+    const [errorData, setErrorData] = useState(0);
+    const [deleteState, setDeleteState] = useState(0);
 
-  const handleDoctorImageClick = () => {
-    // Create a file input element and trigger a click event
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
-    input.onchange = (event) => {
-      const file = event.target.files[0];
-      if (!file) {
-        setErrorData(0);
-        return;
-      }
-      const fileType = file.type;
-      if (fileType !== "image/png" && fileType !== "image/jpeg") {
-        // alert('Please select a PNG or JPEG file');
-        setErrorData(1);
-        return;
-      } else {
-        setErrorData(0);
-      }
-      // Set the selected image as the state of the component
-      setImage(URL.createObjectURL(file));
+    const [image, setImage] = useState(null);
+
+    const handleChangePage = (newPage) => {
+        setPage(newPage);
     };
-    input.click();
-  };
 
-  const totalRows = rows?.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const startIndex = page * rowsPerPage;
-  const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  const visibleRows = rows
-    ?.filter((item) => {
-      var lcInfo = searchQuery.toLocaleLowerCase();
-      return lcInfo === ""
-        ? item
-        : item.name.toLocaleLowerCase().includes(lcInfo) ||
+    const handleDelete = () => {
+
+        deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${deleteState}`, () => {
+            setDeleteModal(false)
+            const filter = rows.filter(val => val.id !== deleteState)
+            CustomToast({
+                type: "success",
+                message: "Hospital Delete Successfuly!",
+              });
+            setRows(filter)
+        });
+    };
+
+    const handleDoctorImageClick = () => {
+        // Create a file input element and trigger a click event
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                setErrorData(0);
+                return;
+            }
+            const fileType = file.type;
+            if (fileType !== "image/png" && fileType !== "image/jpeg") {
+                // alert('Please select a PNG or JPEG file');
+                setErrorData(1);
+                return;
+            } else {
+                setErrorData(0);
+            }
+            // Set the selected image as the state of the component
+            setImage(URL.createObjectURL(file));
+        };
+        input.click();
+    };
+
+    const totalRows = rows?.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    const startIndex = page * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+    const visibleRows = rows?.filter((item) => {
+        var lcInfo = searchQuery.toLocaleLowerCase();
+        return lcInfo === ""
+            ? item
+            : item.name.toLocaleLowerCase().includes(lcInfo) ||
             item.address.toLocaleLowerCase().includes(lcInfo) ||
             item.mobile.toLocaleLowerCase().includes(lcInfo) ||
             item.country.toLocaleLowerCase().includes(lcInfo) ||
             item.zipcode.toLocaleLowerCase().includes(lcInfo) ||
-            item.state.toLocaleLowerCase().includes(lcInfo);
-    })
-    ?.slice(startIndex, endIndex);
+            item.state.toLocaleLowerCase().includes(lcInfo)
+    })?.slice(startIndex, endIndex);
 
-  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
-  const isMediumScreen = useMediaQuery("(min-width: 484px)");
+    const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+    const isMediumScreen = useMediaQuery('(min-width: 484px)');
 
-  return (
-    <>
-      <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
-        <TableContainer
-          component={Paper}
-          sx={{ backgroundColor: "#FFFFFF" }}
-          className="custom-scroll"
-        >
-          <Table aria-label="simple table">
-            <TableHead
-              sx={{
-                "& th": {
-                  color: "#193F52",
-                  whiteSpace: "nowrap",
-                  wordWrap: "break-word",
-                },
-              }}
-            >
-              <TableRow>
-                <TableCell className="number" align="left">
-                  #
-                </TableCell>
-                <TableCell align="left">Name</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Address</TableCell>
-                <TableCell align="left">Mobile No.</TableCell>
-                <TableCell align="left">Country</TableCell>
-                <TableCell align="left">State</TableCell>
-                <TableCell align="left">Zip Code</TableCell>
-                <TableCell align="left">Edit</TableCell>
-              </TableRow>
-            </TableHead>
+    const handleImageClick = (imageUrl) => {
+        setImagePreviewUrl(imageUrl);
+        setIsPreviewOpen(true);
+    };
+    // Function to close the preview
+    const closeImagePreview = () => {
+        setIsPreviewOpen(false);
+    };
 
-            <TableBody
-              className="w-100"
-              sx={{
-                "& td": {
-                  color: "#767676",
-                  whiteSpace: "nowrap",
-                  wordWrap: "break-word",
-                },
-              }}
-            >
-              {/* {
+    return (
+        <>
+
+            <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
+
+                <ImagePreview imagePreviewUrl={imagePreviewUrl} closeImagePreview={closeImagePreview} isPreviewOpen={isPreviewOpen} />
+                <DeletConfirmation
+                    deleteModal={deleteModal}
+                    setDeleteModal={setDeleteModal}
+                    handleDelete={handleDelete}
+                    isLoading={isLoading}
+                />
+                <TableContainer
+                    component={Paper}
+                    sx={{ backgroundColor: "#FFFFFF" }}
+                    className="custom-scroll"
+                >
+                    <Table aria-label="simple table">
+                        <TableHead
+                            sx={{
+                                "& th": {
+                                    color: "#193F52",
+                                    whiteSpace: "nowrap",
+                                    wordWrap: "break-word",
+                                },
+                            }}
+                        >
+                            <TableRow>
+                                <TableCell className="number" align="left">
+                                    #
+                                </TableCell>
+                                <TableCell align="left">Name</TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Address</TableCell>
+                                <TableCell align="center">Mobile No.</TableCell>
+                                <TableCell align="center">Country</TableCell>
+                                <TableCell align="center">State</TableCell>
+                                <TableCell align="center">Zip Code</TableCell>
+                                <TableCell align="center">Edit</TableCell>
+                            </TableRow>
+                        </TableHead>
+
+                        <TableBody className="w-100"
+                            sx={{
+                                "& td": {
+                                    color: "#767676",
+                                    whiteSpace: "nowrap",
+                                    wordWrap: "break-word",
+                                },
+                            }}
+                        >
+
+                            {/* {
                                 !loading  && <div className="w-100 d-flex justify-content-center align-items-center" style={{height:"15rem"}}>
                                     <ButtonLoader/>
                                 </div>
                             } */}
 
-              {!loading ? (
-                visibleRows?.map(
-                  (
-                    {
-                      id,
-                      profile_picture,
-                      name,
-                      email,
-                      address,
-                      phone_no,
-                      country,
-                      state,
-                      zipcode,
-                    },
-                    index
-                  ) => (
-                    <TableRow
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell align="left" className="number">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell align="left">
-                        <CardHeader
-                          sx={{ padding: "0px" }}
-                          avatar={
-                            <Box
-                              sx={{
-                                filter:
-                                  "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
-                              }}
-                            >
-                              <Avatar alt="sohaib" src={profile_picture} />
-                            </Box>
-                          }
-                          title={name}
-                        />
-                      </TableCell>
-                      <TableCell align="left">{email}</TableCell>
-                      <TableCell align="left">{address}</TableCell>
-                      <TableCell align="left">{phone_no}</TableCell>
-                      <TableCell align="left">{country}</TableCell>
-                      <TableCell align="left">{state}</TableCell>
-                      <TableCell align="left">{zipcode}</TableCell>
+                            {!loading ? visibleRows?.map(({ id, profile_picture, name, email, address, phone_no, country, state, zipcode }, index) => (
+                                <TableRow
+                                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                                >
+                                    <TableCell align="left" className="number">
+                                        {index + 1}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                        <CardHeader
+                                            sx={{ padding: "0px" }}
+                                            avatar={
+                                                <Box
+                                                    sx={{
+                                                        filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
+                                                    }}
+                                                >
+                                                    <Avatar alt="Hospital Pic" src={`${process.env.REACT_APP_IMAGE_URL + profile_picture}`} onClick={() => handleImageClick(process.env.REACT_APP_IMAGE_URL + profile_picture)} />
+                                                </Box>
+                                            }
+                                            title={name}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="center">{email}</TableCell>
+                                    <TableCell align="center">{address}</TableCell>
+                                    <TableCell align="center">{phone_no}</TableCell>
+                                    <TableCell align="center">{country}</TableCell>
+                                    <TableCell align="center">{state}</TableCell>
+                                    <TableCell align="center">{zipcode}</TableCell>
 
-                      <TableCell>
-                        <Link to={`/hospitals/edit/${id}`}>
-                          <img className="" src={EditIcon} />
-                        </Link>
-                        <img
-                          className=""
-                          onClick={() => {
-                            setDeleteModal(true);
-                            setDeleteState(id);
-                          }}
-                          src={DeleteIcon}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )
-                )
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5}
-                    className="number"
-                    align="center"
-                    style={{ height: "15rem" }}
-                  >
-                    <ButtonLoader />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                                    <TableCell >
+                                        <Link to={`/hospitals/edit/${id}`}>
+                                            <img className='' src={EditIcon} />
+                                        </Link>
+                                        <img className='cursor-pointer' onClick={() => {
+                                            setDeleteModal(true)
+                                            setDeleteState(id)
+                                        }} src={DeleteIcon} />
+                                    </TableCell>
+                                </TableRow>
+                            )) :
+                                <TableRow>
+                                    <TableCell colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5} className="number" align="center" style={{ height: "15rem" }}>
+                                        <ButtonLoader />
+                                    </TableCell>
+                                </TableRow>
+                            }
 
-        {/* <Modal
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+
+                {/* <Modal
                     className="doctor-filter-modal"
                     centered
                     open={modal1Open}
@@ -346,47 +344,30 @@ const DataTable = ({
                     </div>
                 </Modal> */}
 
-        <Modal
-          className="doctor-filter-modal"
-          centered
-          open={deleteModal}
-          // onOk={() => setModal2Open(false)}
-          onCancel={() => setDeleteModal(false)}
-          width={514}
-          footer={null}
-          closable={false}
-        >
-          <div className="row pb-1">
-            <div className="col-12 d-flex flex-column align-items-center justify-content-center pharmacy-delete">
-              <p className="mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3">
-                Are you sure you want to delete?
-              </p>
-              <button
-                className="mt-lg-4 mt-1 mb-lg-5 mb-2"
-                disabled={isLoading}
-                onClick={() => handleDelete(deleteState)}
-              >
-                {" "}
-                {!isLoading ? "Delete" : <ButtonLoader />}
-              </button>
-            </div>
-          </div>
-        </Modal>
-      </div>
 
-      <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
-        <div className="pagination-detail">
-          Showing {page * rowsPerPage + 1} -{" "}
-          {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
-        </div>
-        <CustomPagination
-          page={page}
-          totalPages={totalPages}
-          onChangePage={handleChangePage}
-        />
-      </div>
-    </>
-  );
+
+
+            </div>
+
+            <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
+                <div className="pagination-detail">
+                    Showing {page * rowsPerPage + 1} -{" "}
+                    {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
+                </div>
+                <CustomPagination
+                    page={page}
+                    totalPages={totalPages}
+                    onChangePage={handleChangePage}
+                />
+            </div>
+        </>
+    );
 };
 
 export default DataTable;
+
+
+
+
+
+

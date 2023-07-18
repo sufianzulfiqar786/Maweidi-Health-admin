@@ -11,7 +11,7 @@ const Phone = ({ value, handleChange, name, field }) => {
 
   return (
     <>
-      <p className="mb-2">Phone no</p>
+      <p className="mb-2">Phone no<span className='error-message'>*</span></p>
       <PhoneInput
         inputProps={{
           name: name,

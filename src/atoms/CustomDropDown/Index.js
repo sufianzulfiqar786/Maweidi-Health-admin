@@ -47,7 +47,7 @@ const CustomDropDown = ({
         className="custom-dropDown"
         name={name}
         mode={mode}
-        value={value}
+        value={value || undefined}
         showSearch
         optionFilterProp="children"
         filterOption={(input, option) =>

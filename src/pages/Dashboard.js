@@ -68,6 +68,12 @@ const Dashboard = () => {
       subname: "",
       subtoggle: false,
     },
+    patient: {
+      toggle: false,
+    },
+    doc: {
+      toggle: false,
+    },
   });
 
   useEffect(() => {
