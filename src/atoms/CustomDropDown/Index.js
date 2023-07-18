@@ -38,7 +38,7 @@ const CustomDropDown = ({
           width: "100%",
         }}
         onChange={(val) => {
-          if (val?.includes("all")) {
+          if (typeof val === 'string' && val?.includes('all')) {
             handleSelectAll();
           } else {
             handleChangeSelect(val, name);
@@ -53,7 +53,7 @@ const CustomDropDown = ({
             .toLowerCase()
             ?.localeCompare(optionB?.label?.toLowerCase())
         }
-        options={updatedOptions}
+        options={updatedOptions || []}
         rules={{
           required: {
             value: true,
