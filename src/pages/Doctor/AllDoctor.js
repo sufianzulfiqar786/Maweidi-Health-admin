@@ -67,21 +67,7 @@ const AllDoctor = () => {
                 firstText="DOCTORS"
                 secondText="ALL DOCTORS"
               />
-              {/* <p className="mb-0 doctor-header-top-text">
-                <Link className="doc-link " to="/">
-                  DASHBOARD
-                </Link>
-                <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
-                <Link className="doc-link " to="alldoctors">
-                  <span>DOCTORS</span>{" "}
-                </Link>
-                <img
-                  className="mx-lg-3 ml-2 pr-1 pb-1"
-                  src={RightArrow}
-                  alt=""
-                />{" "}
-                <span style={{ color: "#4FA6D1" }}>ALL DOCTORS</span>{" "}
-              </p> */}
+             
             </div>
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">

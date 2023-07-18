@@ -33,6 +33,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import ButtonLoader from '../../atoms/buttonLoader';
+import { CustomToast } from '../../atoms/toastMessage';
 
 const AddHospital = ({ Id }) => {
     const customData = useDeleteData()
@@ -258,7 +259,10 @@ const AddHospital = ({ Id }) => {
 
         if (errorMessage === 'No Error') {
             postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), formData, () => {
-
+                CustomToast({
+                    type: "success",
+                    message: `${Id? 'Edit Hospital Successfuly!': 'Add Hospital Successfuly!'}`,
+                  });
             })
         }
 
@@ -906,7 +910,7 @@ const AddHospital = ({ Id }) => {
                                     <div className="col-lg-6">
                                         <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
                                           {
-                                            !isLoading? 'Add Hospital' : <ButtonLoader/> 
+                                            !isLoading? addHospitalData.id? 'Edit Hospital' : 'Add Hospital' : <ButtonLoader/> 
                                           }  
                                         </button>
                                     </div>
