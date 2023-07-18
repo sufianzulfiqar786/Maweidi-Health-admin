@@ -30,6 +30,7 @@ import { useMemo } from "react";
 import { useEffect } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 import ButtonLoader from "../../atoms/buttonLoader";
+import ImagePreview from "../../atoms/ImagePreview";
 
 const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, loading }) => {
     console.log("roesss", rows)
@@ -42,6 +43,9 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
 
     const [modal1Open, setModal1Open] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+
+    const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const [errorData, setErrorData] = useState(0);
     const [deleteState, setDeleteState] = useState(0);
@@ -106,12 +110,21 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
     const isLargeScreen = useMediaQuery('(min-width: 1024px)');
     const isMediumScreen = useMediaQuery('(min-width: 484px)');
 
+    const handleImageClick = (imageUrl) => {
+        setImagePreviewUrl(imageUrl);
+        setIsPreviewOpen(true);
+      };
+      // Function to close the preview
+      const closeImagePreview = () => {
+        setIsPreviewOpen(false);
+      };
+
     return (
         <>
 
             <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
 
-
+            <ImagePreview imagePreviewUrl={imagePreviewUrl} closeImagePreview={closeImagePreview} isPreviewOpen={isPreviewOpen} />
 
                 <TableContainer
                     component={Paper}
@@ -175,7 +188,7 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                                         filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
                                                     }}
                                                 >
-                                                    <Avatar alt="Hospital Pic" src={`${process.env.REACT_APP_IMAGE_URL+profile_picture}`} />
+                                                    <Avatar alt="Hospital Pic" src={`${process.env.REACT_APP_IMAGE_URL+profile_picture}`}  onClick={()=>handleImageClick (process.env.REACT_APP_IMAGE_URL+profile_picture)} />
                                                 </Box>
                                             }
                                             title={name}
