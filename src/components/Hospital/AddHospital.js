@@ -30,6 +30,9 @@ import useDeleteData from '../../customHook/useDelete';
 import { useEffect } from 'react';
 import Phone from '../../atoms/phone';
 import { Controller, useForm } from "react-hook-form";
+import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import ButtonLoader from '../../atoms/buttonLoader';
 
 const AddHospital = ({ Id }) => {
     const customData = useDeleteData()
@@ -55,15 +58,22 @@ const AddHospital = ({ Id }) => {
     const [selectedOptions, setSelectedOptions] = useState(["john"]);
     const [dirty, setDirty] = useState(false);
 
-
+    const specializationData = useSelector((state) => state.specialization.specializationData);
     const { data, isLoading, error, postData } = usePost()
-
     const {
         register,
+        setValue,
         handleSubmit,
         control,
         formState: { errors },
     } = useForm();
+
+    const specialization = useMemo(() => {
+        return specializationData?.data?.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }));
+    }, [specializationData]);
 
     const handleChange = (value) => {
         setSelectedOptions(value);
@@ -182,7 +192,7 @@ const AddHospital = ({ Id }) => {
         // else if (!locationProp) {
         //     setErrorMessage(9)
         // }
-         else {
+        else {
             setErrorMessage('No Error')
         }
 
@@ -233,22 +243,18 @@ const AddHospital = ({ Id }) => {
 
 
         const formData = new FormData();
-        // for (const key in updatedPostData1) {
-        //     formData.append(key, updatedPostData1[key]);
-        // }
-
         for (const key in updatedPostData1) {
             if (
-              (key === "specialties" ) &&
-              Array.isArray(updatedPostData1[key])
+                (key === "specialties") &&
+                Array.isArray(updatedPostData1[key])
             ) {
                 updatedPostData1[key].forEach((value) => {
-                formData.append(`${key}[]`, value);
-              });
+                    formData.append(`${key}[]`, value);
+                });
             } else {
-              formData.append(key, updatedPostData1[key]);
+                formData.append(key, updatedPostData1[key]);
             }
-          }
+        }
 
         if (errorMessage === 'No Error') {
             postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), formData, () => {
@@ -261,12 +267,15 @@ const AddHospital = ({ Id }) => {
     useEffect(() => {
         if (Id) {
             customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
-                console.log("value", val)
+                console.log("value", val?.data)
                 setAddHospitalData(val?.data)
+                Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
+                    setValue(fieldName, fieldValue);
+                });
+                setValue("specialties", val?.data?.specialities?.map(l => (l.id)))
             })
         }
     }, [Id])
-
 
     return (
         <div className='mb-5 pb-5'>
@@ -285,15 +294,13 @@ const AddHospital = ({ Id }) => {
                                     className="mx-lg-3 ml-2 pr-1 pb-1"
                                     src={RightArrow}
                                     alt=""
-                                />{" "}
+                                />
                                 <span style={{ color: "#4FA6D1" }}>HOSPITALS LIST</span>{" "}
                             </p>
                         </div>
 
                         <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
 
-
-                            {" "}
                             {/* <button className="btn-add-new-doc">
                                 <Link className="add-doc-link-color" to="/hospitals/add" > Add </Link>
                             </button>{" "} */}
@@ -324,7 +331,12 @@ const AddHospital = ({ Id }) => {
                                             alt="Uploaded image"
                                         />
                                     ) : (
-                                        <img src={CameraIcon} alt="" />
+                                        addHospitalData.profile_picture ?
+                                            <div className='add-doc-camera-upload'>
+                                                <img className='w-100 h-100 add-doc-camera-upload-1st' src={process.env.REACT_APP_IMAGE_URL+addHospitalData.profile_picture} alt="" />
+                                            </div>
+                                            : <img src={CameraIcon} alt="" />
+
                                     )}
                                 </div>
 
@@ -505,10 +517,14 @@ const AddHospital = ({ Id }) => {
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                        {/* <p className="mb-2"> State </p> */}
+
+                                        <SelectState country={addHospitalData?.country} disabled={!addHospitalData?.country && true} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
 
 
-                                        <Controller
+                                        {/* <p className="mb-3"> State </p> */}
+
+
+                                        {/* <Controller
                                             name="state"
                                             control={control}
                                             rules={{
@@ -530,9 +546,8 @@ const AddHospital = ({ Id }) => {
                                                     )}
                                                 </>
                                             )}
-                                        />
-
-                                        {/* <CustomDropDown selectLabel='Select' option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
+                                        /> */}
+                                        {/* <CustomDropDown selectLabel='Select'  option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
                                     </div>
                                 </div>
 
@@ -552,7 +567,7 @@ const AddHospital = ({ Id }) => {
                                                             field.onChange(value);
                                                             handleChangeSelect(value, name);
                                                         }}
-                                                        option={optionSpecialization}
+                                                        option={specialization}
                                                         name="specialties"
                                                         mode="multiple"
                                                         field={field}
@@ -660,7 +675,7 @@ const AddHospital = ({ Id }) => {
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                        <p className="mb-2"> Working Hours<span className='error-message'>*</span> </p>
+                                        <p className="mb-2"> Operational Hours<span className='error-message'>*</span> </p>
 
                                         <div className="d-flex justify-content-between align-items-center datapicker-border">
                                             <div className='border-right d-flex align-items-center' style={{ height: "36.6px" }}>
@@ -889,8 +904,10 @@ const AddHospital = ({ Id }) => {
 
                                 <div className="row my-5 pt-2 pb-3 ">
                                     <div className="col-lg-6">
-                                        <button className="apply-filter add-doc-changes" style={{ opacity: errorMessage === 'No Error' ? '1' : '0.5' }} onClick={handleHospitalSubmit}>
-                                            Add Hospital
+                                        <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
+                                          {
+                                            !isLoading? 'Add Hospital' : <ButtonLoader/> 
+                                          }  
                                         </button>
                                     </div>
 

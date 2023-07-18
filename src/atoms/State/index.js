@@ -1,16 +1,17 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Country, State } from "country-state-city";
 import CustomDropDown from "../CustomDropDown/Index";
 
-const SelectState = ({ value, handleChange, country,name }) => {
+const SelectState = ({ value, handleChange, country, name, disabled = false }) => {
+  const [disabledState, setDisabledState] = useState(false)
   const Countries = Country.getAllCountries();
-
   const selectedCountry = () => {
     const res = Countries.find((val) => val.name === country);
     return res;
   };
   const stat = useMemo(() => selectedCountry(), [country]);
   const States = useMemo(() => State.getStatesOfCountry(stat?.isoCode), [stat]);
+
   const Cont = () => {
     const res = States.map((val) => ({
       label: val.name,
@@ -27,8 +28,9 @@ const SelectState = ({ value, handleChange, country,name }) => {
         <p className=" doc-add-filter-text">State </p>
         <CustomDropDown
           option={option}
-          handleChangeSelect={(val)=>handleChange(val,name)}
+          handleChangeSelect={(val) => handleChange(val, name)}
           value={value}
+          disabled={option?.length <1 || disabled}
         />
       </div>
     </>

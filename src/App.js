@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { increment } from "./redux/feature/counterSlice/counterSlice";
 import useFetch from "./customHook/useFetch";
+import ScrollToTop from "./atoms/ScrollToTop";
 // import 'dotenv/config'
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
 
       {/* <Privacy /> */}
       <BrowserRouter>
+      <ScrollToTop/>
         {token ? (
           <>
             <Dashboard />

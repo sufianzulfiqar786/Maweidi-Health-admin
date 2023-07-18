@@ -6,7 +6,7 @@ const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr";
+  const token = "15|ErlB5AkM0cJkebRZ9q7doxTa86PMmvHKtEJjXBqS";
   const BaseURL = process.env.REACT_APP_BASE_URL;
 
   const fetchData = async () => {
