@@ -28,15 +28,13 @@ import Group1178 from "../../assets/images/doctor/doc4.png";
 import CrouselCard from "../DashboardComponents/CrouselCard";
 import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
+import useFetch from "../../customHook/useFetch";
 
-const ViewDoctor = () => {
+const ViewDoctor = ({Id}) => {
   const location = useLocation();
   const receivedData = location.state?.data;
-
   const [docBtn, setDocBtn] = useState(0);
-
   const [modal2Open, setModal2Open] = useState(false);
-
   const [selectDay, setSelectDay] = useState({
     sunday: {
       toggle: true,
@@ -67,7 +65,8 @@ const ViewDoctor = () => {
       count: 1,
     },
   });
-
+ 
+  const { data, isLoading, error } = useFetch(`${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`);
   function renderLoop(countDays, dayName) {
     const items = [];
     for (let i = 0; i < countDays; i++) {
@@ -115,7 +114,7 @@ const ViewDoctor = () => {
     autoplay: true,
   };
 
-  const data = [
+  const dataa = [
     {
       id: 1,
       name: "Dustin Wilson",
@@ -186,7 +185,7 @@ const ViewDoctor = () => {
               <div className="col-12 view-doctor-profile-div1 "></div>
               <div className="col-12  view-doctor-profile-div2 ">
                 <p className="mb-0 view-doctor-profile-div2-text1 pt-2">
-                  {receivedData?.name}
+                  {data?.data?.name}
                 </p>
                 <p className="mb-0 view-doctor-profile-div2-text2">
                   {receivedData?.field}

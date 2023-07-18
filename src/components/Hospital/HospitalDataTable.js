@@ -133,13 +133,13 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                     #
                                 </TableCell>
                                 <TableCell align="left">Name</TableCell>
-                                <TableCell align="left">Email</TableCell>
-                                <TableCell align="left">Address</TableCell>
-                                <TableCell align="left">Mobile No.</TableCell>
-                                <TableCell align="left">Country</TableCell>
-                                <TableCell align="left">State</TableCell>
-                                <TableCell align="left">Zip Code</TableCell>
-                                <TableCell align="left">Edit</TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Address</TableCell>
+                                <TableCell align="center">Mobile No.</TableCell>
+                                <TableCell align="center">Country</TableCell>
+                                <TableCell align="center">State</TableCell>
+                                <TableCell align="center">Zip Code</TableCell>
+                                <TableCell align="center">Edit</TableCell>
                             </TableRow>
                         </TableHead>
 
@@ -175,18 +175,18 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                                         filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
                                                     }}
                                                 >
-                                                    <Avatar alt="sohaib" src={profile_picture} />
+                                                    <Avatar alt="Hospital Pic" src={`${process.env.REACT_APP_IMAGE_URL+profile_picture}`} />
                                                 </Box>
                                             }
                                             title={name}
                                         />
                                     </TableCell>
-                                    <TableCell align="left">{email}</TableCell>
-                                    <TableCell align="left">{address}</TableCell>
-                                    <TableCell align="left">{phone_no}</TableCell>
-                                    <TableCell align="left">{country}</TableCell>
-                                    <TableCell align="left">{state}</TableCell>
-                                    <TableCell align="left">{zipcode}</TableCell>
+                                    <TableCell align="center">{email}</TableCell>
+                                    <TableCell align="center">{address}</TableCell>
+                                    <TableCell align="center">{phone_no}</TableCell>
+                                    <TableCell align="center">{country}</TableCell>
+                                    <TableCell align="center">{state}</TableCell>
+                                    <TableCell align="center">{zipcode}</TableCell>
 
                                     <TableCell >
                                         <Link to={`/hospitals/edit/${id}`}>
