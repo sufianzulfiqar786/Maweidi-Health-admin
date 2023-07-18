@@ -2,11 +2,26 @@ import React, { useState } from "react";
 import { Button, Modal, Rate, Select, Slider } from "antd";
 
 import IncreDecreBtn from "./IncreDecreBtn";
-import { optionConsultancyPeriod, optionSpecialization } from "../../Data/DoctorData";
+import {
+  optionConsultancyPeriod,
+  optionSpecialization,
+} from "../../Data/DoctorData";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
 import DoctorForm from "../../organisms/addDoctor";
+import DeletConfirmation from "../../atoms/deletConfirmation";
+import useDeleteData from "../../customHook/useDelete";
 
 const DoctorSetting = () => {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const { isLoading, error, deleteData } = useDeleteData();
+  
+  const handleDelete = (id) => {
+    deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${id}`, () => {
+      // setDeleteModal(false);
+      // const filter = rows.filter((val) => val.id !== deleteState);
+      // setRows(filter);
+    });
+  };
   return (
     <>
       <div className="col-12 px-3 my-4 pt-lg-3">
@@ -271,7 +286,7 @@ const DoctorSetting = () => {
                 <div className="row my-4 ">
                   <div className="col-6">
                     <button className="apply-filter save-changes">
-                    Save Password
+                      Save Password
                     </button>
                   </div>
 
@@ -284,6 +299,12 @@ const DoctorSetting = () => {
           <div className="col-lg-6"></div>
         </div>
       </div>
+      <DeletConfirmation
+        deleteModal={deleteModal}
+        setDeleteModal={setDeleteModal}
+        handleDelete={handleDelete}
+        isLoading={isLoading}
+      />
     </>
   );
 };

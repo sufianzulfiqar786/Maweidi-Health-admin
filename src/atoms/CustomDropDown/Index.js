@@ -10,6 +10,7 @@ const CustomDropDown = ({
   handleChangeSelect,
   disabled,
   name,
+  field,
 }) => {
   const selectAllOption = { value: "all", label: "Select All" };
   const updatedOptions =
@@ -19,35 +20,30 @@ const CustomDropDown = ({
     const allOptions = option.map((item) => item.value);
     handleChangeSelect(allOptions, name);
   };
+
   return (
     <div>
       <Select
-        defaultValue={ mode === "multiple" ? value  :  selectLabel}
+        defaultValue={mode === "multiple" ? value : selectLabel}
         className="custom-dropDown "
         name={name}
         mode={mode}
         value={value}
         showSearch
         disabled={disabled}
+        field
         allowClear
         placeholder={mode && selectLabel}
         style={{
           width: "100%",
         }}
         onChange={(val) => {
-          if (val.includes("all")) {
+          if (val?.includes("all")) {
             handleSelectAll();
-            // if (val.length === updatedOptions.length - 1) {
-            //   handleSelectAll();
-            // } else {
-            //   const filteredOptions = val.filter((value) => value !== "all");
-            //   handleChangeSelect(filteredOptions, name);
-            // }
           } else {
             handleChangeSelect(val, name);
           }
         }}
-        // onChange={(val) => handleChangeSelect(val, name)}
         optionFilterProp="children"
         filterOption={(input, option) =>
           option?.label.toLowerCase()?.indexOf(input?.toLowerCase()) >= 0
@@ -58,6 +54,12 @@ const CustomDropDown = ({
             ?.localeCompare(optionB?.label?.toLowerCase())
         }
         options={updatedOptions}
+        rules={{
+          required: {
+            value: true,
+            message: "Please select atleast one",
+          },
+        }}
       />
     </div>
   );
