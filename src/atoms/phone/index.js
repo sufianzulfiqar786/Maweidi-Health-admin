@@ -5,7 +5,7 @@ import "./Phone.scss";
 const Phone = ({ value, handleChange, name }) => {
   return (
     <>
-      <p className="mb-2">Phone no</p>
+      <p className="mb-2">Phone no<span className='error-message'>*</span></p>
       <PhoneInput
         country={"us"}
         value={value}
