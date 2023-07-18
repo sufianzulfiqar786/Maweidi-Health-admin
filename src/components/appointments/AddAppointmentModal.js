@@ -6,6 +6,7 @@ import "../../assets/css/appointments/modal.scss";
 import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
 import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import Phone from "../../atoms/phone";
+import { Controller, useForm } from "react-hook-form";
 
 const AddAppointmentModal = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
@@ -21,13 +22,17 @@ const AddAppointmentModal = ({ open, onClose }) => {
     email: "",
     phone: "",
   });
-  const [showMap, setShowMap] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
   const [matchedSpecializations, setMatchedSpecializations] = useState([]);
   const [matchedDoctors, setMatchedDoctors] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
-  const backendDates = ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25'];
   const doctors = [
     {
       id: 1,
@@ -161,10 +166,6 @@ const isDisabledDate = (current) => {
     }));
   };
 
-  const isFormEmpty = Object.values(formData).some(
-    (value) => value === "" || value === undefined
-  );
-
   const handleHospitalChange = (value) => {
     findSpecializations(value);
     handleInputChange("hospital", value);
@@ -188,8 +189,7 @@ const isDisabledDate = (current) => {
     handleInputChange("date", value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = () => {
     setFormData({
       kwdId: "",
       patient_name: "",
@@ -242,71 +242,191 @@ const isDisabledDate = (current) => {
           <hr style={{ margin: "0px " }} />
 
           <div class="form-wrapper">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div class="form-group full-width">
                 <label class="required">Enter KWD ID</label>
-                <input
-                  type="text"
+                <Controller
                   name="kwdId"
-                  value={formData?.kwdId}
-                  onChange={(e) =>
-                    handleInputChange(e.target.name, e.target.value)
-                  }
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="kwdId"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleInputChange(e.target.name, e.target.value);
+                        }}
+                      />
+
+                      {errors.kwdId && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                 />
               </div>
 
               <div class="two-group">
                 <div class="form-group">
                   <label>Patient Name</label>
-                  <input
-                    type="text"
-                    name="patient_name"
-                    value={formData?.patient_name}
-                    onChange={(e) =>
-                      handleInputChange(e.target.name, e.target.value)
-                    }
-                  />
+                  <Controller
+                  name="patient_name"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="patient_name"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleInputChange(e.target.name, e.target.value);
+                        }}
+                      />
+
+                      {errors.patient_name && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
                 </div>
                 <div class="form-group">
                   <label>Patient ID</label>
-                  <input
-                    type="text"
-                    name="patientId"
-                    value={formData?.patientId}
-                    onChange={(e) =>
-                      handleInputChange(e.target.name, e.target.value)
-                    }
+                  <Controller
+                  name="patientId"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="patientId"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleInputChange(e.target.name, e.target.value);
+                        }}
+                      />
+
+                      {errors.patientId && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                   />
                 </div>
               </div>
 
               <div class="form-group full-width">
                 <label>Hospital</label>
-                <CustomDropDown
-                    selectLabel="Select"
-                    option={hospitals}
-                    handleChangeSelect={handleHospitalChange}
-                    value={formData?.hospital}
+                  <Controller
+                  name="hospital"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <CustomDropDown
+                        handleChangeSelect={(value, name) => {
+                          field.onChange(value);
+                          handleHospitalChange(value);
+                        }}
+                        option={hospitals}
+                        field={field}
+                        value={field.value}
+                        onBlur={field.onBlur}
+                      />
+
+                      {errors.hospital && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                   />
               </div>
 
               <div class="two-group">
                 <div class="form-group">
                   <label>Specialization</label>
-                  <CustomDropDown
-                    selectLabel="Select"
-                    option={matchedSpecializations}
-                    handleChangeSelect={handleSpecializationChange}
-                    value={formData?.specialization}
+                  <Controller
+                  name="specialization"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <CustomDropDown
+                        handleChangeSelect={(value, name) => {
+                          field.onChange(value);
+                          handleSpecializationChange(value);
+                        }}
+                        option={matchedSpecializations}
+                        field={field}
+                        value={field.value}
+                        onBlur={field.onBlur}
+                      />
+
+                      {errors.specialization && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                   />
                 </div>
                 <div class="form-group">
                   <label>Doctor</label>
-                  <CustomDropDown
-                    selectLabel="Select"
-                    option={matchedDoctors}
-                    handleChangeSelect={handleDoctorsChange}
-                    value={formData?.doctor_name}
+                  <Controller
+                  name="doctor_name"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <CustomDropDown
+                        handleChangeSelect={(value, name) => {
+                          field.onChange(value);
+                          handleDoctorsChange(value);
+                        }}
+                        option={matchedDoctors}
+                        field={field}
+                        value={field.value}
+                        onBlur={field.onBlur}
+                      />
+
+                      {errors.doctor_name && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                   />
                   <label style={{ fontSize: "12px", marginBottom: "-15px" }}>
                     Please confirm the doctor's availability and{" "}
@@ -480,27 +600,57 @@ const isDisabledDate = (current) => {
                 <div class="form-group">
                   <label>Date</label>
                   <div className="border" style={{ borderRadius: "5px" }}>
-                    <DatePicker
-                      disabledDate={isDisabledDate}
-                      size="large"
-                      style={{ border: "none", width: "100%" }}
-                      onChange={handleDateChange}
-                      value={formData?.date}
-                    />
+                  <Controller
+                  name="date"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                      <DatePicker
+                        disabledDate={isDisabledDate}
+                        style={{ border: "none", width: "100%" }}
+                        onChange={(value, name) => {
+                          field.onChange(value);
+                          handleDateChange(value);
+                        }}
+                        field={field}
+                        value={field.value}
+                        onBlur={field.onBlur}
+                      />
+                  )}
+                  />
                   </div>
+                  {errors.date && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
                 </div>
                 <div class="form-group">
                   <label>Time</label>
                   <div className="appointment-time2 d-flex justify-content-between">
-                    <Select
-                      // defaultValue="Category Type"
-                      style={{
-                        width: "80%",
+                    <Controller
+                      name="time"
+                      control={control}
+                      rules={{
+                        required: true,
                       }}
-                      bordered={true}
-                      onChange={handleTimeChange}
-                      value={formData?.time}
-                      options={[
+                      render={({ field }) => (
+                        <>
+                        <Select
+                        placeholder="Select Time"
+                        style={{
+                        width: "80%",
+                        }}
+                        bordered={true}
+                        onChange={(value, name) => {
+                          field.onChange(value);
+                          handleTimeChange(value);
+                        }}
+                        field={field}
+                        value={field.value}
+                        options={[
                         {
                           label: "9:00 AM",
                           value: "9:00 AM",
@@ -531,8 +681,16 @@ const isDisabledDate = (current) => {
                         },
                       ]}
                     />
+                    </>
+                  )}
+                  />
                     <img className="pr-1" src={ClockIcon} alt="" />
                   </div>
+                  {errors.time && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
                   {/* <TimePicker size="large" style={{ width: "100%" }} /> */}
                 </div>
               </div>
@@ -540,39 +698,96 @@ const isDisabledDate = (current) => {
               <div class="three-group">
                 <div class="form-group">
                   <label>Age</label>
-                  <input
-                    type="text"
-                    name="age"
-                    id="phone-input"
-                    value={formData?.age}
-                    onChange={(e) =>
-                      handleInputChange(e.target.name, e.target.value)
-                    }
+                  <Controller
+                  name="age"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="age"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleInputChange(e.target.name, e.target.value);
+                        }}
+                      />
+
+                      {errors.age && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
                   />
                 </div>
                 <div class="form-group">
                   <label for="date-input">Email</label>
-                  <input
-                    type="text"
-                    name="email"
-                    id="phone-input"
-                    value={formData?.email}
-                    onChange={(e) =>
-                      handleInputChange(e.target.name, e.target.value)
-                    }
-                  />
+                  <Controller
+                  name="email"
+                  control={control}
+                  rules={{
+                    required: true,
+                    pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                  }}
+                  render={({ field }) => (
+                    <input
+                      className=""
+                      type="text"
+                      name="email"
+                      {...field}
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        handleInputChange(e.target.name, e.target.value)
+                      }}
+                    />
+                  )}
+                />
+                {errors.email && errors.email.type === "required" && (
+                  <span className="error-message">This field is required</span>
+                )}
+                {errors.email && errors.email.type === "pattern" && (
+                  <span className="error-message">Invalid email address</span>
+                )}
                 </div>
                 <div class="form-group" style={{marginTop: '11px'}}>
-                <Phone handleChange={(value) => handleInputChange("phone", value)} value={formData?.phone}/>
+                <Controller
+                  name="phone"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <Phone
+                        name="phone"
+                        field={field}
+                        value={field.value}
+                        handleChange={(e) => {
+                          field.onChange(e);
+                          handleInputChange(e.target.name, e.target.value);
+                        }}
+                      />
+                      {errors.phone && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
                 </div>
               </div>
 
               <button
                 type="submit"
-                class={`submit-button full-width ${
-                  isFormEmpty ? "disabled" : ""
-                }`}
-                disabled={isFormEmpty}
+                class="submit-button full-width"
               >
                 Book An Appointment
               </button>
