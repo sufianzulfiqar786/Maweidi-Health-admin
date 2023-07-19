@@ -30,6 +30,10 @@ import useDeleteData from '../../customHook/useDelete';
 import { useEffect } from 'react';
 import Phone from '../../atoms/phone';
 import { Controller, useForm } from "react-hook-form";
+import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import ButtonLoader from '../../atoms/buttonLoader';
+import { CustomToast } from '../../atoms/toastMessage';
 
 const AddHospital = ({ Id }) => {
     const customData = useDeleteData()
@@ -55,15 +59,22 @@ const AddHospital = ({ Id }) => {
     const [selectedOptions, setSelectedOptions] = useState(["john"]);
     const [dirty, setDirty] = useState(false);
 
-
+    const specializationData = useSelector((state) => state.specialization.specializationData);
     const { data, isLoading, error, postData } = usePost()
-
     const {
         register,
+        setValue,
         handleSubmit,
         control,
         formState: { errors },
     } = useForm();
+
+    const specialization = useMemo(() => {
+        return specializationData?.data?.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }));
+    }, [specializationData]);
 
     const handleChange = (value) => {
         setSelectedOptions(value);
@@ -157,31 +168,32 @@ const AddHospital = ({ Id }) => {
         if (!addHospitalData.profile_picture) {
             setErrorMessage(-1)
         }
-        else if (!addHospitalData.name) {
-            setErrorMessage(1)
-        }
-        else if (!addHospitalData.email) {
-            setErrorMessage(2)
-        }
-        else if (!addHospitalData.email.match(/[@]/)) {
-            setErrorMessage(3)
-        }
-        else if (!addHospitalData.phone_no) {
-            setErrorMessage(4)
-        } else if (!addHospitalData.country) {
-            setErrorMessage(5)
-        }
-        else if (!addHospitalData.start_time) {
-            setErrorMessage(6)
-        } else if (!addHospitalData.end_time) {
-            setErrorMessage(7)
-        }
-        else if (!addHospitalData.zipcode) {
-            setErrorMessage(8)
-        }
-        else if (!locationProp) {
-            setErrorMessage(9)
-        } else {
+        // else if (!addHospitalData.name) {
+        //     setErrorMessage(1)
+        // }
+        // else if (!addHospitalData.email) {
+        //     setErrorMessage(2)
+        // }
+        // else if (!addHospitalData.email.match(/[@]/)) {
+        //     setErrorMessage(3)
+        // }
+        // else if (!addHospitalData.phone_no) {
+        //     setErrorMessage(4)
+        // } else if (!addHospitalData.country) {
+        //     setErrorMessage(5)
+        // }
+        // else if (!addHospitalData.start_time) {
+        //     setErrorMessage(6)
+        // } else if (!addHospitalData.end_time) {
+        //     setErrorMessage(7)
+        // }
+        // else if (!addHospitalData.zipcode) {
+        //     setErrorMessage(8)
+        // }
+        // else if (!locationProp) {
+        //     setErrorMessage(9)
+        // }
+        else {
             setErrorMessage('No Error')
         }
 
@@ -213,16 +225,16 @@ const AddHospital = ({ Id }) => {
             'address': '123 Main Street',
             // 'zipcode': '12345',
             // 'country': 'United States',
-            'state': 'California',
+            // 'state': 'California',
             // 'phone_no': '123-456-7890',
             // 'facebook': 'https://www.facebook.com/johndoe',
             // 'linkedin': 'https://www.linkedin.com/in/johndoe',
             // 'instagram': 'https://www.instagram.com/johndoe',
             // 'start_time': '09:00 AM',
             // 'end_time': '05:00 PM',
-            'specialties[]': 2,
-            'specialties[]': 4,
-            'specialties[]': 5,
+            // 'specialties[]': 2,
+            // 'specialties[]': 4,
+            // 'specialties[]': 5,
             'lat': '34.56789',
             'long': '45.6789',
             // 'profile_picture': 'https://example.com/johndoe/profile.jpg',
@@ -233,12 +245,24 @@ const AddHospital = ({ Id }) => {
 
         const formData = new FormData();
         for (const key in updatedPostData1) {
-            formData.append(key, updatedPostData1[key]);
+            if (
+                (key === "specialties") &&
+                Array.isArray(updatedPostData1[key])
+            ) {
+                updatedPostData1[key].forEach((value) => {
+                    formData.append(`${key}[]`, value);
+                });
+            } else {
+                formData.append(key, updatedPostData1[key]);
+            }
         }
 
         if (errorMessage === 'No Error') {
             postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), formData, () => {
-
+                CustomToast({
+                    type: "success",
+                    message: `${Id? 'Edit Hospital Successfuly!': 'Add Hospital Successfuly!'}`,
+                  });
             })
         }
 
@@ -247,12 +271,15 @@ const AddHospital = ({ Id }) => {
     useEffect(() => {
         if (Id) {
             customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
-                console.log("value", val)
+                console.log("value", val?.data)
                 setAddHospitalData(val?.data)
+                Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
+                    setValue(fieldName, fieldValue);
+                });
+                setValue("specialties", val?.data?.specialities?.map(l => (l.id)))
             })
         }
     }, [Id])
-
 
     return (
         <div className='mb-5 pb-5'>
@@ -271,15 +298,13 @@ const AddHospital = ({ Id }) => {
                                     className="mx-lg-3 ml-2 pr-1 pb-1"
                                     src={RightArrow}
                                     alt=""
-                                />{" "}
+                                />
                                 <span style={{ color: "#4FA6D1" }}>HOSPITALS LIST</span>{" "}
                             </p>
                         </div>
 
                         <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
 
-
-                            {" "}
                             {/* <button className="btn-add-new-doc">
                                 <Link className="add-doc-link-color" to="/hospitals/add" > Add </Link>
                             </button>{" "} */}
@@ -310,7 +335,12 @@ const AddHospital = ({ Id }) => {
                                             alt="Uploaded image"
                                         />
                                     ) : (
-                                        <img src={CameraIcon} alt="" />
+                                        addHospitalData.profile_picture ?
+                                            <div className='add-doc-camera-upload'>
+                                                <img className='w-100 h-100 add-doc-camera-upload-1st' src={process.env.REACT_APP_IMAGE_URL+addHospitalData.profile_picture} alt="" />
+                                            </div>
+                                            : <img src={CameraIcon} alt="" />
+
                                     )}
                                 </div>
 
@@ -457,7 +487,33 @@ const AddHospital = ({ Id }) => {
                                 <div className="row mt-4">
                                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                         {/* <p className="mb-2"> Country </p> */}
-                                        <SelectCountry handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} />
+                                        {/* <SelectCountry handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} /> */}
+
+                                        <Controller
+                                            name="country"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <SelectCountry handleChange={(value, name) => {
+                                                        field.onChange(value);
+                                                        handleChangeSelect(value, name);
+                                                    }} name="country"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur} />
+
+                                                    {errors.country && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
+
                                         {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
                                         {
                                             errorMessage === 5 ? <p className=' mb-0 error-message'>Please select country</p> : null
@@ -465,9 +521,37 @@ const AddHospital = ({ Id }) => {
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                        {/* <p className="mb-2"> State </p> */}
-                                        <SelectState country={addHospitalData?.country} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
-                                        {/* <CustomDropDown selectLabel='Select' option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
+
+                                        <SelectState country={addHospitalData?.country} disabled={!addHospitalData?.country && true} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
+
+
+                                        {/* <p className="mb-3"> State </p> */}
+
+
+                                        {/* <Controller
+                                            name="state"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <SelectState country={addHospitalData?.country} name="state"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur} handleChange={(value, name) => {
+                                                            field.onChange(value);
+                                                            handleChangeSelect(value, name);
+                                                        }} />
+                                                    {errors.state && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        /> */}
+                                        {/* <CustomDropDown selectLabel='Select'  option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
                                     </div>
                                 </div>
 
@@ -475,34 +559,34 @@ const AddHospital = ({ Id }) => {
                                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                         <p className="mb-2"> Specialization </p>
                                         <Controller
-                  name="hospital"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <CustomDropDown
-                        handleChangeSelect={(value, name) => {
-                          field.onChange(value);
-                          handleChangeSelect(value, name);
-                        }}
-                        option={optionSpecialization}
-                        name="hospital"
-                        mode="multiple"
-                        field={field}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                      />
+                                            name="specialties"
+                                            control={control}
+                                            rules={{
+                                                required: true,
+                                            }}
+                                            render={({ field }) => (
+                                                <>
+                                                    <CustomDropDown
+                                                        handleChangeSelect={(value, name) => {
+                                                            field.onChange(value);
+                                                            handleChangeSelect(value, name);
+                                                        }}
+                                                        option={specialization}
+                                                        name="specialties"
+                                                        mode="multiple"
+                                                        field={field}
+                                                        value={field.value}
+                                                        onBlur={field.onBlur}
+                                                    />
 
-                      {errors.hospital && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
+                                                    {errors.specialties && (
+                                                        <span className="error-message">
+                                                            This field is required
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        />
                                         {/* <div className='all-doc-filter-multi-select d-flex justify-content-between '>
 
                                             <Select
@@ -595,7 +679,7 @@ const AddHospital = ({ Id }) => {
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                        <p className="mb-2"> Working Hours<span className='error-message'>*</span> </p>
+                                        <p className="mb-2"> Operational Hours<span className='error-message'>*</span> </p>
 
                                         <div className="d-flex justify-content-between align-items-center datapicker-border">
                                             <div className='border-right d-flex align-items-center' style={{ height: "36.6px" }}>
@@ -604,17 +688,35 @@ const AddHospital = ({ Id }) => {
 
                                             {/* <TimeChanger borderInp={'none'} imgHide='none' /> */}
                                             <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
-                                                <input
-                                                    className=" pl-1"
-                                                    type="time"
-                                                    name='start_time'
-                                                    value={addHospitalData.start_time}
-                                                    onChange={handleChangeHospital}
-                                                    min="00:00"
-                                                    max="23:59"
-                                                    step="60"
-                                                    timeFormat="HH:mm"
+
+                                                <Controller
+                                                    name="start_time"
+                                                    control={control}
+                                                    rules={{
+                                                        required: true,
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <>
+                                                            <input
+                                                                className=" pl-1"
+                                                                type="time"
+                                                                name="start_time"
+                                                                {...field}
+                                                                value={field.value}
+                                                                onChange={(e) => {
+                                                                    field.onChange(e.target.value);
+                                                                    setNameData(e.target.value)
+                                                                    handleChangeHospital(e)
+                                                                }}
+                                                                min="00:00"
+                                                                max="23:59"
+                                                                step="60"
+                                                                timeFormat="HH:mm"
+                                                            />
+                                                        </>
+                                                    )}
                                                 />
+
 
                                             </div>
 
@@ -622,16 +724,34 @@ const AddHospital = ({ Id }) => {
 
 
                                             <div className="  d-inline-flex time-picker time-picker-hospital py-1 px-2 ">
-                                                <input
-                                                    className=" pl-1"
-                                                    type="time"
-                                                    name='end_time'
-                                                    value={addHospitalData.end_time}
-                                                    onChange={handleChangeHospital}
-                                                    min="00:00"
-                                                    max="23:59"
-                                                    step="60"
-                                                    timeFormat="HH:mm"
+
+
+                                                <Controller
+                                                    name="end_time"
+                                                    control={control}
+                                                    rules={{
+                                                        required: true,
+                                                    }}
+                                                    render={({ field }) => (
+                                                        <>
+                                                            <input
+                                                                className=" pl-1"
+                                                                type="time"
+                                                                name="end_time"
+                                                                {...field}
+                                                                value={field.value}
+                                                                onChange={(e) => {
+                                                                    field.onChange(e.target.value);
+                                                                    setNameData(e.target.value)
+                                                                    handleChangeHospital(e)
+                                                                }}
+                                                                min="00:00"
+                                                                max="23:59"
+                                                                step="60"
+                                                                timeFormat="HH:mm"
+                                                            />
+                                                        </>
+                                                    )}
                                                 />
 
                                             </div>
@@ -640,12 +760,12 @@ const AddHospital = ({ Id }) => {
                                                 <img className="px-2 " src={ClockIcon} alt="" />
                                             </div>
                                         </div>
-                                        {
-                                            errorMessage === 6 ? <p className=' mb-0 error-message'>Please enter start time</p> : null
-                                        }
-                                        {
-                                            errorMessage === 7 ? <p className=' mb-0 error-message'>Please enter end time</p> : null
-                                        }
+                                        {errors.start_time || errors.end_time ? (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        ) : null}
+
                                     </div>
                                 </div>
 
@@ -731,17 +851,43 @@ const AddHospital = ({ Id }) => {
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
                                         <p className="mb-2"> Zip Code<span className='error-message'>*</span> </p>
                                         <div className="d-flex  ">
-                                            <input
+                                            {/* <input
                                                 className=""
                                                 type="text"
                                                 placeholder="Zip Code"
                                                 name='zipcode' value={addHospitalData.zipcode} onChange={handleChangeHospital}
+                                            /> */}
+
+                                            <Controller
+                                                name="zipcode"
+                                                control={control}
+                                                rules={{
+                                                    required: true,
+                                                }}
+                                                render={({ field }) => (
+                                                    <>
+
+                                                        <input
+                                                            type="text"
+                                                            name="zipcode"
+                                                            {...field}
+                                                            value={field.value}
+                                                            onChange={(e) => {
+                                                                field.onChange(e.target.value);
+                                                                handleChangeHospital(e)
+                                                            }}
+                                                        />
+
+                                                    </>
+                                                )}
                                             />
 
                                         </div>
-                                        {
-                                            errorMessage === 8 ? <p className=' mb-0 error-message'>Please enter Zip Code</p> : null
-                                        }
+                                        {errors.zipcode && (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
 
@@ -762,8 +908,10 @@ const AddHospital = ({ Id }) => {
 
                                 <div className="row my-5 pt-2 pb-3 ">
                                     <div className="col-lg-6">
-                                        <button className="apply-filter add-doc-changes" style={{ opacity: errorMessage === 'No Error' ? '1' : '0.5' }} onClick={handleHospitalSubmit}>
-                                            Add Hospital
+                                        <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
+                                          {
+                                            !isLoading? addHospitalData.id? 'Edit Hospital' : 'Add Hospital' : <ButtonLoader/> 
+                                          }  
                                         </button>
                                     </div>
 

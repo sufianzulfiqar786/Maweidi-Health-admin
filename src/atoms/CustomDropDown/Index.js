@@ -1,6 +1,7 @@
 import React from "react";
+import { Select, Input } from "antd";
 
-import { Select } from "antd";
+const { Option } = Select;
 
 const CustomDropDown = ({
   mode,
@@ -13,54 +14,67 @@ const CustomDropDown = ({
   field,
 }) => {
   const selectAllOption = { value: "all", label: "Select All" };
-  const updatedOptions =
-    mode === "multiple" ? [selectAllOption, ...option] : option;
+  const updatedOptions = mode === "multiple" ? [selectAllOption, ...option] : option;
 
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);
     handleChangeSelect(allOptions, name);
   };
 
+  const handleSelectChange = (val) => {
+    if (Array.isArray(val) && val.includes("all")) {
+      handleSelectAll();
+    } else {
+      handleChangeSelect(val, name);
+    }
+  };
+
+  const renderOptions = updatedOptions.map((opt) => {
+    if (opt && opt.label) {
+      return (
+        <Option key={opt.value} value={opt.value}>
+          {opt.label}
+        </Option>
+      );
+    }
+    return null;
+  });
+
   return (
     <div>
       <Select
         defaultValue={mode === "multiple" ? value : selectLabel}
-        className="custom-dropDown "
+        className="custom-dropDown"
         name={name}
         mode={mode}
         value={value || undefined}
         showSearch
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
         disabled={disabled}
-        field
+        field={field}
         allowClear
         placeholder={mode && selectLabel}
         style={{
           width: "100%",
         }}
-        onChange={(val) => {
-          if (val?.includes("all")) {
-            handleSelectAll();
-          } else {
-            handleChangeSelect(val, name);
-          }
-        }}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          option?.label.toLowerCase()?.indexOf(input?.toLowerCase()) >= 0
-        }
-        filterSort={(optionA, optionB) =>
-          optionA?.label
-            .toLowerCase()
-            ?.localeCompare(optionB?.label?.toLowerCase())
-        }
-        options={updatedOptions}
+        onChange={handleSelectChange}
         rules={{
           required: {
             value: true,
-            message: "Please select atleast one",
+            message: "Please select at least one",
           },
         }}
-      />
+      >
+        {/* {mode === "multiple" && (
+          <Option key={selectAllOption.value} value={selectAllOption.value}>
+            {selectAllOption.label}
+          </Option>
+        )} */}
+        {renderOptions}
+      </Select>
     </div>
   );
 };

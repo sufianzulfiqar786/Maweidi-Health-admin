@@ -2,6 +2,8 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import counterSlice from '../feature/counterSlice/counterSlice'
+import specializationSlice from "../feature/specializationSlice";
+
 const persistConfig = {
   key: "root",
   storage,
@@ -11,6 +13,7 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     counter: counterSlice,
+    specialization: specializationSlice.reducer,
   })
 );
 export const store = configureStore({

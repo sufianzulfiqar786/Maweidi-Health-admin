@@ -265,18 +265,27 @@ const DataTable = ({ rows }) => {
           visibleRows?.map(
             ({
               id,
-              pic,
+
               reviews,
               departments,
               rating,
               reviewNmber,
-              user: { name },
+              user: { name, profile_pic },
             }) => {
               return (
                 <>
                   <div className="col-md-3  col-12 px-2 mt-lg-5 pt-lg-3 mt-3">
                     <div className="doc-card pb-1 d-flex flex-column  align-items-center">
-                      <img className="doc-card-img" src={pic1} alt="" />
+                      <div className="doc-card-img">
+                        <img
+                          className=""
+                          src={
+                            `${process.env.REACT_APP_IMAGE_URL}/${profile_pic}` ||
+                            pic1
+                          }
+                          alt=""
+                        />
+                      </div>
 
                       <p className="mb-0 doc-card-text1 text-center pt-2 mt-1">
                         {name}
@@ -299,7 +308,7 @@ const DataTable = ({ rows }) => {
                       <Link
                         to={`/doctors/detail/${id}`}
                         state={{
-                          data: { pic, name, departments, rating },
+                          data: { profile_pic, name, departments, rating },
                         }}
                         className="d-flex justify-content-center"
                         style={{ width: "100%" }}

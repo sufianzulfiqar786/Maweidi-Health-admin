@@ -15,7 +15,7 @@ const UploadFile = ({setFormDataState, formDataState}) => {
     const handleCertificatesUpload = (event) => {
         const file = event.target.files[0].name;
         setInfoData(file);
-        setFormDataState({...formDataState, 'certificates': event.target.files[0]})
+        setFormDataState({...formDataState, 'certificate': event.target.files[0]})
     };
 
     return (

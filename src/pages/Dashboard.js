@@ -44,10 +44,12 @@ import PharmacyViewOrderlistDetail from "./Pharmacy/PharmacyViewOrderlistDetail"
 import AddPharmacy from "./Pharmacy/AddPharmacy";
 import AddLab from "./Laboratory/AddLab";
 import EditPatient from "./Patients/EditPatient";
-
+import { fetchSpecialization } from "../redux/feature/specializationSlice";
 import { ValidateRoute, DefultRoute, ValidUI } from "./privateRoutes";
+import { useDispatch } from "react-redux";
 const Dashboard = () => {
   let location = useLocation();
+  const dispatch = useDispatch();
   const [menu, setMenu] = useState(0);
   const [menuLeft, setMenuLeft] = useState("col-3");
   const [menuRight, setMenuRight] = useState("col-9");
@@ -82,7 +84,10 @@ const Dashboard = () => {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  useEffect(() => {
+    // Dispatch fetchSpecialization thunk when component mounts
+    dispatch(fetchSpecialization());
+  }, [dispatch]);
   useEffect(() => {
     if (!isLargeScreen) {
       setMenuLeft("col-0");
