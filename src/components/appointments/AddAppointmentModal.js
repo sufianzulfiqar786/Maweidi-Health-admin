@@ -207,24 +207,25 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const findDoctors = () => {
     if (doctorsData) {
       setMatchedDoctors(
-        doctorsData?.data?.map(({ id, name }) => ({
+        doctorsData?.data?.map(({ id, user }) => ({
           id,
-          value: name,
-          label: name,
+          value: user?.name,
+          label: user?.name,
         }))
       );
     }
   };
   useMemo(() => findDoctors(), [doctorsData?.data]);
 
-  const findAvailableDates = (doctorValue) => {
-    const selectedDoctor = matchedDoctors.find(
-      (doctor) => doctor.value === doctorValue
-    );
-    if (selectedDoctor) {
-      setAvailableDates(selectedDoctor.availableDates);
-    }
-  };
+  // const findAvailableDates = (doctorValue) => {
+  //   console.log("-------matchedDoctors--------", matchedDoctors);
+  //   const selectedDoctor = matchedDoctors.find(
+  //     (doctor) => doctor?.value === doctorValue
+  //   );
+  //   if (selectedDoctor) {
+  //     setAvailableDates(selectedDoctor.availableDates);
+  //   }
+  // };
 
   const isDisabledDate = (current) => {
     const formattedDate = current.format("YYYY-MM-DD");
@@ -250,7 +251,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
   };
 
   const handleDoctorsChange = (value) => {
-    findAvailableDates(value);
+    // findAvailableDates(value);
     handleInputChange("doctor_name", value);
   };
 
@@ -713,7 +714,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       render={({ field }) => (
                         <>
                           <Select
-                            placeholder="Select Time"
+                            defaultValue="Select Time"
                             style={{
                               width: "80%",
                             }}

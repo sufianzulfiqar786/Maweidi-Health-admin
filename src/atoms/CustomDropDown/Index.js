@@ -29,7 +29,7 @@ const CustomDropDown = ({
     }
   };
 
-  const renderOptions = updatedOptions.map((opt) => {
+  const renderOptions = updatedOptions?.map((opt) => {
     if (opt && opt.label) {
       return (
         <Option key={opt.value} value={opt.value}>
