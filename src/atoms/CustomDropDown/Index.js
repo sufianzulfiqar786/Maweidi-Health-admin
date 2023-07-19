@@ -1,6 +1,7 @@
 import React from "react";
+import { Select, Input } from "antd";
 
-import { Select } from "antd";
+const { Option } = Select;
 
 const CustomDropDown = ({
   mode,
@@ -10,55 +11,70 @@ const CustomDropDown = ({
   handleChangeSelect,
   disabled,
   name,
+  field,
 }) => {
   const selectAllOption = { value: "all", label: "Select All" };
-  const updatedOptions =
-    mode === "multiple" ? [selectAllOption, ...option] : option;
+  const updatedOptions = mode === "multiple" ? [selectAllOption, ...option] : option;
 
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);
     handleChangeSelect(allOptions, name);
   };
+
+  const handleSelectChange = (val) => {
+    if (Array.isArray(val) && val.includes("all")) {
+      handleSelectAll();
+    } else {
+      handleChangeSelect(val, name);
+    }
+  };
+
+  const renderOptions = updatedOptions.map((opt) => {
+    if (opt && opt.label) {
+      return (
+        <Option key={opt.value} value={opt.value}>
+          {opt.label}
+        </Option>
+      );
+    }
+    return null;
+  });
+
   return (
     <div>
       <Select
-        defaultValue={ mode === "multiple" ? value  :  selectLabel}
-        className="custom-dropDown "
+        defaultValue={mode === "multiple" ? value : selectLabel}
+        className="custom-dropDown"
         name={name}
         mode={mode}
-        value={value}
+        value={value || undefined}
         showSearch
+        optionFilterProp="children"
+        filterOption={(input, option) =>
+          option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
         disabled={disabled}
+        field={field}
         allowClear
         placeholder={mode && selectLabel}
         style={{
           width: "100%",
         }}
-        onChange={(val) => {
-          if (val.includes("all")) {
-            handleSelectAll();
-            // if (val.length === updatedOptions.length - 1) {
-            //   handleSelectAll();
-            // } else {
-            //   const filteredOptions = val.filter((value) => value !== "all");
-            //   handleChangeSelect(filteredOptions, name);
-            // }
-          } else {
-            handleChangeSelect(val, name);
-          }
+        onChange={handleSelectChange}
+        rules={{
+          required: {
+            value: true,
+            message: "Please select at least one",
+          },
         }}
-        // onChange={(val) => handleChangeSelect(val, name)}
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          option?.label.toLowerCase()?.indexOf(input?.toLowerCase()) >= 0
-        }
-        filterSort={(optionA, optionB) =>
-          optionA?.label
-            .toLowerCase()
-            ?.localeCompare(optionB?.label?.toLowerCase())
-        }
-        options={updatedOptions}
-      />
+      >
+        {/* {mode === "multiple" && (
+          <Option key={selectAllOption.value} value={selectAllOption.value}>
+            {selectAllOption.label}
+          </Option>
+        )} */}
+        {renderOptions}
+      </Select>
     </div>
   );
 };

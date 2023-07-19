@@ -43,6 +43,7 @@ const FullScreenMenu = ({
   setMobileMenu1,
   MobileMenu1,
 }) => {
+  console.log("menuDropDownFullScreen", menuDropDownFullScreen)
   return (
     <div className="hover-effect">
 
@@ -703,9 +704,9 @@ const FullScreenMenu = ({
               }}
             >
               <div className="  dashboard-left-icon">
-                <img className="py-1" src={`${menuDropDownFullScreen.name === "pharmacy"
-                  ? LaboratoryIcon
-                  : LaboratoryIconBlue
+                <img className="py-1" src={`${menuDropDownFullScreen.name === "laboratory"
+                  ? LaboratoryIconBlue
+                  : LaboratoryIcon
                   }`} alt="" />
               </div>
 

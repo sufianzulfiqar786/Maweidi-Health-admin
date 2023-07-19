@@ -166,8 +166,8 @@ $font-size48: 48px;
 }
 
 .error-message {
-  font-size: 11.5px;
-  color: red;
+  font-size: 11.5px !important;
+  color: red !important;
   font-family: Poppins Regular;
 }
 
@@ -182,10 +182,23 @@ $font-size48: 48px;
   border-bottom: none !important;
 }
 
-.custom-dropDown{
-  &::placeholder{
-    background-color: red !important;
-    color: blue !important;
-  }
+.form-control:focus {
+  border-color: #E4E3E4;
+  box-shadow: none !important;
 }
 
+.form-control {
+  border-color: #E4E3E4 !important;
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

@@ -30,13 +30,12 @@ import Group1178 from "../../assets/images/doctor/doc4.png";
 import CrouselCard from "../DashboardComponents/CrouselCard";
 import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
-import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
-import usePost from "../../customHook/usePost";
-const ViewDoctor = () => {
-  const { data, isLoading, error, postData } = usePost();
+import useFetch from "../../customHook/useFetch";
+import CustomDropDown from "../../atoms/CustomDropDown/Index";
+
+const ViewDoctor = ({ Id }) => {
   const location = useLocation();
   const receivedData = location.state?.data;
-
   const [docBtn, setDocBtn] = useState(0);
   // const [docBtn1, setDocBtn1] = useState(0);
 
@@ -101,6 +100,37 @@ const ViewDoctor = () => {
       label: "Urology",
     },
   ];
+
+  const { data, isLoading, error } = useFetch(
+    `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
+  );
+  function renderLoop(countDays, dayName) {
+    const items = [];
+    for (let i = 0; i < countDays; i++) {
+      items.push(
+        <>
+          <div className={`${countDays === 1 ? "" : "pb-3"} `}>
+            <TimeChanger />
+
+            <span className="px-lg-3 px-1 time-selector-to">To</span>
+
+            <TimeChanger />
+
+            <span className="pl-lg-3 pl-1">
+              <img
+                className="cursor-pointer"
+                onClick={() => increaseDayCount(dayName)}
+                src={TimeTableAddBtn}
+                alt=""
+              />
+            </span>
+          </div>
+        </>
+      );
+    }
+    return items;
+  }
+
   const increaseDayCount = (day) => {
     setSelectDay((prevState) => ({
       ...prevState,
@@ -243,14 +273,12 @@ const ViewDoctor = () => {
             <Link className="doc-link " to="/">
               DASHBOARD
             </Link>
-            <img
-              className="mx-lg-3 ml-2 pr-1 pb-1"
-              src={RightArrow}
-              alt=""
-            />{" "}
-            <span><Link className="doc-link " to="alldoctors">
-              <span>DOCTORS</span>{" "}
-            </Link></span>{" "}
+            <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
+            <span>
+              <Link className="doc-link " to="doctors">
+                <span>DOCTORS</span>{" "}
+              </Link>
+            </span>{" "}
             <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
             <span style={{ color: "#4FA6D1" }}>ALL DOCTORS</span>{" "}
           </p>
@@ -262,15 +290,15 @@ const ViewDoctor = () => {
               <div className="col-12 view-doctor-profile-div1 "></div>
               <div className="col-12  view-doctor-profile-div2 ">
                 <p className="mb-0 view-doctor-profile-div2-text1 pt-2">
-                  {receivedData?.name}
+                  {data?.data?.user?.name}
                 </p>
                 <p className="mb-0 view-doctor-profile-div2-text2">
-                  {receivedData?.field}
+                  {data?.data?.specialization?.name}
                 </p>
               </div>
               <img
                 className="position-absolute view-doctor-profile-img ml-4 "
-                src={receivedData?.pic}
+                src={`${process.env.REACT_APP_IMAGE_URL}/${data?.data?.user?.profile_pic}`}
                 alt=""
               />
             </div>
@@ -348,7 +376,9 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'>Women's health services</span>{" "}
+                      <span className="view-doc-sub-special">
+                        Women's health services
+                      </span>{" "}
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -357,7 +387,10 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'> Pregnancy care{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        Pregnancy care{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -366,7 +399,9 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'>Surgical procedures{" "}</span>
+                      <span className="view-doc-sub-special">
+                        Surgical procedures{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -375,7 +410,10 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'>  Specialty care{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        Specialty care{" "}
+                      </span>
                     </p>
                     <p className="mb-0">
                       {" "}
@@ -384,14 +422,17 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'> Conclusion{" "}</span>
+                      <span className="view-doc-sub-special"> Conclusion </span>
                     </p>
                   </div>
 
                   <div className="col-12 pt-2 mt-4">
                     <p className="mb-0 view-doc-special">
                       {" "}
-                      <span className='view-doc-special'> Consultancy Charges:{" "}</span>
+                      <span className="view-doc-special">
+                        {" "}
+                        Consultancy Charges:{" "}
+                      </span>
                     </p>
                     <p className="mb-0 pt-2">
                       {" "}
@@ -400,7 +441,10 @@ const ViewDoctor = () => {
                         src={RightArrowSpec}
                         alt=""
                       />{" "}
-                      <span className='view-doc-sub-special'> $50/Patient{" "}</span>
+                      <span className="view-doc-sub-special">
+                        {" "}
+                        $50/Patient{" "}
+                      </span>
                     </p>
                   </div>
                 </>
@@ -522,7 +566,7 @@ const ViewDoctor = () => {
                                       <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
                                     </div>
 
-                                    <TimeChanger  />
+                                    <TimeChanger />
 
 
                                     <TimeChanger />
@@ -1110,7 +1154,7 @@ const ViewDoctor = () => {
 
               {docBtn === 3 && (
                 <>
-                  <DoctorSetting />
+                  <DoctorSetting id={Id} rawData={data?.data} />
                 </>
               )}
             </div>
