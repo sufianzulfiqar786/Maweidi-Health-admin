@@ -165,7 +165,11 @@ const DoctorForm = ({ id, rawData }) => {
         facebook: rawData?.facebook,
         linkedin: rawData?.linkedin,
         instagram: rawData?.instagram,
+        certificate:rawData?.certificate,
+        specialization_id:rawData?.specialization_id,
         council_registration_no: rawData?.council_registration_no,
+        languages: rawData?.user?.languages?.map((language) => language?.id),
+        hospitals: rawData?.hospitals?.map((hospital) => hospital?.id),
       });
 
       Object.entries(rawData?.user).forEach(([fieldName, fieldValue]) => {
@@ -182,7 +186,7 @@ const DoctorForm = ({ id, rawData }) => {
       );
       setValue(
         "languages",
-        rawData?.languages?.map((language) => language?.id)
+        rawData?.user?.languages?.map((language) => language?.id)
       );
     }
   }, [id, rawData]);
@@ -206,7 +210,7 @@ const DoctorForm = ({ id, rawData }) => {
                 />
               ) : (
                 <div className="d-flex text-center justify-content-center w-100">
-                <img src={CameraIcon} alt="upload" />
+                  <img src={CameraIcon} alt="upload" />
                 </div>
               )}
             </div>

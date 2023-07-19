@@ -63,10 +63,11 @@
   &-img {
     width: 100%;
     height: 220px;
-    img{
+
+    img {
       width: 100%;
       height: 100%;
-   
+
       object-fit: cover;
     }
   }
@@ -214,8 +215,10 @@
   color: #ffffff;
 
   &.disabled {
-    opacity: 0.5; /* reduce opacity for a lighter color effect */
-    cursor: not-allowed; /* change cursor to indicate it's disabled */
+    opacity: 0.5;
+    /* reduce opacity for a lighter color effect */
+    cursor: not-allowed;
+    /* change cursor to indicate it's disabled */
   }
 }
 
@@ -412,7 +415,7 @@
   color: #8c8c8c;
 }
 
-.doc-review-name{
+.doc-review-name {
   font-family: "Poppins Regular";
   font-weight: 400;
   font-size: 16px;
@@ -421,7 +424,7 @@
   color: #212224;
 }
 
-.doc-review-date{
+.doc-review-date {
   font-family: "Poppins Regular";
   font-weight: 400;
   font-size: 16px;
@@ -626,7 +629,7 @@
 }
 
 .doc-setting-input .ant-select-selector .ant-select-selection-item {
-  color: #8c8c8c;
+  // color: #8c8c8c;
   font-family: "Poppins Regular";
   font-style: normal;
   font-weight: 400;
@@ -684,13 +687,15 @@
 .doc-setting-input input[type="text"],
 .doc-setting-input textarea {
   padding-left: 10px;
+  font-family: $Poppins-Regular !important;
+  font-size: 12px;
   /* adjust the value to your preference */
 }
 
 .doc-setting-input ::placeholder,
 .doc-setting-input textarea::placeholder {
   // padding-left: 10px; /* adjust the value to your preference */
-  font-family: "Poppins Regular";
+  font-family: $Poppins-Regular !important;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -1003,31 +1008,39 @@
     height: 46px;
     border-radius: 50px;
   }
+
   .doctor-detail-text-1 {
     font-size: 1vw;
     line-height: 14px;
   }
+
   .doctor-detail-text-2 {
     font-size: 0.8vw;
     line-height: 10px;
   }
+
   .doctor-detail-text-2 .ant-rate-star {
     font-size: 11px;
   }
+
   .appoinment-detail-text-1 {
     font-size: 1vw;
     line-height: 12px;
   }
+
   .appoinment-detail-text-2 {
     font-size: 0.8vw;
   }
-  .appoinment-detail-text-3{
+
+  .appoinment-detail-text-3 {
     font-size: 0.6vw;
   }
-  .appoinment-correction-correct{
+
+  .appoinment-correction-correct {
     width: 18px;
     height: 18px;
   }
+
   .appoinment-correction-incorrect {
     width: 18px;
     height: 18px;
@@ -1035,6 +1048,7 @@
 }
 
 @media (min-width: 992px) and (max-width: 1413px) {
+
   .time-table-day,
   .time-table-time-text,
   .time-table-phone-text,
@@ -1042,6 +1056,7 @@
   .time-table-phone-text2-link {
     font-size: 1vw;
   }
+
   .time-table-text {
     font-size: 1.2vw;
   }
@@ -1056,9 +1071,11 @@
     width: 55px;
     height: 55px;
   }
+
   .appoinment-text {
     font-size: 13px;
   }
+
   .appoinment-count-text {
     font-size: 12px;
   }
