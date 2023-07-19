@@ -56,7 +56,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
   useEffect(() => {
     console.log("-----hospitalData------", hospitalData);
-    if (hospitalData) {
+    if (hospitalData?.success) {
       setHospitals(
         hospitalData?.data.map(({ id, name, specialities }) => ({
           id,
@@ -190,7 +190,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
   const findSpecializations = () => {
     console.log("------specializationData-------", matchedSpecializations);
-    if (specializationData) {
+    if (specializationData?.success) {
       setMatchedSpecializations(
         specializationData?.data?.map(({ id, name }) => ({
           id,
@@ -198,6 +198,9 @@ const AddAppointmentModal = ({ open, onClose }) => {
           label: name,
         }))
       );
+    }
+    else {
+
     }
   };
   useMemo(() => findSpecializations(), [specializationData?.data]);
