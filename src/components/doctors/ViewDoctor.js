@@ -31,15 +31,23 @@ import CrouselCard from "../DashboardComponents/CrouselCard";
 import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
 import CustomDropDown from "../../atoms/CustomDropDown/Index.js";
-
+import usePost from "../../customHook/usePost";
 const ViewDoctor = () => {
+  const { data, isLoading, error, postData } = usePost();
   const location = useLocation();
   const receivedData = location.state?.data;
 
   const [docBtn, setDocBtn] = useState(0);
-  const [docBtn1, setDocBtn1] = useState(0);
+  // const [docBtn1, setDocBtn1] = useState(0);
 
   const [modal2Open, setModal2Open] = useState(false);
+
+
+
+
+  const setUpAvailableTime = () => {
+
+  }
 
   const [selectDay, setSelectDay] = useState({
     sunday: {
@@ -101,7 +109,7 @@ const ViewDoctor = () => {
         count: prevState[day].count + 1,
       },
     }));
-    setDocBtn1(docBtn1 + 1)
+    // setDocBtn1(docBtn1 + 1)
   };
 
   const decreaseDayCount = (day) => {
@@ -112,17 +120,16 @@ const ViewDoctor = () => {
         count: prevState[day].count - 1,
       },
     }));
-    setDocBtn1(docBtn1 - 1)
+    // setDocBtn1(docBtn1 - 1)
 
   };
   const handleChangeSelect = (val, name) => {
-    console.log(val, name);
   }
   function renderLoop(countDays, dayName) {
 
     const items = [];
     for (let i = 0; i < countDays; i++) {
-      const isLastElement = i === countDays - 1; // Check if it's the last iteration
+      // const isLastElement = i === 0;
 
       items.push(
         <>
@@ -140,25 +147,27 @@ const ViewDoctor = () => {
 
             </div>
             {
-              isLastElement ?
-                <span className="pl-lg-3 pl-1">
-                  <img
-                    className="cursor-pointer"
-                    onClick={() => increaseDayCount(dayName)}
-                    src={TimeTableAddBtn}
-                    alt=""
-                  />
-                </span> :
-                <span className="pl-lg-3 pl-1">
-                  <img
-                    className="cursor-pointer"
-                    onClick={() => decreaseDayCount(dayName)}
-                    src={TimeTableRemoveBtn}
-                    alt=""
-                    style={{ width: "20px" }}
-                  />
-                </span>
+              // isLastElement ?
 
+              // <span className="pl-lg-3 pl-1">
+              //   <img
+              //     className="cursor-pointer"
+              //     onClick={() => increaseDayCount(dayName)}
+              //     src={TimeTableAddBtn}
+              //     alt=""
+              //   />
+              // </span>
+              // :
+
+              <span className="pl-lg-3 pl-1">
+                <img
+                  className="cursor-pointer"
+                  onClick={() => decreaseDayCount(dayName)}
+                  src={TimeTableRemoveBtn}
+                  alt=""
+                  style={{ width: "20px" }}
+                />
+              </span>
             }
 
 
@@ -182,7 +191,7 @@ const ViewDoctor = () => {
     autoplay: true,
   };
 
-  const data = [
+  const datavalues = [
     {
       id: 1,
       name: "Dustin Wilson",
@@ -504,8 +513,38 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center align-items-start">
+
+                            {
+                              selectDay.sunday.toggle ?
+                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger  />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("sunday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+
                             {selectDay.sunday.toggle &&
-                              renderLoop(selectDay.sunday.count, "sunday")}
+                              renderLoop(selectDay.sunday.count, "sunday")
+
+                            }
                           </div>
                         </div>
 
@@ -538,8 +577,34 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.monday.toggle &&
-                              renderLoop(selectDay.monday.count, "monday")}
+                            {
+                              selectDay.monday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("monday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* {selectDay.monday.toggle &&
+                              renderLoop(selectDay.monday.count, "monday")} */}
                           </div>
                         </div>
 
@@ -573,8 +638,34 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.tuesday.toggle &&
-                              renderLoop(selectDay.tuesday.count, "tuesday")}
+                            {
+                              selectDay.tuesday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("tuesday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* {selectDay.tuesday.toggle &&
+                              renderLoop(selectDay.tuesday.count, "tuesday")} */}
                           </div>
                         </div>
 
@@ -607,11 +698,37 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.wednesday.toggle &&
+                            {
+                              selectDay.wednesday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("wednesday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* {selectDay.wednesday.toggle &&
                               renderLoop(
                                 selectDay.wednesday.count,
-                                "wednesday"
-                              )}
+                                "wednesday",
+                              )} */}
                           </div>
                         </div>
 
@@ -644,8 +761,37 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
+                            {
+                              selectDay.thursday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("thursday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* 
                             {selectDay.thursday.toggle &&
-                              renderLoop(selectDay.thursday.count, "thursday")}
+                              renderLoop(selectDay.thursday.count, "thursday")} */}
+
+
                           </div>
                         </div>
 
@@ -678,8 +824,34 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.friday.toggle &&
-                              renderLoop(selectDay.friday.count, "friday")}
+                            {
+                              selectDay.friday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("friday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* {selectDay.friday.toggle &&
+                              renderLoop(selectDay.friday.count, "friday")} */}
                           </div>
                         </div>
 
@@ -712,8 +884,34 @@ const ViewDoctor = () => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.saturday.toggle &&
-                              renderLoop(selectDay.saturday.count, "saturday")}
+                            {
+                              selectDay.saturday.toggle ?
+                                <div style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                    <div style={{ width: "141px" }}>
+                                      <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                                    </div>
+
+                                    <TimeChanger />
+
+
+                                    <TimeChanger />
+
+                                  </div>
+                                  <span className="pl-lg-3 pl-1">
+                                    <img
+                                      className="cursor-pointer"
+                                      onClick={() => increaseDayCount("saturday")}
+                                      src={TimeTableAddBtn}
+                                      alt=""
+                                    />
+                                  </span>
+
+
+                                </div> : null
+                            }
+                            {/* {selectDay.saturday.toggle &&
+                              renderLoop(selectDay.saturday.count, "saturday")} */}
                           </div>
                         </div>
                       </Modal>
