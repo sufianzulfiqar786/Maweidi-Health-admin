@@ -8,23 +8,21 @@ import DocRoleCrossIcon from "../../assets/images/doctor/DocRoleCrossIcon.svg";
 import DoctorList from "../../components/doctors/DoctorList";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
-import {
-  optionSpecialization,
-} from "../../Data/DoctorData";
+import { optionSpecialization } from "../../Data/DoctorData";
 import DoctorForm from "../../organisms/addDoctor";
 
 const AddDoctor = () => {
   const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState("");
 
+ 
+ 
+  
   const handleAddItem = () => {
     const newItemObject = {
       id: items.length + 1,
     };
     setItems([...items, newItemObject]);
-    setNewItem("");
   };
-
   const handleRemoveItem = (index) => {
     const newItems = [...items];
     newItems.splice(index, 1);
@@ -48,7 +46,7 @@ const AddDoctor = () => {
           <div className="row mt-5 pt-3">
             <div className="col-lg-8   ">
               <div className="row mx-0 px-2 add-doc-left-col">
-                <DoctorForm />
+                <DoctorForm  />
               </div>
             </div>
 
@@ -135,7 +133,6 @@ const AddDoctor = () => {
                           <div className="row mt-4 pt-2">
                             <div className="col-lg-12   doc-setting-input doc-setting-input-black">
                               <p className="mb-2 add-doc-role-type-detail">
-                                {" "}
                                 Country{" "}
                               </p>
                               <CustomDropDown
@@ -187,20 +184,16 @@ const AddDoctor = () => {
                 </>
               );
             })}
-
-            <div className="col-12 mb-5 py-4 d-flex align-items-center">
-              <img
-                className="cursor-pointer"
-                onClick={handleAddItem}
-                src={AddRoleIcon}
-                alt=""
-              />{" "}
-              <span
-                onClick={handleAddItem}
-                className="cursor-pointer add-doc-role pl-3 "
-              >
-                Add a Role
-              </span>
+      
+    
+            <div className="col-12 mb-5 py-4 d-flex align-items-center ">
+              <div onClick={handleAddItem}>
+                <img className="cursor-pointer" src={AddRoleIcon} alt="" />{" "}
+                <span className="cursor-pointer add-doc-role pl-3 ">
+                  Add a Role
+                </span>
+              </div>
+           
             </div>
           </div>
         </div>

@@ -441,7 +441,6 @@ const ViewDoctor = ({ Id }) => {
                                   size={300}
                                   defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       sunday: {
@@ -864,7 +863,7 @@ const ViewDoctor = ({ Id }) => {
 
               {docBtn === 3 && (
                 <>
-                  <DoctorSetting id={Id} rawData={data?.data}/>
+                  <DoctorSetting id={Id} rawData={data?.data} />
                 </>
               )}
             </div>

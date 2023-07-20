@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useQuery, QueryClient } from 'react-query';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 const useFetch = (url) => {
   const [data, setData] = useState(null);
@@ -9,7 +9,8 @@ const useFetch = (url) => {
   const token = "15|ErlB5AkM0cJkebRZ9q7doxTa86PMmvHKtEJjXBqS";
   const BaseURL = process.env.REACT_APP_BASE_URL;
 
-  const fetchData = async () => {
+  // Function to fetch data from the API
+  const fetchData = async (url) => {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -19,9 +20,13 @@ const useFetch = (url) => {
     return response.data;
   };
 
-  
-
-  const { data: queryData, isLoading: queryIsLoading, error: queryError } = useQuery(url, fetchData, {
+  // Use the React Query hook to fetch the data
+  const {
+    data: queryData,
+    isLoading: queryIsLoading,
+    error: queryError,
+    refetch,
+  } = useQuery(url, () => fetchData(url), {
     onSuccess: (data) => {
       setData(data);
       setIsLoading(false);
@@ -33,12 +38,19 @@ const useFetch = (url) => {
   });
 
   // Update the local state when the query data changes
-  useState(() => {
+  useEffect(() => {
     setData(queryData);
     setIsLoading(queryIsLoading);
     setError(queryError);
   }, [queryData, queryIsLoading, queryError]);
 
-  return { data, isLoading, error };
+  // Function to recall the API with the updated URL when paginate prop changes
+  const fetchPaginatedData = (refetchurl) => {
+    refetch(refetchurl);
+  };
+
+  // Return the necessary values
+  return { data, isLoading, error, fetchPaginatedData };
 };
+
 export default useFetch;

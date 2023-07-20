@@ -6,11 +6,12 @@ const CustomPagination = ({ page, totalPages, onChangePage }) => {
   };
 
   const handleNext = () => {
-    onChangePage(Math.min(page + 1, totalPages - 1));
+    alert(Math.min(page + 1, totalPages ))
+    onChangePage(Math.min(page + 1, totalPages ));
   };
 
   const handleClick = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
+    if (newPage >= 0 && newPage <= totalPages) {
       onChangePage(newPage);
     }
   };
@@ -19,17 +20,20 @@ const CustomPagination = ({ page, totalPages, onChangePage }) => {
     const pageButtons = [];
     const maxPagesToShow = 3;
     // Show at most maxPagesToShow page buttons, centered around the current page
-    const startPage = Math.max(page - Math.floor(maxPagesToShow / 2), 0);
+    const startPage = Math.max(page - Math.floor(maxPagesToShow / 2), 1);
     const endPage = Math.min(startPage + maxPagesToShow, totalPages);
+    console.log("startPage",endPage,startPage)
 
-    for (let i = startPage; i < endPage; i++) {
+    for (let i = startPage; i <= endPage; i++) {
       pageButtons.push(
         <button
           key={i}
-          onClick={() => handleClick(i)}
-          className={i === page ? "active" : ""}
+          onClick={() =>{
+           
+            handleClick(i)}}
+          className={i  === page ? "active" : ""}
         >
-          {i + 1}
+          {i }
         </button>
       );
     }
@@ -42,7 +46,7 @@ const CustomPagination = ({ page, totalPages, onChangePage }) => {
       <button
         className="prev-button"
         onClick={handlePrev}
-        disabled={page === 0}
+        disabled={page === 1}
       >
         Prev
       </button>
@@ -51,7 +55,7 @@ const CustomPagination = ({ page, totalPages, onChangePage }) => {
       <button
         className="next-button"
         onClick={handleNext}
-        disabled={page === totalPages - 1}
+        disabled={page === totalPages }
       >
         Next
       </button>

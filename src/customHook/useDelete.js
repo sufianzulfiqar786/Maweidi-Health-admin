@@ -4,7 +4,6 @@ import axios from 'axios';
 const useDeleteData = () => {
     const BaseURL = process.env.REACT_APP_BASE_URL;
     const [isLoading, setIsLoading] = useState(false);
-    
     const [error, setError] = useState(null);
     const token = "9|uD8jekiaHPaOyrYxApumGaIzmhmYDTmnH8CB4fSr"
     const deleteData = async (url, cb) => {

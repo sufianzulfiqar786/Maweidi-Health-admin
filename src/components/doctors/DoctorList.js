@@ -17,7 +17,7 @@ const App = () => {
   const [docdata, setDocData] = useState([]);
   useEffect(() => {
     if (data) {
-      setDocData(data?.data);
+      setDocData(data?.data?.data);
     }
   }, [data]);
 

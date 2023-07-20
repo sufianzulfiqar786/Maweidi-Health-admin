@@ -22,12 +22,17 @@ import ButtonLoader from "../../atoms/buttonLoader";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../atoms/toastMessage";
+import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
 
+import ConsutancyFee from "../../components/doctors/ConsutancyFee";
 const DoctorForm = ({ id, rawData }) => {
   const [errorData, setErrorData] = useState(0);
   const [formDataState, setFormDataState] = useState({});
   const [hospitalOption, setHospitalOption] = useState([]);
   const [image, setImage] = useState(null);
+  const [showDoctorFee, setShowDoctorFee] = useState(false);
+  const [feeData, setFeeData] = useState([]);
+  const [selectdedHospital, setSelectdedHospital] = useState("");
   const navigate = useNavigate();
   const realHospitalData = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
   const lang = useFetch(process.env.REACT_APP_GET_LANGUAGES);
@@ -54,10 +59,10 @@ const DoctorForm = ({ id, rawData }) => {
   } = useForm();
 
   useEffect(() => {
-    if (realHospitalData?.data?.data?.length > 0) {
+    if (realHospitalData?.data?.data?.data?.length > 0) {
       const opt =
-        realHospitalData?.data?.data &&
-        realHospitalData?.data?.data.map((val) => ({
+        realHospitalData?.data?.data?.data &&
+        realHospitalData?.data?.data?.data?.map((val) => ({
           label: val?.name,
           value: val?.id,
         }));
@@ -67,11 +72,22 @@ const DoctorForm = ({ id, rawData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormDataState({ ...formDataState, [name]: value });
   };
 
   const handleSelect = (value, name) => {
     setFormDataState({ ...formDataState, [name]: value });
+    if (name === "hospitals") {
+      const opt = hospitalOption?.filter((hospital) =>
+        value.includes(hospital.value)
+      );
+
+      // If setSelectdedHospital comes as a prop, use it to update the state
+      if (typeof setSelectdedHospital === "function") {
+        setSelectdedHospital(opt);
+      }
+    }
   };
 
   const onSubmit = () => {
@@ -165,8 +181,8 @@ const DoctorForm = ({ id, rawData }) => {
         facebook: rawData?.facebook,
         linkedin: rawData?.linkedin,
         instagram: rawData?.instagram,
-        certificate:rawData?.certificate,
-        specialization_id:rawData?.specialization_id,
+        certificate: rawData?.certificate,
+        specialization_id: rawData?.specialization_id,
         council_registration_no: rawData?.council_registration_no,
         languages: rawData?.user?.languages?.map((language) => language?.id),
         hospitals: rawData?.hospitals?.map((hospital) => hospital?.id),
@@ -584,6 +600,34 @@ const DoctorForm = ({ id, rawData }) => {
                     </>
                   )}
                 />
+              </div>
+              <div className="col-lg-12 mt-3 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> About Doctor </p>
+                <textarea
+                  name="about"
+                  value={formDataState.about}
+                  onChange={handleChange}
+                  cols="30"
+                  rows="7"
+                  placeholder=""
+                />
+              </div>
+              <div className="col-12 py-4 d-flex align-items-center ">
+                {!showDoctorFee ? (
+                  <div onClick={() => setShowDoctorFee(true)} className="ml-3">
+                    <img className="cursor-pointer" src={AddRoleIcon} alt="" />{" "}
+                    <span className="cursor-pointer add-doc-role pl-3 ">
+                      Set Consultancy Fee
+                    </span>
+                  </div>
+                ) : (
+                  <ConsutancyFee
+                    setShowDoctorFee={setShowDoctorFee}
+                    setFeeData={setFeeData}
+                    feeData={feeData}
+                    selectdedHospital={selectdedHospital}
+                  />
+                )}
               </div>
             </div>
 
