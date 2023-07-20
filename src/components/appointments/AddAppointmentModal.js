@@ -684,7 +684,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       render={({ field }) => (
                         <DatePicker
                           disabledDate={isDisabledDate}
-                          style={{ border: "none", width: "100%" }}
+                          style={{ border: "none", width: "100%", height: '36.5px' }}
                           onChange={(value, name) => {
                             field.onChange(value);
                             handleDateChange(value);
