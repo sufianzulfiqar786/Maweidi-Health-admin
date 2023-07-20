@@ -10,37 +10,29 @@ import useFetch from "../../customHook/useFetch";
 import { useSelector } from "react-redux";
 
 const App = () => {
-  const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
-  const { data, isLoading, error } = useFetch(`${GetDoctor}`);
+  const [page, setPage] = useState(1);
 
-  const [loading, setLoading] = useState(false);
   const [docdata, setDocData] = useState([]);
+  const { data, isLoading, error, fetchPaginatedData } = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS}?per_page=10&page=${page}`
+  );
   useEffect(() => {
     if (data) {
-      setDocData(data?.data?.data);
+      setDocData([...docdata, ...data?.data?.data]);
     }
   }, [data]);
 
   const loadMoreData = () => {
-    if (loading) {
+    if (isLoading) {
       return;
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setDocData([...docdata, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+
+    setPage(page + 1);
+    fetchPaginatedData(
+      `${process.env.REACT_APP_GET_DOCTORS}?per_page=10&page=${page + 1}`
+    );
   };
-  useEffect(() => {
-    // loadMoreData();
-  }, []);
+
   const specializationData = useSelector(
     (state) => state.specialization.specializationData
   );
@@ -67,7 +59,7 @@ const App = () => {
         <InfiniteScroll
           dataLength={docdata?.length}
           next={loadMoreData}
-          hasMore={docdata?.length < 50}
+          hasMore={docdata?.length < data?.data?.total}
           loader={
             <Skeleton
               avatar

@@ -123,20 +123,23 @@ const DoctorForm = ({ id, rawData }) => {
         formData.append(key, formDataState[key]);
       }
     }
-
-    postData(
-      id
-        ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
-        : `${process.env.REACT_APP_ADD_DOCTORS}`,
-      formData,
-      () => {
-        CustomToast({
-          type: "success",
-          message: "Doctor Saved Successfuly!",
-        });
-        navigate("/doctors");
-      }
-    );
+    if (!formDataState?.profile_pic) {
+      setErrorData(4);
+    } else {
+      postData(
+        id
+          ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
+          : `${process.env.REACT_APP_ADD_DOCTORS}`,
+        formData,
+        () => {
+          CustomToast({
+            type: "success",
+            message: "Doctor Saved Successfuly!",
+          });
+          navigate("/doctors");
+        }
+      );
+    }
   };
 
   const handleDoctorImageClick = () => {
@@ -235,7 +238,7 @@ const DoctorForm = ({ id, rawData }) => {
           </div>
 
           <div className="col-12" style={{ marginTop: "-20px" }}>
-            {errorData === 1 ? (
+            {errorData === 1 || errorData === 4 ? (
               <span className="error-message">
                 Please select a valid image file (JPEG or PNG)
               </span>
