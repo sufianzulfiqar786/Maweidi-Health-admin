@@ -42,23 +42,18 @@ const AddAppointmentModal = ({ open, onClose }) => {
     process.env.REACT_APP_GET_SPECIALIZATIONS + `/${selectedHospitalId}`
   );
 
-  const url = process.env.REACT_APP_GET_DOCTORS_BY_SPEC_HOSPITAL + `/${selectedHospitalId}/${selectedSpecializationId}`;
-  console.log("-----url-----", url);
-
   const {
     data: doctorsData,
     isLoading,
     error,
   } = useFetch(
-    process.env.REACT_APP_GET_DOCTORS_BY_SPEC_HOSPITAL + `/${selectedHospitalId}/${selectedSpecializationId}`
+    `${process.env.REACT_APP_GET_DOCTORS_BY_SPEC_HOSPITAL}?hospital_id=${selectedHospitalId}&specialization_id=${selectedSpecializationId}`
   );
-  console.log("------doctorsData-------", doctorsData);
 
   useEffect(() => {
-    console.log("-----hospitalData------", hospitalData);
     if (hospitalData?.success) {
       setHospitals(
-        hospitalData?.data.map(({ id, name, specialities }) => ({
+        hospitalData?.data?.data?.map(({ id, name, specialities }) => ({
           id,
           value: name,
           label: name,
@@ -75,101 +70,86 @@ const AddAppointmentModal = ({ open, onClose }) => {
     formState: { errors },
   } = useForm();
 
-  const doctors = [
+  let available = [
     {
-      id: 1,
-      value: "Dr. Drake Boeson",
-      label: "Dr. Drake Boeson",
-      availableDates: [
-        "2023-07-15",
-        "2023-07-17",
-        "2023-07-20",
-        "2023-07-23",
-        "2023-07-25",
-      ],
+        date: "11/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 2,
-      value: "Dr. Keegan Dach",
-      label: "Dr. Keegan Dach",
-      availableDates: [
-        "2023-07-15",
-        "2023-07-17",
-        "2023-07-20",
-        "2023-07-23",
-        "2023-07-25",
-      ],
+        date: "18/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 3,
-      value: "Dr. Delaney Mangino",
-      label: "Dr. Delaney Mangino",
-      availableDates: [
-        "2023-07-15",
-        "2023-07-17",
-        "2023-07-20",
-        "2023-07-23",
-        "2023-07-25",
-      ],
+        date: "26/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 4,
-      value: "Dr. Dustin Jurries",
-      label: "Dr. Dustin Jurries",
-      availableDates: [
-        "2023-07-15",
-        "2023-07-17",
-        "2023-07-20",
-        "2023-07-23",
-        "2023-07-25",
-      ],
+        date: "24/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 5,
-      value: "Dr. Kyleigh Drentlaw",
-      label: "Dr. Kyleigh Drentlaw",
-      availableDates: [
-        "2023-07-15",
-        "2023-07-17",
-        "2023-07-20",
-        "2023-07-23",
-        "2023-07-25",
-      ],
-    },
-  ];
-  const specialistOptions = [
-    {
-      id: 1,
-      value: "Cardiology",
-      label: "Cardiology",
-      doctors: [1, 2],
+        date: "23/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 2,
-      value: "Neurology",
-      label: "Neurology",
-      doctors: [2, 3],
+        date: "30/07/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
     {
-      id: 3,
-      value: "Gynaecology",
-      label: "Gynaecology",
-      doctors: [2, 3, 4],
+        date: "30/06/2023", avail: "AV", arr: [
+            { time: `9:00 - 10:00`, Availability: "AV" },
+            { time: `11:00 - 12:00`, Availability: "AV" },
+            { time: `12:00 - 1:00`, Availability: "AV" },
+            { time: `2:00 - 3:00`, Availability: "NV" },
+            { time: `4:00 - 5:00`, Availability: "AV" },
+            { time: `5:00 - 6:00`, Availability: "NV" },
+        ]
     },
-    {
-      id: 4,
-      value: "Ophthalmology",
-      label: "Ophthalmology",
-      doctors: [1, 2, 5],
-    },
-    {
-      id: 5,
-      value: "Urology",
-      label: "Urology",
-      doctors: [1, 3, 5],
-    },
-  ];
+]
 
+  const isCustomDate = (date) => {
+    let mapedvalue = available.map((value) => {
+        return value.date
+    })
+
+    return mapedvalue.includes(date)
+  }
  
   const getSelectedHospitalId = (hospitalValue) => {
     const selectedHospital = hospitals.find(
@@ -216,21 +196,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
     }
   };
   useMemo(() => findDoctors(), [doctorsData?.data]);
-
-  // const findAvailableDates = (doctorValue) => {
-  //   console.log("-------matchedDoctors--------", matchedDoctors);
-  //   const selectedDoctor = matchedDoctors.find(
-  //     (doctor) => doctor?.value === doctorValue
-  //   );
-  //   if (selectedDoctor) {
-  //     setAvailableDates(selectedDoctor.availableDates);
-  //   }
-  // };
-
-  const isDisabledDate = (current) => {
-    const formattedDate = current.format("YYYY-MM-DD");
-    return !availableDates.includes(formattedDate);
-  };
 
   const handleInputChange = (name, value) => {
     setFormData((prevValues) => ({
@@ -683,7 +648,23 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       }}
                       render={({ field }) => (
                         <DatePicker
-                          disabledDate={isDisabledDate}
+                          dateRender={current => {
+                            if (isCustomDate(current.format("DD/MM/YYYY")) === true) {
+                              return(
+                                <div style={{backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px'}}>
+                                  {current.date()}
+                                </div>
+                              )
+                            }
+                            else {
+                              return (
+                                <div style={{backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px'}}>
+                                  {current.date()}
+                                </div>
+                              );
+                            }
+                          }}
+                          format="DD/MM/YYYY"
                           style={{ border: "none", width: "100%", height: '36.5px' }}
                           onChange={(value, name) => {
                             field.onChange(value);

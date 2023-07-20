@@ -15,6 +15,7 @@ import prescriptionSVG from "../../assets/images/common/prescription.svg";
 import Cross from "../common/Cross";
 import Tick from "../common/Tick.js";
 import "../../assets/css/common/datatable.scss";
+import PageLoader from "../../atoms/pageLoader";
 
 const DataTable = ({
   onTickClick,
@@ -22,10 +23,11 @@ const DataTable = ({
   rows,
   filterOption,
   searchQuery,
+  page,
+  setPage,
+  rowsPerPage,
+  isLoading
 }) => {
-  
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
@@ -74,6 +76,7 @@ const DataTable = ({
   const visibleRows = filteredRows.slice(startIndex, endIndex);
 
   return (
+    isLoading? <PageLoader/> :
     <>
       <TableContainer
         component={Paper}
