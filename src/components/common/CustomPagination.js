@@ -6,7 +6,6 @@ const CustomPagination = ({ page, totalPages, onChangePage }) => {
   };
 
   const handleNext = () => {
-    alert(Math.min(page + 1, totalPages ))
     onChangePage(Math.min(page + 1, totalPages ));
   };
 

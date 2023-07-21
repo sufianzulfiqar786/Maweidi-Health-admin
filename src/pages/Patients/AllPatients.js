@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Chevron from "../../assets/images/common/chevron-right.svg";
 import DataTable from "../../components/patients/allpatients/DataTable";
+// css file
+import "../../assets/css/doctor.scss";
 import "../../assets/css/patients/allpatients/allpatientsheader.scss";
 import Searchbar from "../../components/common/Searchbar";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
+import { Link } from "react-router-dom";
 
 const AllPatients = () => {
   const [rows, setRows] = useState([
@@ -116,19 +119,21 @@ const AllPatients = () => {
 
         <div className="col-12 my-4">
           <div className="row ">
-            <div className="col-md-12">
+            <div className="col-md-9">
               <BreadCrum
                 firstLink="/patients"
                 firstText="PATIENTS"
                 secondText="ALL PATIENTS"
               />
-              {/* <p className="allpatient-breadcrumb">
-                <span>DASHBOARD</span>
-                <img src={Chevron} />
-                <span> PATIENTS</span>
-                <img src={Chevron} />
-                <span className="current-tab"> ALL PATIENTS</span>
-              </p> */}
+            </div>
+            <div className="col-lg-3 col-12 mt-lg-0 mt-3 d-flex justify-content-center justify-content-md-end ">
+              {" "}
+              <button className="btn-add-new-doc w-75">
+                <Link className="add-doc-link-color" to="/patients/add">
+                  {" "}
+                  Add Patients{" "}
+                </Link>
+              </button>{" "}
             </div>
           </div>
           <div className="row m-0 p-0">
