@@ -296,13 +296,14 @@ const Appointments = () => {
       setRows(
         appointmentsData?.data?.data?.map(({ id, fees, user, doctor, selected_date, selected_time, hospital, status}) => ({
           number: id,
+          patient_id: user?.id,
           patient_name: user?.name,
           date: selected_date,
           time: selected_time,
           hospital_name: hospital !==null? hospital?.name : "Badr AL Samaa Hospitals",
           docCivilID: doctor !==null? doctor?.council_registration_no : "40122-67366475-3",
           doctor_name: doctor !==null? doctor?.user?.name : "Dr. Jane Smith",
-          specialization: doctor !==null? doctor?.specialization_id : "Cardiology",
+          specialization: "Cardiology",
           fees: fees !==null? fees : "$50/Patient",
           appointmentStatus: status !==0 ? "Approved" :"Rejected",
         }))
