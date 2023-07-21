@@ -15,6 +15,7 @@ import prescriptionSVG from "../../assets/images/common/prescription.svg";
 import Cross from "../common/Cross";
 import Tick from "../common/Tick.js";
 import "../../assets/css/common/datatable.scss";
+import PageLoader from "../../atoms/pageLoader";
 
 const DataTable = ({
   onTickClick,
@@ -22,10 +23,11 @@ const DataTable = ({
   rows,
   filterOption,
   searchQuery,
+  page,
+  setPage,
+  rowsPerPage,
+  isLoading
 }) => {
-  
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
@@ -74,6 +76,7 @@ const DataTable = ({
   const visibleRows = filteredRows.slice(startIndex, endIndex);
 
   return (
+    isLoading? <PageLoader/> :
     <>
       <TableContainer
         component={Paper}
@@ -94,6 +97,7 @@ const DataTable = ({
               <TableCell className="number" align="left">
                 #
               </TableCell>
+              <TableCell align="left">Patient Id</TableCell>
               <TableCell align="left">Patient Name</TableCell>
               <TableCell align="left">Date</TableCell>
               <TableCell align="left">Time</TableCell>
@@ -124,19 +128,9 @@ const DataTable = ({
                   {row.number}
                 </TableCell>
                 <TableCell align="left">
-                  {/* <CardHeader
-                    sx={{ padding: "0px" }}
-                    avatar={
-                      <Box
-                        sx={{
-                          filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
-                        }}
-                      >
-                        <Avatar alt="sohaib" src={sohaibavatar} />
-                      </Box>
-                    }
-                    title={row.patient_name}
-                  /> */}
+                  {row.patient_id}
+                </TableCell>
+                <TableCell align="left">
                   {row.patient_name}
                 </TableCell>
                 <TableCell align="left">{row.date}</TableCell>
