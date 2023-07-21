@@ -19,12 +19,13 @@ const useFetch = (url) => {
     return response.data;
   };
 
-  
 
+  
   const { data: queryData, isLoading: queryIsLoading, error: queryError } = useQuery(url, fetchData, {
     onSuccess: (data) => {
       setData(data);
       setIsLoading(false);
+      console.log(data);
     },
     onError: (error) => {
       setError(error);

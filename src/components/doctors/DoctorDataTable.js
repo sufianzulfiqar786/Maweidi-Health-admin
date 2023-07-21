@@ -257,7 +257,6 @@ const DataTable = ({ rows }) => {
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
   const visibleRows = rows?.slice(startIndex, endIndex);
-
   return (
     <>
       <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
