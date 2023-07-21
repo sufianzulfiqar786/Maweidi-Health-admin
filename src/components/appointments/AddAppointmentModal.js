@@ -24,6 +24,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
     doctor_name: "",
     date: "",
     time: "",
+    fees: "",
     age: "",
     email: "",
     phone: "",
@@ -244,7 +245,6 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
   const handleTimeChange = (value) => {
     handleInputChange("time", value);
-    console.log("----selectedSpecializationId-----", selectedSpecializationId);
   };
 
   const handleDateChange = (value) => {
@@ -261,6 +261,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
       doctor_name: "",
       date: "",
       time: "",
+      fees: "",
       age: "",
       email: "",
       phone: "",
@@ -278,6 +279,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
       doctor_name: "",
       date: "",
       time: "",
+      fees: "",
       age: "",
       email: "",
       phone: "",
@@ -801,7 +803,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       <>
                         <input
                           type="text"
-                          name="age"
+                          name="fees"
                           {...field}
                           value={field.value}
                           onChange={(e) => {
@@ -841,6 +843,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                             field.onChange(e.target.value);
                             handleInputChange(e.target.name, e.target.value);
                           }}
+                          onClick={()=> {console.log("----formData------", formData)}}
                         />
 
                         {errors.age && (
