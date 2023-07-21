@@ -328,6 +328,30 @@ const FullScreenMenu = ({
                     </span>
                   </Link>
                 </div>
+                <div className="sub-menu1-top-padding col-12 mt-2 pt-1 ml-5 left-drop-down d-flex align-items-center">
+                  <span class="dot"></span>
+                  <Link className="maweidi-link " to="/doctors/availability">
+                    <span
+                      className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "adddoc"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
+                      onClick={() => {
+                        setMenuDropDownFullScreen((prevState) => ({
+                          ...prevState,
+                          subMenuMobile: {
+                            ...prevState.subMenuMobile,
+                            subtoggle: !prevState.subMenuMobile.subtoggle,
+                            subname: "adddoc",
+                          },
+                        }));
+                        setMobileMenu1(!MobileMenu1);
+                      }}
+                    >
+                      Doctor Availability
+                    </span>
+                  </Link>
+                </div>
               </>
             )}
         </div>

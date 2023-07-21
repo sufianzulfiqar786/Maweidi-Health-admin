@@ -15,6 +15,8 @@ import AllDoctor from "./Doctor/AllDoctor";
 import AllPatients from "./Patients/AllPatients";
 import AddPatient from "./Patients/AddPatient";
 import AddDoctor from "./Doctor/AddDoctor";
+import Availability from "./Doctor/Availability";
+
 import ViewDoctor from "../components/doctors/ViewDoctor";
 import PatientProfile from "./Patients/patientprofile/PatientProfile";
 import Pharmacy from "./Pharmacy/pharmacy";
@@ -245,7 +247,7 @@ const Dashboard = () => {
                     <AddPharmacy />
                   ) : location.pathname.startsWith("/pharmacy/update/") &&
                     (ValidUI() === "superAdmin") |
-                      (ValidUI() === "PharmacyAdmin") ? (
+                    (ValidUI() === "PharmacyAdmin") ? (
                     <AddPharmacy
                       Id={ValidateRoute(location.pathname).split("/")[3]}
                     />

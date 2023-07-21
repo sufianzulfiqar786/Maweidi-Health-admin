@@ -645,7 +645,7 @@ const isDisabledDate = (current) => {
                         },
                         {
                           label: "10:00 AM",
-                          value: "111:00 AM",
+                          value: "11:00 AM",
                         },
                         {
                           label: "11:00 AM",

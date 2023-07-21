@@ -14,7 +14,7 @@ import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
-
+import TimeTable from '../../components/doctors/TimeTable';
 // scss
 import "../../assets/css/doctor.scss";
 import { Controller, useForm } from "react-hook-form";
