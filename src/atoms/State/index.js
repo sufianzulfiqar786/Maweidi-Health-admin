@@ -17,8 +17,11 @@ const SelectState = ({ value, handleChange, country, name, disabled = false }) =
       label: val.name,
       value: val.name,
     }));
+
     return res;
   };
+
+  console.log("States===>", States, country)
 
   const option = useMemo(() => Cont(), [stat]);
 

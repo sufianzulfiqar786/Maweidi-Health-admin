@@ -29,7 +29,9 @@ const CustomDropDown = ({
     } else {
       console.log(val, name, "val-->");
       handleChangeSelect(val, name);
-      hospitalDopDown(val, dayId)
+      if (typeof hospitalDopDown === 'function') {
+        hospitalDopDown(val, dayId);
+      }
     }
   };
 
