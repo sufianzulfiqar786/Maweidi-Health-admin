@@ -185,6 +185,7 @@ const DoctorForm = ({ id, rawData }) => {
         linkedin: rawData?.linkedin,
         instagram: rawData?.instagram,
         certificate: rawData?.certificate,
+        about: rawData?.about,
         specialization_id: rawData?.specialization_id,
         council_registration_no: rawData?.council_registration_no,
         languages: rawData?.user?.languages?.map((language) => language?.id),
@@ -463,7 +464,7 @@ const DoctorForm = ({ id, rawData }) => {
             </div>
 
             <div className="row mt-3">
-              <div className="col-lg-6 pr-lg-1 doc-setting-input">
+              <div className="col-lg-4 pr-lg-1 doc-setting-input">
                 <p className="mb-2"> Specialization </p>
                 <Controller
                   name="specialization_id"
@@ -494,8 +495,38 @@ const DoctorForm = ({ id, rawData }) => {
                   )}
                 />
               </div>
+              <div className="col-lg-4 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> Qualification </p>
+                <Controller
+                  name="qualification"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="qualification"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleChange(e);
+                        }}
+                      />
 
-              <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+                      {errors.qualification && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+
+              <div className="col-lg-4 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
                 <p className="mb-2">Experience in years </p>
                 <IncreDecreBtn
                   formDataState={formDataState}
