@@ -196,6 +196,7 @@ const DoctorForm = ({ id, rawData }) => {
         setValue(fieldName, fieldValue);
       });
       setValue("first_name", nameParts[0]);
+      setValue("qualification", rawData?.qualification);
       setValue("last_name", nameParts[1]);
       setValue("specialization_id", rawData?.specialization_id);
       setValue("council_registration_no", rawData?.council_registration_no);
@@ -495,7 +496,7 @@ const DoctorForm = ({ id, rawData }) => {
                   )}
                 />
               </div>
-              <div className="col-lg-4 pr-lg-1 doc-setting-input">
+              <div className="col-lg-4 pr-lg-1 mt-lg-0 mt-3 doc-setting-input">
                 <p className="mb-2"> Qualification </p>
                 <Controller
                   name="qualification"
@@ -526,7 +527,7 @@ const DoctorForm = ({ id, rawData }) => {
                 />
               </div>
 
-              <div className="col-lg-4 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+              <div className="col-lg-4 mt-lg-0 mt-3 pl-lg-1 doc-setting-input ">
                 <p className="mb-2">Experience in years </p>
                 <IncreDecreBtn
                   formDataState={formDataState}
