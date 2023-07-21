@@ -101,6 +101,7 @@ const DataTable = ({ rows, searchQuery }) => {
                   <Link
                     to={"/patientprofile"}
                     style={{ textDecoration: "none", color: "inherit" }}
+                    className="patient-name-hover"
                   >
                     <CardHeader
                       sx={{ padding: "0px" }}

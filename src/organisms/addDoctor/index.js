@@ -14,7 +14,7 @@ import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
-
+import TimeTable from '../../components/doctors/TimeTable';
 // scss
 import "../../assets/css/doctor.scss";
 import { Controller, useForm } from "react-hook-form";
@@ -22,12 +22,17 @@ import ButtonLoader from "../../atoms/buttonLoader";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../atoms/toastMessage";
+import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
 
+import ConsutancyFee from "../../components/doctors/ConsutancyFee";
 const DoctorForm = ({ id, rawData }) => {
   const [errorData, setErrorData] = useState(0);
   const [formDataState, setFormDataState] = useState({});
   const [hospitalOption, setHospitalOption] = useState([]);
   const [image, setImage] = useState(null);
+  const [showDoctorFee, setShowDoctorFee] = useState(false);
+  const [feeData, setFeeData] = useState([]);
+  const [selectdedHospital, setSelectdedHospital] = useState("");
   const navigate = useNavigate();
   const realHospitalData = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
   const lang = useFetch(process.env.REACT_APP_GET_LANGUAGES);
@@ -54,10 +59,10 @@ const DoctorForm = ({ id, rawData }) => {
   } = useForm();
 
   useEffect(() => {
-    if (realHospitalData?.data?.data?.length > 0) {
+    if (realHospitalData?.data?.data?.data?.length > 0) {
       const opt =
-        realHospitalData?.data?.data &&
-        realHospitalData?.data?.data.map((val) => ({
+        realHospitalData?.data?.data?.data &&
+        realHospitalData?.data?.data?.data?.map((val) => ({
           label: val?.name,
           value: val?.id,
         }));
@@ -67,11 +72,22 @@ const DoctorForm = ({ id, rawData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormDataState({ ...formDataState, [name]: value });
   };
 
   const handleSelect = (value, name) => {
     setFormDataState({ ...formDataState, [name]: value });
+    if (name === "hospitals") {
+      const opt = hospitalOption?.filter((hospital) =>
+        value.includes(hospital.value)
+      );
+
+      // If setSelectdedHospital comes as a prop, use it to update the state
+      if (typeof setSelectdedHospital === "function") {
+        setSelectdedHospital(opt);
+      }
+    }
   };
 
   const onSubmit = () => {
@@ -107,20 +123,23 @@ const DoctorForm = ({ id, rawData }) => {
         formData.append(key, formDataState[key]);
       }
     }
-
-    postData(
-      id
-        ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
-        : `${process.env.REACT_APP_ADD_DOCTORS}`,
-      formData,
-      () => {
-        CustomToast({
-          type: "success",
-          message: "Doctor Saved Successfuly!",
-        });
-        navigate("/doctors");
-      }
-    );
+    if (!formDataState?.profile_pic) {
+      setErrorData(4);
+    } else {
+      postData(
+        id
+          ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
+          : `${process.env.REACT_APP_ADD_DOCTORS}`,
+        formData,
+        () => {
+          CustomToast({
+            type: "success",
+            message: "Doctor Saved Successfuly!",
+          });
+          navigate("/doctors");
+        }
+      );
+    }
   };
 
   const handleDoctorImageClick = () => {
@@ -165,7 +184,12 @@ const DoctorForm = ({ id, rawData }) => {
         facebook: rawData?.facebook,
         linkedin: rawData?.linkedin,
         instagram: rawData?.instagram,
+        certificate: rawData?.certificate,
+        about: rawData?.about,
+        specialization_id: rawData?.specialization_id,
         council_registration_no: rawData?.council_registration_no,
+        languages: rawData?.user?.languages?.map((language) => language?.id),
+        hospitals: rawData?.hospitals?.map((hospital) => hospital?.id),
       });
 
       Object.entries(rawData?.user).forEach(([fieldName, fieldValue]) => {
@@ -182,7 +206,7 @@ const DoctorForm = ({ id, rawData }) => {
       );
       setValue(
         "languages",
-        rawData?.languages?.map((language) => language?.id)
+        rawData?.user?.languages?.map((language) => language?.id)
       );
     }
   }, [id, rawData]);
@@ -190,7 +214,7 @@ const DoctorForm = ({ id, rawData }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row px-1">
+        <div className="row px-2">
           <div className="col-md-12 pt-2 d-flex align-items-center doc-cam">
             <div
               className="mt-4 mb-md-4 mb-0 d-flex align-items-center justify-content- 
@@ -205,7 +229,9 @@ const DoctorForm = ({ id, rawData }) => {
                   alt="Uploaded image"
                 />
               ) : (
-                <img src={CameraIcon} alt="" />
+                <div className="d-flex text-center justify-content-center w-100">
+                  <img src={CameraIcon} alt="upload" />
+                </div>
               )}
             </div>
 
@@ -213,7 +239,7 @@ const DoctorForm = ({ id, rawData }) => {
           </div>
 
           <div className="col-12" style={{ marginTop: "-20px" }}>
-            {errorData === 1 ? (
+            {errorData === 1 || errorData === 4 ? (
               <span className="error-message">
                 Please select a valid image file (JPEG or PNG)
               </span>
@@ -438,7 +464,7 @@ const DoctorForm = ({ id, rawData }) => {
             </div>
 
             <div className="row mt-3">
-              <div className="col-lg-6 pr-lg-1 doc-setting-input">
+              <div className="col-lg-4 pr-lg-1 doc-setting-input">
                 <p className="mb-2"> Specialization </p>
                 <Controller
                   name="specialization_id"
@@ -469,8 +495,38 @@ const DoctorForm = ({ id, rawData }) => {
                   )}
                 />
               </div>
+              <div className="col-lg-4 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> Qualification </p>
+                <Controller
+                  name="qualification"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        type="text"
+                        name="qualification"
+                        {...field}
+                        value={field.value}
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                          handleChange(e);
+                        }}
+                      />
 
-              <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+                      {errors.qualification && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+
+              <div className="col-lg-4 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
                 <p className="mb-2">Experience in years </p>
                 <IncreDecreBtn
                   formDataState={formDataState}
@@ -578,6 +634,34 @@ const DoctorForm = ({ id, rawData }) => {
                     </>
                   )}
                 />
+              </div>
+              <div className="col-lg-12 mt-3 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> About Doctor </p>
+                <textarea
+                  name="about"
+                  value={formDataState.about}
+                  onChange={handleChange}
+                  cols="30"
+                  rows="7"
+                  placeholder=""
+                />
+              </div>
+              <div className="col-12 py-4 d-flex align-items-center ">
+                {!showDoctorFee ? (
+                  <div onClick={() => setShowDoctorFee(true)} className="ml-3">
+                    <img className="cursor-pointer" src={AddRoleIcon} alt="" />{" "}
+                    <span className="cursor-pointer add-doc-role pl-3 ">
+                      Set Consultancy Fee
+                    </span>
+                  </div>
+                ) : (
+                  <ConsutancyFee
+                    setShowDoctorFee={setShowDoctorFee}
+                    setFeeData={setFeeData}
+                    feeData={feeData}
+                    selectdedHospital={selectdedHospital}
+                  />
+                )}
               </div>
             </div>
 

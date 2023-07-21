@@ -14,21 +14,27 @@ import CustomCheckbox from "../../components/common/CustomCheckbox";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import useFetch from "../../customHook/useFetch";
 import PageLoader from "../../atoms/pageLoader";
+import { useEffect } from "react";
 
 const AllDoctor = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
-
-  const { data, isLoading, error } = useFetch(
-    `${process.env.REACT_APP_GET_DOCTORS}`
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+ 
+  const { data, isLoading, error ,fetchPaginatedData} = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${page}`,
   );
-
+  const handleChangePage = (newPage) => {
+    setPage(newPage);
+    // fetchPaginatedData(`${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${newPage}`)
+  };
   const handleChange = (value) => {
     setSelectedOptions(value);
     setDirty(true);
-    console.log("Select Changed");
   };
+ 
 
   const marks = {
     // 0: '0°C',
@@ -67,7 +73,6 @@ const AllDoctor = () => {
                 firstText="DOCTORS"
                 secondText="ALL DOCTORS"
               />
-             
             </div>
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
@@ -454,7 +459,12 @@ const AllDoctor = () => {
         </div>
 
         <div className="col-12 mb-5 pb-5 px-0">
-          <DoctorDataTable rows={data?.data} />
+          <DoctorDataTable
+            rows={data?.data}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            handleChangePage={handleChangePage}
+          />
         </div>
       </div>
     </>

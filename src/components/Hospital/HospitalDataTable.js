@@ -33,15 +33,21 @@ import ButtonLoader from "../../atoms/buttonLoader";
 import ImagePreview from "../../atoms/ImagePreview";
 import DeletConfirmation from "../../atoms/deletConfirmation";
 import { CustomToast } from "../../atoms/toastMessage";
+import useFetch from "../../customHook/useFetch";
 
-const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, loading }) => {
-    console.log("roesss", rows)
-    const [page, setPage] = useState(0);
+const DataTable = ({ searchQuery, title = 'Edit a Pharmacy',  setRows, loading }) => {
+
+    const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-
+console.log("page", page)
     const { isLoading, error, deleteData } = useDeleteData();
 
+    const getHospital = useFetch(
+        `${process.env.REACT_APP_GET_HOSPITAL_DATA}?per_page=${rowsPerPage}&page=${page}`
+      );
 
+      const rows = getHospital.data
+      console.log("roesss", rows?.data)
 
     const [modal1Open, setModal1Open] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
@@ -62,56 +68,22 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
 
         deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${deleteState}`, () => {
             setDeleteModal(false)
-            const filter = rows.filter(val => val.id !== deleteState)
+            getHospital.fetchPaginatedData(`${process.env.REACT_APP_GET_HOSPITAL_DATA}?per_page=${rowsPerPage}&page=${page}`)
+            // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
             CustomToast({
                 type: "success",
                 message: "Hospital Delete Successfuly!",
               });
-            setRows(filter)
+            
+            // setRows(filter)
         });
     };
 
-    const handleDoctorImageClick = () => {
-        // Create a file input element and trigger a click event
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
-        input.onchange = (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                setErrorData(0);
-                return;
-            }
-            const fileType = file.type;
-            if (fileType !== "image/png" && fileType !== "image/jpeg") {
-                // alert('Please select a PNG or JPEG file');
-                setErrorData(1);
-                return;
-            } else {
-                setErrorData(0);
-            }
-            // Set the selected image as the state of the component
-            setImage(URL.createObjectURL(file));
-        };
-        input.click();
-    };
-
-    const totalRows = rows?.length;
+    const totalRows = rows?.data?.total;
     const totalPages = Math.ceil(totalRows / rowsPerPage);
     const startIndex = page * rowsPerPage;
     const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-    const visibleRows = rows?.filter((item) => {
-        var lcInfo = searchQuery.toLocaleLowerCase();
-        return lcInfo === ""
-            ? item
-            : item.name.toLocaleLowerCase().includes(lcInfo) ||
-            item.address.toLocaleLowerCase().includes(lcInfo) ||
-            item.mobile.toLocaleLowerCase().includes(lcInfo) ||
-            item.country.toLocaleLowerCase().includes(lcInfo) ||
-            item.zipcode.toLocaleLowerCase().includes(lcInfo) ||
-            item.state.toLocaleLowerCase().includes(lcInfo)
-    })?.slice(startIndex, endIndex);
+    const visibleRows = rows?.data?.data
 
     const isLargeScreen = useMediaQuery('(min-width: 1024px)');
     const isMediumScreen = useMediaQuery('(min-width: 484px)');
@@ -176,19 +148,12 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                                 },
                             }}
                         >
-
-                            {/* {
-                                !loading  && <div className="w-100 d-flex justify-content-center align-items-center" style={{height:"15rem"}}>
-                                    <ButtonLoader/>
-                                </div>
-                            } */}
-
-                            {!loading ? visibleRows?.map(({ id, profile_picture, name, email, address, phone_no, country, state, zipcode }, index) => (
+                            {!getHospital?.isLoading ? visibleRows?.map(({ id, profile_picture, name, email, address, phone_no, country, state, zipcode }, index) => (
                                 <TableRow
                                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                                 >
                                     <TableCell align="left" className="number">
-                                        {index + 1}
+                                        {((page -1) * rowsPerPage + index) + 1}
                                     </TableCell>
                                     <TableCell align="left">
                                         <CardHeader
@@ -234,125 +199,12 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
                     </Table>
                 </TableContainer>
 
-
-                {/* <Modal
-                    className="doctor-filter-modal"
-                    centered
-                    open={modal1Open}
-                    // onOk={() => setModal2Open(false)}
-                    onCancel={() => setModal1Open(false)}
-                    width={1046}
-                    footer={
-                        <div className="row px-3 mt-lg-4 mb-lg-4">
-                            <div className="col-12 pt-3 pb-2 d-flex justify-content-center mt-3">
-                                <button className="apply-filter submit-pharmacy-edit">Save Changes</button>
-                            </div>
-                        </div>
-                    }
-                >
-                    <div className="row px-3 border-bottom">
-                        <div className="col-12 ">
-                            <p className="doc-add-filter">{title}</p>
-                        </div>
-                    </div>
-
-                    <div className="col-12 pt-2 pb-md-3 pb-4 d-flex align-items-center doc-cam">
-                        <div
-                            className="mt-4 mb-md-2 mb-0 d-flex align-items-center justify-content-center add-doc-camera-upload cursor-pointer"
-                            onClick={handleDoctorImageClick}
-                        >
-                            {image ? (
-                                <img
-                                    className="add-doc-camera-upload-1st"
-                                    src={image}
-                                    alt="Uploaded image"
-                                />
-                            ) : (
-                                <img src={CameraIcon} alt="" />
-                            )}
-                        </div>
-
-                        <span className="pl-4 pt-3 ml-2 doc-cam-text">
-                            Profile Picture
-                        </span>
-                    </div>
-                    <div className="col-12" style={{ marginTop: "-20px" }}>
-                        {errorData === 1 ? (
-                            <span className="error-message">
-                                Please select a valid image file (JPEG or PNG)
-                            </span>
-                        ) : (
-                            ""
-                        )}
-                    </div>
-
-                    <div className="row px-3 mt-4">
-                        <div className="col-lg-12 doc-setting-input">
-                            <p className=" doc-add-filter-text">Name</p>
-
-                            <input type="text" />
-                        </div>
-
-
-                    </div>
-
-                    <div className="row px-3 mt-4">
-                        <div className="col-lg-12 doc-setting-input">
-                            <p className=" doc-add-filter-text">Phone No</p>
-
-                            <input type="text" />
-                        </div>
-                    </div>
-                    <div className="row px-3 mt-4">
-                        <div className="col-lg-12 doc-setting-input">
-                            <p className=" doc-add-filter-text">Email <span style={{ color: "#8C8C8C" }}>(Optional)</span></p>
-
-                            <input type="text" />
-                        </div>
-                    </div>
-
-                    <div className="row px-3 mt-4">
-                        <div className="col-lg-12 doc-setting-input">
-                            <p className=" doc-add-filter-text">Address</p>
-
-                            <input type="text" />
-                        </div>
-                    </div>
-
-
-
-                    <div className="row px-3 mt-4">
-                        <div className="col-lg-4 pr-lg-0 doc-setting-input">
-                            <p className=" doc-add-filter-text">Country </p>
-
-                            <input type="text" placeholder="Choose" />
-                        </div>
-
-                        <div className="col-lg-4 pt-lg-0 pt-4 doc-setting-input">
-                            <p className=" doc-add-filter-text ">State</p>
-
-                            <input type="text" placeholder="Choose" />
-                        </div>
-
-                        <div className="col-lg-4 pt-lg-0 pt-4 pl-lg-0 doc-setting-input">
-                            <p className=" doc-add-filter-text">Zip</p>
-
-                            <input type="text" />
-                        </div>
-
-
-                    </div>
-                </Modal> */}
-
-
-
-
             </div>
 
             <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
                 <div className="pagination-detail">
-                    Showing {page * rowsPerPage + 1} -{" "}
-                    {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
+                    Showing {(page -1) * rowsPerPage + 1} -{" "}
+                    {rows?.data?.to} of {rows?.data?.total}
                 </div>
                 <CustomPagination
                     page={page}
@@ -365,9 +217,3 @@ const DataTable = ({ searchQuery, title = 'Edit a Pharmacy', rows, setRows, load
 };
 
 export default DataTable;
-
-
-
-
-
-

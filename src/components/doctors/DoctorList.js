@@ -7,41 +7,35 @@ import IncorrectIcon from "../../assets/images/dashboard/IncorrectIcon.svg";
 // css
 import "../../assets/css/dashboard.scss";
 import useFetch from "../../customHook/useFetch";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  
-  const GetDoctor = process.env.REACT_APP_GET_DOCTORS;
-  const { data, isLoading, error } = useFetch(`${GetDoctor}`);
+  const [page, setPage] = useState(1);
 
-  const [loading, setLoading] = useState(false);
   const [docdata, setDocData] = useState([]);
+  const { data, isLoading, error, fetchPaginatedData } = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS}?per_page=10&page=${page}`
+  );
   useEffect(() => {
     if (data) {
-      setDocData(data?.data);
+      setDocData([...docdata, ...data?.data?.data]);
     }
   }, [data]);
 
   const loadMoreData = () => {
-    if (loading) {
+    if (isLoading) {
       return;
     }
-    setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setDocData([...docdata, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  };
-  useEffect(() => {
-    loadMoreData();
-  }, []);
 
+    setPage(page + 1);
+    fetchPaginatedData(
+      `${process.env.REACT_APP_GET_DOCTORS}?per_page=10&page=${page + 1}`
+    );
+  };
+
+  const specializationData = useSelector(
+    (state) => state.specialization.specializationData
+  );
   return (
     <>
       <div className="row px-4 py-3 my-1 ">
@@ -65,7 +59,7 @@ const App = () => {
         <InfiniteScroll
           dataLength={docdata?.length}
           next={loadMoreData}
-          hasMore={docdata?.length < 50}
+          hasMore={docdata?.length < data?.data?.total}
           loader={
             <Skeleton
               avatar
@@ -80,41 +74,48 @@ const App = () => {
         >
           <List
             dataSource={docdata}
-            renderItem={(item) => (
-              <>
-                <div className="row  pt-1 pb-3">
-                  <div className="col-12">
-                    <div className="d-flex appoinment-detail align-items-center">
-                      <img
-                        className="add-doctor-detail-img cursor-pointer"
-                        src="https://www.moh.gov.bh/Content/Upload/Image/636724319772210000-%D8%AF.-%D8%AE%D8%A7%D8%AA%D9%88%D9%86-%D9%83%D8%A7%D8%B8%D9%85.jpg"
-                        alt=""
-                      />
+            renderItem={(item) => {
+              const matchingSpecialization = specializationData?.data?.find(
+                (specialization) => specialization.id === item.specialization_id
+              );
+              return (
+                <>
+                  <div className="row  pt-1 pb-3">
+                    <div className="col-12">
+                      <div className="d-flex appoinment-detail align-items-center">
+                        <img
+                          className="add-doctor-detail-img cursor-pointer"
+                          src={`${process.env.REACT_APP_IMAGE_URL}/${item?.user?.profile_pic}`}
+                          alt=""
+                        />
 
-                      <div className="appoinment-detail-text pl-4 d-flex justify-content-center flex-column">
-                        <p className="mb-0 add-doc-detail-text-1">
-                          {item?.user?.name}
-                        </p>
-                        <p className="mb-0 add-doc-detail-text-2">
-                          {item?.departments}
-                        </p>
-                        <p className="mb-0 add-doc-detail-text-2">
-                          {item?.experience_years} Years Experienced
-                        </p>
+                        <div className="appoinment-detail-text pl-4 d-flex justify-content-center flex-column">
+                          <p className="mb-0 add-doc-detail-text-1">
+                            {item?.user?.name}
+                          </p>
+                          <p className="mb-0 add-doc-detail-text-2">
+                            {matchingSpecialization
+                              ? matchingSpecialization.name
+                              : "Specialization not found"}
+                          </p>
+                          <p className="mb-0 add-doc-detail-text-2">
+                            {item?.experience_years} Years Experienced
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
-              // <List.Item key={item.email}>
-              //   <List.Item.Meta
-              //     avatar={<Avatar src={item.picture.large} />}
-              //     title={<a href="https://ant.design">{item.name.last}</a>}
-              //     description={item.email}
-              //   />
-              //   <div>Content</div>
-              // </List.Item>
-            )}
+                </>
+                // <List.Item key={item.email}>
+                //   <List.Item.Meta
+                //     avatar={<Avatar src={item.picture.large} />}
+                //     title={<a href="https://ant.design">{item.name.last}</a>}
+                //     description={item.email}
+                //   />
+                //   <div>Content</div>
+                // </List.Item>
+              );
+            }}
           />
         </InfiniteScroll>
       </div>

@@ -41,10 +41,11 @@ const PatientProfile = () => {
                     setSettingsActive(false);
                   }}
                   style={{
-                    background: profileActive
+                    background: !profileActive
                       ? "white"
                       : "linear-gradient(323.79deg, #125A77 35.68%, #397D99 92.17%)",
-                    color: profileActive ? "#193F52" : "white",
+                      boxShadow: settingsActive ? "" : '0 8px 6px -6px black',
+                    color: !profileActive ? "#193F52" : "white",
                     borderTopLeftRadius: "6px",
                   }}
                 >
@@ -56,10 +57,11 @@ const PatientProfile = () => {
                     setSettingsActive(true);
                   }}
                   style={{
-                    background: settingsActive
+                    background: !settingsActive
                       ? "white"
                       : "linear-gradient(323.79deg, #125A77 35.68%, #397D99 92.17%)",
-                    color: settingsActive ? "#193F52" : "white",
+                      boxShadow: settingsActive && "0 8px 6px -6px black",
+                    color: !settingsActive ? "#193F52" : "white",
                     borderTopRightRadius: "6px",
                   }}
                 >

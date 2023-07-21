@@ -30,10 +30,11 @@ const IncreDecreBtn = ({ setFormDataState, formDataState }) => {
       <div className="d-flex doc-setting-input-counter">
         <button
           onClick={handleDecrease}
+          type="button"
           className="doc-setting-incre-decre-btn border-right d-flex align-items-center px-2"
         >
           {" "}
-          <img src={DcreIcon} alt="" />{" "}
+          <img src={DcreIcon} alt="DcreIcon" />{" "}
         </button>
         <input
           className="doc-setting-input-count text-center"
@@ -43,10 +44,11 @@ const IncreDecreBtn = ({ setFormDataState, formDataState }) => {
         />
         <button
           onClick={handleIncrease}
+          type="button"
           className="doc-setting-incre-decre-btn border-left d-flex align-items-center px-2"
         >
           {" "}
-          <img src={IncreIcon} alt="" />{" "}
+          <img src={IncreIcon} alt="IncreIcon" />{" "}
         </button>
       </div>
     </>

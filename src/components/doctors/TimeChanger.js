@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import TimeChangerUpArrow from "../../assets/images/doctor/TimeChangerUpArrow.svg";
 import TimeChangerDownArrow from "../../assets/images/doctor/TimeChangerDownArrow.svg";
 
-function TimeInput({ imgHide, borderInp }) {
-  const [time, setTime] = useState("00:00"); // Set the initial time value
+function TimeInput({ currentDate, Time, dayId, staringTimeDrop, endTimeDrop, selector }) {
+
+  const [time, setTime] = useState("01:00"); // Set the initial time value
+
   const [time1, setTime1] = useState("00:00"); // Set the initial time value
 
   const increment = () => {
@@ -27,6 +29,8 @@ function TimeInput({ imgHide, borderInp }) {
         .toString()
         .padStart(2, "0")}`
     );
+    selector ? staringTimeDrop(time, dayId) : endTimeDrop(time, dayId)
+
   };
 
   const decrement = () => {
@@ -50,14 +54,21 @@ function TimeInput({ imgHide, borderInp }) {
         .padStart(2, "0")}`
     );
   };
+  const setTimeOnChange = (value) => {
+    setTime(value.target.value)
+
+    selector ? staringTimeDrop(value.target.value, dayId) : endTimeDrop(value.target.value, dayId)
+  }
 
   return (
     <>
       <div className="d-inline-flex time-picker py-1 px-2 ">
         <input
           type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
+          value={Time ?? time}
+          onChange={(e) => {
+            setTimeOnChange(e)
+          }}
           min="00:00"
           max="23:59"
           step="60"

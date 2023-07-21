@@ -1,6 +1,4 @@
 import React, { useRef, useState } from 'react'
-import { Select, DatePicker, Checkbox } from "antd";
-import { Link } from 'react-router-dom';
 
 // css file
 import "../../assets/css/doctor.scss";
@@ -11,7 +9,6 @@ import '../../App.scss'
 import RightArrow from "../../assets/images/doctor/RightArrow.svg";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
 import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
-import CalenderIcon from "../../assets/images/doctor/CalenderIcon.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import DocRoleCrossIcon from "../../assets/images/doctor/DocRoleCrossIcon.svg";
 import Location from "../../atoms/Location/Location.js";
@@ -21,7 +18,7 @@ import GoogleMap from "../common/GoogleMap.js";
 import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
-import { optionCountry, optionRoleType, optionSpecialization, optionState } from '../../Data/DoctorData';
+import { optionCountry, optionRoleType, optionState } from '../../Data/DoctorData';
 import CustomDropDown from '../../atoms/CustomDropDown/Index';
 import usePost from '../../customHook/usePost';
 import SelectCountry from '../../atoms/Country';
@@ -41,14 +38,6 @@ const AddHospital = ({ Id }) => {
     const [errorData, setErrorData] = useState(0);
     const [errorMessage, setErrorMessage] = useState(0);
     const [nameData, setNameData] = useState('');
-    const [time, setTime] = useState("00:00");
-    const [time1, setTime1] = useState("00:00");
-    const { RangePicker } = DatePicker;
-
-    const [infoData, setInfoData] = useState("");
-
-    const inputRef = useRef();
-    const inputCertiRef = useRef();
 
     const [image, setImage] = useState(null);
 
@@ -56,13 +45,10 @@ const AddHospital = ({ Id }) => {
     const [newItem, setNewItem] = useState("");
     const [addHospitalData, setAddHospitalData] = useState("");
 
-    const [selectedOptions, setSelectedOptions] = useState(["john"]);
-    const [dirty, setDirty] = useState(false);
-
     const specializationData = useSelector((state) => state.specialization.specializationData);
     const { data, isLoading, error, postData } = usePost()
     const {
-        register,
+        reset,
         setValue,
         handleSubmit,
         control,
@@ -75,13 +61,6 @@ const AddHospital = ({ Id }) => {
             value: item.id,
         }));
     }, [specializationData]);
-
-    const handleChange = (value) => {
-        setSelectedOptions(value);
-        setDirty(true);
-        console.log("Select Changed");
-        handleChangeSelect(value, 'specialization')
-    };
     const [showMap, setShowMap] = useState(false);
     const [locationProp, setLocationProp] = useState("");
 
@@ -90,11 +69,9 @@ const AddHospital = ({ Id }) => {
     };
 
     const handleDoctorImageClick = () => {
-        // Create a file input element and trigger a click event
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-        // input.accept = 'image/png,image/jpeg';  // its just show png and jpeg file rather then other
         input.onchange = (event) => {
             const file = event.target.files[0];
             if (!file) {
@@ -103,13 +80,11 @@ const AddHospital = ({ Id }) => {
             }
             const fileType = file.type;
             if (fileType !== "image/png" && fileType !== "image/jpeg") {
-                // alert('Please select a PNG or JPEG file');
                 setErrorData(1);
                 return;
             } else {
                 setErrorData(0);
             }
-            // Set the selected image as the state of the component
             setAddHospitalData({ ...addHospitalData, 'profile_picture': file })
             setImage(URL.createObjectURL(file));
         };
@@ -130,15 +105,9 @@ const AddHospital = ({ Id }) => {
         setItems(newItems);
     };
     const formatTimeTo24Hour = (time) => {
-        if (!time) return ''; // Handle the case when the time is empty or null
-
-        // Split the time into hours and minutes
+        if (!time) return '';
         const [hours, minutes] = time.split(':');
-
-        // Create a new date object to parse the time
         const parsedTime = new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
-
-        // Convert the parsed time to a string in 24-hour format
         const formattedTime = parsedTime.toTimeString().slice(0, 5);
 
         return formattedTime;
@@ -164,43 +133,34 @@ const AddHospital = ({ Id }) => {
 
     }
 
+    useEffect(() => {
+        if (Id) {
+            customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
+                console.log("value", val?.data)
+                setAddHospitalData(val?.data)
+                Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
+                    setValue(fieldName, fieldValue);
+                });
+                setValue("specialties", val?.data?.specialities?.map(l => (l.id)))
+            })
+        }
+    }, [Id])
+
     const validation = () => {
         if (!addHospitalData.profile_picture) {
             setErrorMessage(-1)
         }
-        // else if (!addHospitalData.name) {
-        //     setErrorMessage(1)
-        // }
-        // else if (!addHospitalData.email) {
-        //     setErrorMessage(2)
-        // }
-        // else if (!addHospitalData.email.match(/[@]/)) {
-        //     setErrorMessage(3)
-        // }
-        // else if (!addHospitalData.phone_no) {
-        //     setErrorMessage(4)
-        // } else if (!addHospitalData.country) {
-        //     setErrorMessage(5)
-        // }
-        // else if (!addHospitalData.start_time) {
-        //     setErrorMessage(6)
-        // } else if (!addHospitalData.end_time) {
-        //     setErrorMessage(7)
-        // }
-        // else if (!addHospitalData.zipcode) {
-        //     setErrorMessage(8)
-        // }
         // else if (!locationProp) {
         //     setErrorMessage(9)
         // }
         else {
             setErrorMessage('No Error')
         }
-
-
     }
 
     const handleHospitalSubmit = () => {
+
+
 
 
         validation()
@@ -220,24 +180,9 @@ const AddHospital = ({ Id }) => {
 
         const updatedPostData1 = {
             ...addHospitalData,
-            // 'name': 'John Doe',
-            // 'email': 'johndoe@example.com',
             'address': '123 Main Street',
-            // 'zipcode': '12345',
-            // 'country': 'United States',
-            // 'state': 'California',
-            // 'phone_no': '123-456-7890',
-            // 'facebook': 'https://www.facebook.com/johndoe',
-            // 'linkedin': 'https://www.linkedin.com/in/johndoe',
-            // 'instagram': 'https://www.instagram.com/johndoe',
-            // 'start_time': '09:00 AM',
-            // 'end_time': '05:00 PM',
-            // 'specialties[]': 2,
-            // 'specialties[]': 4,
-            // 'specialties[]': 5,
             'lat': '34.56789',
             'long': '45.6789',
-            // 'profile_picture': 'https://example.com/johndoe/profile.jpg',
             'updated_at': '2023-07-17 10:30:00',
             'created_at': '2023-07-16 14:20:00'
         }
@@ -261,25 +206,15 @@ const AddHospital = ({ Id }) => {
             postData((Id ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}` : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`), formData, () => {
                 CustomToast({
                     type: "success",
-                    message: `${Id? 'Edit Hospital Successfuly!': 'Add Hospital Successfuly!'}`,
-                  });
-            })
-        }
-
-
-    }
-    useEffect(() => {
-        if (Id) {
-            customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
-                console.log("value", val?.data)
-                setAddHospitalData(val?.data)
-                Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
-                    setValue(fieldName, fieldValue);
+                    message: `${Id ? 'Hospital Details Updated Successfully!' : 'Add Hospital Successfuly!'}`,
                 });
-                setValue("specialties", val?.data?.specialities?.map(l => (l.id)))
+                !Id ??  setAddHospitalData('')
+                !Id ??  reset()
+                !Id ?? setImage('')
             })
         }
-    }, [Id])
+    }
+  
 
     return (
         <div className='mb-5 pb-5'>
@@ -304,10 +239,6 @@ const AddHospital = ({ Id }) => {
                         </div>
 
                         <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-
-                            {/* <button className="btn-add-new-doc">
-                                <Link className="add-doc-link-color" to="/hospitals/add" > Add </Link>
-                            </button>{" "} */}
 
                         </div>
 
@@ -337,7 +268,7 @@ const AddHospital = ({ Id }) => {
                                     ) : (
                                         addHospitalData.profile_picture ?
                                             <div className='add-doc-camera-upload'>
-                                                <img className='w-100 h-100 add-doc-camera-upload-1st' src={process.env.REACT_APP_IMAGE_URL+addHospitalData.profile_picture} alt="" />
+                                                <img className='w-100 h-100 add-doc-camera-upload-1st' src={process.env.REACT_APP_IMAGE_URL + addHospitalData.profile_picture} alt="" />
                                             </div>
                                             : <img src={CameraIcon} alt="" />
 
@@ -350,14 +281,7 @@ const AddHospital = ({ Id }) => {
                             </div>
 
                             <div className="col-md-6 pt-2 d-flex justify-content-md-end justify-content-center align-items-center ">
-                                {/* <div>
-                                <span
-                                    className="doc-upload-pic cursor-pointer"
-                                    onClick={handleDoctorImageClick}
-                                >
-                                    Upload Picture
-                                </span>
-                            </div> */}
+
                             </div>
                             {
                                 errorMessage === -1 ? <p className=' mb-0 pl-3 error-message'>Please upload image</p> : null
@@ -376,12 +300,6 @@ const AddHospital = ({ Id }) => {
                                 <div className="row">
                                     <div className="col-12  doc-setting-input">
                                         <p className="mb-2">Name<span className='error-message'>*</span> </p>
-                                        {/* <input className="" type="text" name='name' value={addHospitalData.name} onChange={(e) => {
-                                            setNameData(e.target.value)
-                                            handleChangeHospital(e)
-                                        }} /> */}
-
-
 
                                         <Controller
                                             name="name"
@@ -395,7 +313,7 @@ const AddHospital = ({ Id }) => {
                                                         type="text"
                                                         name="name"
                                                         {...field}
-                                                        value={field.value}
+                                                        value={field.value || ""}
                                                         onChange={(e) => {
                                                             field.onChange(e.target.value);
                                                             setNameData(e.target.value)
@@ -421,7 +339,6 @@ const AddHospital = ({ Id }) => {
                                 <div className="row mt-4">
                                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
                                         <p className="mb-2"> Your Email<span className='error-message'>*</span> </p>
-                                        {/* <input className="" name='email' value={addHospitalData.email} onChange={handleChangeHospital} type="text" /> */}
                                         <Controller
                                             name="email"
                                             control={control}
@@ -435,7 +352,7 @@ const AddHospital = ({ Id }) => {
                                                     type="text"
                                                     name="email"
                                                     {...field}
-                                                    value={field.value}
+                                                    value={field.value || ""}
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         handleChangeHospital(e);
@@ -452,8 +369,6 @@ const AddHospital = ({ Id }) => {
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                                        {/* <p className="mb-2"> Phone No </p> */}
-                                        {/* <Phone value={addHospitalData?.phone_no} handleChange={handleChangeSelect} name='phone_no' /> */}
                                         <Controller
                                             name="phone_no"
                                             control={control}
@@ -486,9 +401,6 @@ const AddHospital = ({ Id }) => {
 
                                 <div className="row mt-4">
                                     <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                                        {/* <p className="mb-2"> Country </p> */}
-                                        {/* <SelectCountry handleChange={handleChangeSelect} name="country" value={addHospitalData?.country} /> */}
-
                                         <Controller
                                             name="country"
                                             control={control}
@@ -500,6 +412,8 @@ const AddHospital = ({ Id }) => {
                                                     <SelectCountry handleChange={(value, name) => {
                                                         field.onChange(value);
                                                         handleChangeSelect(value, name);
+                                                        setValue('state', '')
+                                                        setAddHospitalData({ ...addHospitalData, ['state']: '' })
                                                     }} name="country"
                                                         field={field}
                                                         value={field.value}
@@ -513,45 +427,11 @@ const AddHospital = ({ Id }) => {
                                                 </>
                                             )}
                                         />
-
-                                        {/* <CustomDropDown selectLabel='Select' option={optionCountry} name="country" value={addHospitalData?.country} handleChangeSelect={handleChangeSelect} /> */}
-                                        {
-                                            errorMessage === 5 ? <p className=' mb-0 error-message'>Please select country</p> : null
-                                        }
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
 
                                         <SelectState country={addHospitalData?.country} disabled={!addHospitalData?.country && true} name="state" value={addHospitalData?.state} handleChange={handleChangeSelect} />
-
-
-                                        {/* <p className="mb-3"> State </p> */}
-
-
-                                        {/* <Controller
-                                            name="state"
-                                            control={control}
-                                            rules={{
-                                                required: true,
-                                            }}
-                                            render={({ field }) => (
-                                                <>
-                                                    <SelectState country={addHospitalData?.country} name="state"
-                                                        field={field}
-                                                        value={field.value}
-                                                        onBlur={field.onBlur} handleChange={(value, name) => {
-                                                            field.onChange(value);
-                                                            handleChangeSelect(value, name);
-                                                        }} />
-                                                    {errors.state && (
-                                                        <span className="error-message">
-                                                            This field is required
-                                                        </span>
-                                                    )}
-                                                </>
-                                            )}
-                                        /> */}
-                                        {/* <CustomDropDown selectLabel='Select'  option={optionState} name="state" value={addHospitalData?.state} handleChangeSelect={handleChangeSelect} /> */}
                                     </div>
                                 </div>
 
@@ -587,95 +467,7 @@ const AddHospital = ({ Id }) => {
                                                 </>
                                             )}
                                         />
-                                        {/* <div className='all-doc-filter-multi-select d-flex justify-content-between '>
-
-                                            <Select
-                                                onChange={handleChange}
-                                                onMouseDown={(e) => {
-                                                    setDirty(false);
-                                                    console.log("Select Clicked");
-                                                    e.stopPropagation();
-                                                }}
-                                                style={{ width: "100%", minHeight: "36.6px" }}
-                                                mode="multiple"
-                                                options={[
-                                                    {
-                                                        value: "Allergists/Immunologists",
-                                                        label: (
-                                                            <Checkbox
-
-                                                                checked={selectedOptions.includes("Allergists/Immunologists")}
-                                                            >
-                                                                Allergists/Immunologists
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Anesthesiologists",
-                                                        label: (
-                                                            <Checkbox
-
-                                                                checked={selectedOptions.includes("Anesthesiologists")}
-                                                            >
-                                                                Anesthesiologists
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Cardiologists​",
-                                                        label: (
-                                                            <Checkbox
-                                                                checked={selectedOptions.includes("Cardiologists​")}
-                                                            >
-                                                                Cardiologists
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Colon and Rectal Surgeons​",
-                                                        label: (
-                                                            <Checkbox
-                                                                checked={selectedOptions.includes("Colon and Rectal Surgeons​")}
-                                                            >
-                                                                Colon and Rectal Surgeons
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Dermatologists​",
-                                                        label: (
-                                                            <Checkbox
-                                                                checked={selectedOptions.includes("Dermatologists​")}
-                                                            >
-                                                                Dermatologists
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Endocrinology​",
-                                                        label: (
-                                                            <Checkbox
-                                                                checked={selectedOptions.includes("Endocrinology​")}
-                                                            >
-                                                                Endocrinology
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                    {
-                                                        value: "Gastroenterologists​",
-                                                        label: (
-                                                            <Checkbox
-                                                                checked={selectedOptions.includes("Gastroenterologists​")}
-                                                            >
-                                                                Gastroenterologists
-                                                            </Checkbox>
-                                                        )
-                                                    },
-                                                ]}
-                                            />
-
-                                            
-                                        </div> */}
+                                        
                                     </div>
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
@@ -702,7 +494,7 @@ const AddHospital = ({ Id }) => {
                                                                 type="time"
                                                                 name="start_time"
                                                                 {...field}
-                                                                value={field.value}
+                                                                value={field.value || ""}
                                                                 onChange={(e) => {
                                                                     field.onChange(e.target.value);
                                                                     setNameData(e.target.value)
@@ -739,7 +531,7 @@ const AddHospital = ({ Id }) => {
                                                                 type="time"
                                                                 name="end_time"
                                                                 {...field}
-                                                                value={field.value}
+                                                                value={field.value || ""}
                                                                 onChange={(e) => {
                                                                     field.onChange(e.target.value);
                                                                     setNameData(e.target.value)
@@ -801,7 +593,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='facebook' value={addHospitalData.facebook} onChange={handleChangeHospital}
+                                                name='facebook' value={addHospitalData.facebook || ""} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -814,7 +606,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='instagram' value={addHospitalData.instagram} onChange={handleChangeHospital}
+                                                name='instagram' value={addHospitalData.instagram || ""} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -822,18 +614,6 @@ const AddHospital = ({ Id }) => {
                                 </div>
 
                                 <div className="row mt-4">
-                                    {/* <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                                    <p className="mb-2"> Instagram </p>
-                                    <div className="d-flex  ">
-                                        <img className="" src={InstaInput} alt="" />
-                                        <input
-                                            className="add-doc-social-input"
-                                            type="text"
-                                            placeholder="Username"
-                                            name='instagram' value={addHospitalData.instagram} onChange={handleChangeHospital}
-                                        />
-                                    </div>
-                                </div> */}
 
                                     <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input ">
                                         <p className="mb-2"> Linkedin </p>
@@ -843,7 +623,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='linkedin' value={addHospitalData.linkedin} onChange={handleChangeHospital}
+                                                name='linkedin' value={addHospitalData.linkedin || ""} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -851,12 +631,6 @@ const AddHospital = ({ Id }) => {
                                     <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
                                         <p className="mb-2"> Zip Code<span className='error-message'>*</span> </p>
                                         <div className="d-flex  ">
-                                            {/* <input
-                                                className=""
-                                                type="text"
-                                                placeholder="Zip Code"
-                                                name='zipcode' value={addHospitalData.zipcode} onChange={handleChangeHospital}
-                                            /> */}
 
                                             <Controller
                                                 name="zipcode"
@@ -871,7 +645,7 @@ const AddHospital = ({ Id }) => {
                                                             type="text"
                                                             name="zipcode"
                                                             {...field}
-                                                            value={field.value}
+                                                            value={field.value || ""}
                                                             onChange={(e) => {
                                                                 field.onChange(e.target.value);
                                                                 handleChangeHospital(e)
@@ -891,8 +665,6 @@ const AddHospital = ({ Id }) => {
                                     </div>
                                 </div>
 
-
-
                                 <div className="row mt-4">
                                     <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
                                         <p className="mb-2"> Location </p>
@@ -906,12 +678,20 @@ const AddHospital = ({ Id }) => {
                                     </div>
                                 </div>
 
+                                <div className="row mt-4">
+                                    <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
+                                        <p className="mb-2"> About Hospital </p>
+                                       <textarea id="" className='pt-2' cols="30" rows="7"
+                                       name='about' value={addHospitalData.about || ""} onChange={handleChangeHospital}
+                                       ></textarea>
+                                    </div>
+                                </div>
                                 <div className="row my-5 pt-2 pb-3 ">
                                     <div className="col-lg-6">
-                                        <button className="apply-filter add-doc-changes" onClick={handleHospitalSubmit}>
-                                          {
-                                            !isLoading? addHospitalData.id? 'Edit Hospital' : 'Add Hospital' : <ButtonLoader/> 
-                                          }  
+                                        <button className="apply-filter add-doc-changes" disabled={isLoading} onClick={handleHospitalSubmit}>
+                                            {
+                                                !isLoading ? addHospitalData.id ? 'Edit Hospital' : 'Add Hospital' : <ButtonLoader />
+                                            }
                                         </button>
                                     </div>
 

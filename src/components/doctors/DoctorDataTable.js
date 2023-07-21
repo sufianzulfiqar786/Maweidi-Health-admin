@@ -1,262 +1,20 @@
 import React, { useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import CardHeader from "@mui/material/CardHeader";
-import Avatar from "@mui/material/Avatar";
-import sohaibavatar from "../../assets/images/dashboard/sohaibavatar.png";
 import "../../assets/css/common/datatable.scss";
-import { Box, Typography } from "@mui/material";
 import CustomPagination from "../common/CustomPagination";
-import prescriptionSVG from "../../assets/images/common/prescription.svg";
-import Edit from "../common/Edit.js";
-import Delete from "../common/Delete.js";
-import Cross from "../common/Cross";
-import Tick from "../common/Tick.js";
 
 // images png
 import pic1 from "../../assets/images/doctor/doc1.png";
-import pic2 from "../../assets/images/doctor/doc2.png";
-import pic3 from "../../assets/images/doctor/doc3.png";
-import pic4 from "../../assets/images/doctor/doc4.png";
+
 import { Link } from "react-router-dom";
 
-// const rows = [
-//   {
-//     id: 1,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic3,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 1,
-//     pic: pic4,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 1,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic4,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 1,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic4,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 1,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic2,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic4,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 1,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 2,
-//     pic: pic3,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 3,
-//     pic: pic3,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-//   {
-//     id: 4,
-//     pic: pic1,
-//     name: "Dr. Liam",
-//     field: "Dentist",
-//     rating: "4.5",
-//     review: "Patient Reviews",
-//     reviewNmber: "167",
-//   },
-// ];
-
-const DataTable = ({ rows }) => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
-
-  const handleChangePage = (newPage) => {
-    setPage(newPage);
-  };
-
-  const totalRows = rows?.length;
+const DataTable = ({ rows, handleChangePage, rowsPerPage, page }) => {
+  const totalRows = rows?.total;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
+
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  const visibleRows = rows?.slice(startIndex, endIndex);
+  // const visibleRows = rows?.slice(startIndex, endIndex);
+  const visibleRows = rows?.data;
 
   return (
     <>
@@ -332,8 +90,9 @@ const DataTable = ({ rows }) => {
       {visibleRows ? (
         <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
           <div className="pagination-detail">
-            Showing {page * rowsPerPage + 1} -{" "}
-            {Math.min((page + 1) * rowsPerPage, rows?.length)} of {rows?.length}
+            Showing {(page - 1) * rowsPerPage + 1} -{" "}
+            {rows?.to} of{" "}
+            {rows?.total}
           </div>
           <CustomPagination
             page={page}
