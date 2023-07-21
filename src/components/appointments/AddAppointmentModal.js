@@ -8,6 +8,7 @@ import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import Phone from "../../atoms/phone";
 import { Controller, useForm } from "react-hook-form";
 import useFetch from "../../customHook/useFetch";
+import moment from 'moment';
 
 const AddAppointmentModal = ({ open, onClose }) => {
   const { data: hospitalData } = useFetch(
@@ -35,6 +36,27 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const [selectedHospitalId, setSelectedHospitalId] = useState();
   const [selectedSpecializationId, setSelectedSpecializationId] = useState();
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const handleDatesChange = (dates) => {
+    if (dates && dates.length === 2) {
+      setStartDate(dates[0]?.format('DD/MM/YYYY'));
+      setEndDate(dates[1]?.format('DD/MM/YYYY'));
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+    }
+  };
+
+  const disabledDate = (current) => {
+    if (!startDate || !endDate) {
+      return false;
+    }
+    const startMoment = moment(startDate, 'DD/MM/YYYY');
+    const endMoment = moment(endDate, 'DD/MM/YYYY');
+    return current < startMoment || current > endMoment;
+  };
 
   const {
     data: specializationData
@@ -638,6 +660,17 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
               <div class="two-group">
                 <div class="form-group">
+                  <label>Date Range</label>
+                  <div className="border" style={{ borderRadius: "5px" }}>
+                  <DatePicker.RangePicker onChange={handleDatesChange} format="DD/MM/YYYY" style={{ border: "none", width: "100%", height: '36.5px' }}/>
+                  </div>
+                  {errors.date && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+                <div class="form-group">
                   <label>Date</label>
                   <div className="border" style={{ borderRadius: "5px" }}>
                     <Controller
@@ -648,21 +681,25 @@ const AddAppointmentModal = ({ open, onClose }) => {
                       }}
                       render={({ field }) => (
                         <DatePicker
+                          // disabledDate={disabledDate}
                           dateRender={current => {
-                            if (isCustomDate(current.format("DD/MM/YYYY")) === true) {
-                              return(
-                                <div style={{backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px'}}>
-                                  {current.date()}
-                                </div>
-                              )
+                            if(!disabledDate(current)){
+                              if (isCustomDate(current.format("DD/MM/YYYY")) === true) {
+                                return(
+                                  <div style={{backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px'}}>
+                                    {current.date()}
+                                  </div>
+                                )
+                              }
+                              else {
+                                return (
+                                  <div style={{backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px'}}>
+                                    {current.date()}
+                                  </div>
+                                );
+                              }
                             }
-                            else {
-                              return (
-                                <div style={{backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px'}}>
-                                  {current.date()}
-                                </div>
-                              );
-                            }
+                            
                           }}
                           format="DD/MM/YYYY"
                           style={{ border: "none", width: "100%", height: '36.5px' }}
@@ -683,6 +720,9 @@ const AddAppointmentModal = ({ open, onClose }) => {
                     </span>
                   )}
                 </div>
+              </div>
+
+              <div class="two-group">
                 <div class="form-group">
                   <label>Time</label>
                   <div className="appointment-time2 d-flex justify-content-between">
@@ -748,6 +788,36 @@ const AddAppointmentModal = ({ open, onClose }) => {
                     </span>
                   )}
                   {/* <TimePicker size="large" style={{ width: "100%" }} /> */}
+                </div>
+                <div class="form-group">
+                  <label>Fees</label>
+                  <Controller
+                    name="fees"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="text"
+                          name="age"
+                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                        />
+
+                        {errors.fees && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </div>
               </div>
 
