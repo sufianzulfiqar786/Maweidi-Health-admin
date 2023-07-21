@@ -21,14 +21,14 @@ const AllDoctor = () => {
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
  
   const { data, isLoading, error ,fetchPaginatedData} = useFetch(
-    `${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${page}`,``
+    `${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${page}`,
   );
   const handleChangePage = (newPage) => {
     setPage(newPage);
-    fetchPaginatedData(`${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${newPage}`)
+    // fetchPaginatedData(`${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${newPage}`)
   };
   const handleChange = (value) => {
     setSelectedOptions(value);
