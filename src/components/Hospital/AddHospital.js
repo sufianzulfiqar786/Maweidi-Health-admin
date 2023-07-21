@@ -213,8 +213,6 @@ const AddHospital = ({ Id }) => {
                 !Id ?? setImage('')
             })
         }
-
-
     }
   
 
