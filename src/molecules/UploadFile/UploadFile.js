@@ -60,7 +60,7 @@ const UploadFile = ({ setFormDataState, formDataState }) => {
           ref={inputCertiRef}
           onChange={handleCertificatesUpload}
           style={{ display: "none" }}
-          // accept="application/pdf"
+          accept=".pdf, image/*"
         />
       </div>
     </>
