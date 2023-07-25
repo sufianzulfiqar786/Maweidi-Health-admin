@@ -42,15 +42,19 @@ const ViewDoctor = ({ Id }) => {
   const [modal2Open, setModal2Open] = useState(false);
   const [specialistOptions, setspecialistOptions] = useState([]);
   const [presentDays, setpresentDays] = useState([])
+  const [temp, settemp] = useState({})
 
   const [addTimePostReq, setaddTimePostReq] = useState(
     {
       doctor_id: 131,
-      hospital_id: 456,
       schedules: [
+        {
+
+        }
       ]
     }
   )
+
 
   const setUpAvailableTime = () => {
   }
@@ -58,35 +62,35 @@ const ViewDoctor = ({ Id }) => {
   const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData()
   const [selectDay, setSelectDay] = useState({
     sunday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     monday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     tuesday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     wednesday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     thursday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     friday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     saturday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
   });
-
+  const [moveNext, setmoveNext] = useState(true)
 
   const { data, isLoading, error } = useFetch(
     `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
@@ -94,15 +98,15 @@ const ViewDoctor = ({ Id }) => {
 
   const getTimeTableData = () => {
     deleteData(
-      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${123}`, (Data) => {
-        setdoctorTimeTable(Data?.data?.timetable)
+      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${131}`, (Data) => {
+        // console.log(Data, "API");
+        setdoctorTimeTable(Data?.data?.schedules)
         setspecialistOptions(data?.data?.hospitals.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
       }
     );
 
   }
 
-  // REACT_APP_SET_DOCTOR_AVaAILABILITY
   const increaseDayCount = (day) => {
     setSelectDay((prevState) => ({
       ...prevState,
@@ -125,18 +129,45 @@ const ViewDoctor = ({ Id }) => {
 
 
   };
-  const handleChangeSelect = (val, name) => {
+
+
+  const handleChangeSelect = (val, name, updatedValue, dayID, setAblID) => {
+
+    let data = specialistOptions.filter((value) => { return value.value === val })[0]?.id
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules.map((schedule) =>
+        schedule?.day === dayID ?
+          {
+            ...schedule,
+            time_slots: schedule?.time_slots?.map((timeSlot) =>
+              timeSlot?.uniVal === updatedValue
+                ? {
+                  ...timeSlot,
+                  hospital_id: data,
+                }
+                : timeSlot
+            ),
+
+          } : schedule
+
+      )
+    })
+
 
   }
+
   const checkingNew = () => {
 
   }
 
-  function renderLoop(countDays = [], dayName) {
+  function renderLoop(countDays = [], dayName, dayNumber) {
+    let actualDay = countDays[0];
 
     const items = [];
-    for (let i = 0; i < countDays.length; i++) {
-      // const isLastElement = i === 0;
+    for (let i = 0; i < actualDay?.length; i++) {
+      actualDay[i].uniVal =  Math.random().toString(36).substr(2, 9)
+      let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
       items.push(
         <>
@@ -144,13 +175,14 @@ const ViewDoctor = ({ Id }) => {
           <div className={`${countDays === 1 ? "" : "pb-3"} `} style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
               <div style={{ width: "141px" }}>
-                <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} setAblID={actualDay[i]?.hospital_id} value={hospitalName ?? actualDay[i]?.hospital_id} updatedValue={actualDay[i]?.uniVal} dayId={dayNumber} />
               </div>
+
               {/* .slice(0, -3) */}
-              <TimeChanger Time={countDays[i].start_time} />
+              <TimeChanger Time={actualDay[i].start_time.slice(0, -3)} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={true} />
 
 
-              <TimeChanger Time={countDays[i].end_time} />
+              <TimeChanger Time={actualDay[i].end_time.slice(0, -3)} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={false} />
 
             </div>
             {
@@ -159,7 +191,12 @@ const ViewDoctor = ({ Id }) => {
               <span className="pl-lg-3 pl-1">
                 <img
                   className="cursor-pointer"
-                  onClick={() => decreaseDayCount(dayName)}
+                  onClick={() => {
+                    deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
+                    // decreaseDayCount(dayName)
+                    // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+
+                  }}
                   src={TimeTableRemoveBtn}
                   alt=""
                   style={{ width: "20px" }}
@@ -175,7 +212,19 @@ const ViewDoctor = ({ Id }) => {
 
     return items;
   }
+  //Set Doctor Time Table.
+  useEffect(() => {
+    setaddTimePostReq(
+      {
+        ...addTimePostReq,
+        schedules: [
+          ...doctorTimeTable
 
+        ]
+      }
+
+    )
+  }, [doctorTimeTable]);
 
 
   let settings = {
@@ -227,61 +276,44 @@ const ViewDoctor = ({ Id }) => {
   ];
 
   let filterTimeAvalibility = (dayID) => {
-    let a = addTimePostReq.schedules.filter((tableFilter) => tableFilter.day === dayID)
+    let filteredSchedules = addTimePostReq?.schedules?.filter((tableFilter) => tableFilter.day === dayID)
 
-    return a[0]?.time_slots
+    // const schedulesWithUniqueID = filteredSchedules.map((schedule) => {
+    //   return {
+    //     ...schedule,
+    //     time_slots: schedule.time_slots.map((timeSlot) => ({
+    //       ...timeSlot,
+    //       uniID: Math.random().toString(36).substr(2, 9),
+    //     })),
+    //   };
+    // });
+
+    return [filteredSchedules[0]?.time_slots, dayID]
   }
 
 
-  // copy all hospital values to update record
-  useEffect(() => {
-    const mappedArray = doctorTimeTable.reduce((result, item) => {
-      const existingDayEntry = result.find((entry) => entry.day === item.day);
 
-      if (existingDayEntry) {
-        // If the day exists, push a new time_slots object to the existing entry
-        existingDayEntry.time_slots.push({
-          start_time: item.start_time.slice(0, -3),
-          end_time: item.end_time.slice(0, -3),
-          hospital_id: item.hospital_id,
-        });
-      } else {
-        // If the day doesn't exist, create a new entry and add it to the result array
-        result.push({
-          day: item.day,
-          time_slots: [
-            {
-              start_time: item.start_time.slice(0, -3),
-              end_time: item.end_time.slice(0, -3),
-              hospital_id: item.hospital_id,
-            },
-          ],
-        });
-      }
-
-      return result;
-    }, []);
-
-
-    setaddTimePostReq({ ...addTimePostReq, schedules: mappedArray })
-    setpresentDays(addTimePostReq?.schedules.map((schedule) => schedule?.day))
-
-  }, [doctorTimeTable]);
 
 
   // value from drop down
-  const hospitalDopDown = (hosName, id) => {
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === id);
+  const hospitalDopDown = (hosName, id, name, setAblID) => {
+
+    const index = addTimePostReq?.schedules?.findIndex((schedule) => schedule.day === id);
+    const getIndex = specialistOptions?.filter((value) => {
+      return value.value === hosName
+    })[0]?.id
 
     if (index !== -1) {
-      const timeSlot = addTimePostReq.schedules[index].time_slots[0];
-      if (timeSlot.start_time === "" && timeSlot.end_time === "") {
-        timeSlot.hospital_id = hosName;
+      const timeSlot = addTimePostReq?.schedules[index]?.time_slots[0];
+      if (timeSlot?.start_time === "" && timeSlot?.end_time === "") {
+        timeSlot.hospital_id = getIndex;
+
       } else {
-        addTimePostReq.schedules[index].time_slots.push({
+        addTimePostReq?.schedules[index]?.time_slots.push({
           start_time: "",
           end_time: "",
-          hospital_id: hosName,
+          hospital_id: getIndex,
+          uniVal: Math.random().toString(36).substr(2, 9)
         });
       }
     } else {
@@ -291,16 +323,21 @@ const ViewDoctor = ({ Id }) => {
           {
             start_time: "",
             end_time: "",
-            hospital_id: hosName,
+            hospital_id: getIndex,
+            uniVal: Math.random().toString(36).substr(2, 9)
           },
         ],
       });
+      // requestAnimationFrame
+
     }
+
   };
 
 
 
   const staringTimeDrop = (time, dayId) => {
+
     const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
     if (index !== -1) {
       let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
@@ -325,7 +362,41 @@ const ViewDoctor = ({ Id }) => {
       `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`, addTimePostReq
     )
   }
+  const deleteTimeSlot = (dayName, hospitalID) => {
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) => {
+        if (schedule.day === dayName) {
+          return {
+            ...schedule,
+            time_slots: [],
+          };
+        }
+        return {
+          ...schedule,
+          time_slots: [...(schedule?.time_slots || [])],
+        };
+      }),
+    });
+    
 
+
+  };
+  const deleteSingleTimeSlot = (day, elementID) => {
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules.map((schedule) =>
+        schedule.day === day
+          ? {
+            ...schedule,
+            time_slots: schedule.time_slots.filter((timeSlot) => timeSlot.uniVal !== elementID),
+          }
+          : schedule
+      ),
+    });
+  };
+
+  // console.log(addTimePostReq);
   return (
     // <div>ViewDoctor{receivedData?.name}</div>
 
@@ -611,7 +682,7 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(1)}
+                                  defaultChecked
                                   onClick={(e) => {
 
 
@@ -622,6 +693,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.sunday.toggle,
                                       },
                                     }));
+                                    selectDay?.sunday.toggle ? deleteTimeSlot(1) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -631,8 +703,8 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center align-items-start">
 
                             {
-                              // selectDay.sunday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(1)
+                              selectDay.sunday.toggle
+
                                 ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
@@ -656,12 +728,7 @@ const ViewDoctor = ({ Id }) => {
                                       src={TimeTableAddBtn}
                                       alt=""
 
-                                      style={{
-                                        pointerEvents: `${addTimePostReq.schedules[1]?.time_slots[0].start_time === ""
-                                          || addTimePostReq.schedules[1]?.time_slots[0].end_time === "" ?
-                                          "none" : ""
-                                          }`
-                                      }}
+
                                     />
                                   </span>
 
@@ -670,8 +737,9 @@ const ViewDoctor = ({ Id }) => {
                             }
 
                             {
-                            // selectDay.sunday.toggle &&
-                              renderLoop(filterTimeAvalibility(1), "sunday")
+                              selectDay.sunday.toggle &&
+
+                              renderLoop(filterTimeAvalibility(1), "sunday", 1)
 
                             }
                           </div>
@@ -689,9 +757,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(2)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       monday: {
@@ -699,6 +766,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.monday.toggle,
                                       },
                                     }));
+                                    selectDay?.monday.toggle ? deleteTimeSlot(2) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -707,9 +775,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.monday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(2)
-                              ?
+                              selectDay.monday.toggle
+
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -738,8 +806,8 @@ const ViewDoctor = ({ Id }) => {
                                 </div> : null
                             }
                             {
-                            // selectDay.monday.toggle &&
-                              renderLoop(filterTimeAvalibility(2), "monday")}
+                              selectDay.monday.toggle &&
+                              renderLoop(filterTimeAvalibility(2), "monday", 2)}
                           </div>
                         </div>
 
@@ -756,9 +824,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(3)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       tuesday: {
@@ -766,6 +833,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.tuesday.toggle,
                                       },
                                     }));
+                                    selectDay?.tuesday.toggle ? deleteTimeSlot(3) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -774,9 +842,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.tuesday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(3)
-                              ?
+                              selectDay.tuesday.toggle
+
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -805,8 +873,8 @@ const ViewDoctor = ({ Id }) => {
                                 </div> : null
                             }
                             {
-                            // selectDay.tuesday.toggle &&
-                              renderLoop(filterTimeAvalibility(3), "tuesday")}
+                              selectDay.tuesday.toggle &&
+                              renderLoop(filterTimeAvalibility(3), "tuesday", 3)}
                           </div>
                         </div>
 
@@ -822,9 +890,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(4)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       wednesday: {
@@ -832,6 +899,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.wednesday.toggle,
                                       },
                                     }));
+                                    selectDay?.wednesday.toggle ? deleteTimeSlot(4) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -840,9 +908,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.wednesday.toggle 
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(4)
-                              ?
+                              selectDay.wednesday.toggle
+
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -871,10 +939,11 @@ const ViewDoctor = ({ Id }) => {
                                 </div> : null
                             }
                             {
-                            // selectDay.wednesday.toggle &&
+                              selectDay.wednesday.toggle &&
                               renderLoop(
                                 filterTimeAvalibility(4),
                                 "wednesday",
+                                4
                               )}
                           </div>
                         </div>
@@ -891,9 +960,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(5)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       thursday: {
@@ -901,6 +969,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.thursday.toggle,
                                       },
                                     }));
+                                    selectDay?.thursday.toggle ? deleteTimeSlot(5) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -909,9 +978,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.thursday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(5)
-                              ?
+                              selectDay.thursday.toggle
+
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -941,8 +1010,8 @@ const ViewDoctor = ({ Id }) => {
                             }
 
                             {
-                            // selectDay.thursday.toggle &&
-                              renderLoop(filterTimeAvalibility(5), "thursday")}
+                              selectDay.thursday.toggle &&
+                              renderLoop(filterTimeAvalibility(5), "thursday", 5)}
 
 
                           </div>
@@ -960,9 +1029,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(6)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       friday: {
@@ -970,6 +1038,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.friday.toggle,
                                       },
                                     }));
+                                    selectDay?.friday.toggle ? deleteTimeSlot(6) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -978,9 +1047,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.friday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(6)
-                              ?
+                              selectDay.friday.toggle
+
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -1009,8 +1078,8 @@ const ViewDoctor = ({ Id }) => {
                                 </div> : null
                             }
                             {
-                            // selectDay.friday.toggle &&
-                              renderLoop(filterTimeAvalibility(6), "friday")}
+                              selectDay.friday.toggle &&
+                              renderLoop(filterTimeAvalibility(6), "friday", 6)}
                           </div>
                         </div>
 
@@ -1026,9 +1095,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(7)}
+                                  defaultChecked={true}
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       saturday: {
@@ -1036,6 +1104,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.saturday.toggle,
                                       },
                                     }));
+                                    selectDay?.thursday.saturday ? deleteTimeSlot(7) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1044,9 +1113,8 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              selectDay.saturday.toggle |
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(7)
-                               ?
+                              selectDay.saturday.toggle
+                                ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
                                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                                     <div style={{ width: "141px" }}>
@@ -1076,8 +1144,8 @@ const ViewDoctor = ({ Id }) => {
                                 </div> : null
                             }
                             {
-                            // selectDay.saturday.toggle &&
-                              renderLoop(filterTimeAvalibility(7), "saturday")}
+                              selectDay.saturday.toggle &&
+                              renderLoop(filterTimeAvalibility(7), "saturday", 7)}
                           </div>
                         </div>
                       </Modal>

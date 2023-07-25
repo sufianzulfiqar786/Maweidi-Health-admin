@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import TimeChangerUpArrow from "../../assets/images/doctor/TimeChangerUpArrow.svg";
 import TimeChangerDownArrow from "../../assets/images/doctor/TimeChangerDownArrow.svg";
 
-function TimeInput({ currentDate, Time, dayId, staringTimeDrop, endTimeDrop, selector }) {
+function TimeInput({ moveNext, currentDate, singleSelector, Time, dayId, staringTimeDrop, endTimeDrop, selector, setaddTimePostReq, addTimePostReq, elementID, dayNumber }) {
 
-  const [time, setTime] = useState("01:00"); // Set the initial time value
+  const [time, setTime] = useState("12:00"); // Set the initial time value
 
-  const [time1, setTime1] = useState("00:00"); // Set the initial time value
+
 
   const increment = () => {
     // Increment the time value by 1 minute
@@ -29,7 +29,19 @@ function TimeInput({ currentDate, Time, dayId, staringTimeDrop, endTimeDrop, sel
         .toString()
         .padStart(2, "0")}`
     );
-    selector ? staringTimeDrop(time, dayId) : endTimeDrop(time, dayId)
+    if (selector) {
+
+      if (typeof staringTimeDrop === "function") {
+        staringTimeDrop(time, dayId)
+      }
+    }
+    else {
+
+      if (typeof endTimeDrop === "function") {
+        endTimeDrop(time, dayId)
+      }
+    }
+
 
   };
 
@@ -55,9 +67,60 @@ function TimeInput({ currentDate, Time, dayId, staringTimeDrop, endTimeDrop, sel
     );
   };
   const setTimeOnChange = (value) => {
+    if (typeof setaddTimePostReq === "function") {
+    
+      singleSelector ?
+        setaddTimePostReq({
+          ...addTimePostReq,
+          schedules: addTimePostReq?.schedules.map((schedule) =>
+            schedule?.day === dayNumber
+              ? {
+                ...schedule,
+                time_slots: schedule.time_slots?.map((timeSlot) =>
+                  timeSlot?.uniVal === elementID
+                    ? {
+                      ...timeSlot,
+                      start_time: value.target.value,
+                    }
+                    : timeSlot
+                ),
+              }
+              : schedule
+          ),
+        }) : setaddTimePostReq({
+          ...addTimePostReq,
+          schedules: addTimePostReq?.schedules.map((schedule) =>
+            schedule?.day === dayNumber
+              ? {
+                ...schedule,
+                time_slots: schedule.time_slots?.map((timeSlot) =>
+                  timeSlot?.uniVal === elementID
+                    ? {
+                      ...timeSlot,
+                      end_time: value.target.value,
+                    }
+                    : timeSlot
+                ),
+              }
+              : schedule
+          ),
+        })
+    }
     setTime(value.target.value)
+    if (selector) {
 
-    selector ? staringTimeDrop(value.target.value, dayId) : endTimeDrop(value.target.value, dayId)
+      if (typeof staringTimeDrop === "function" && (singleSelector === undefined || singleSelector === null)) {
+        staringTimeDrop(value.target.value, dayId)
+      }
+    }
+    else {
+      if (typeof endTimeDrop === "function" && (singleSelector === undefined || singleSelector === null)) {
+        endTimeDrop(value.target.value, dayId)
+      }
+
+    }
+
+
   }
 
   return (
