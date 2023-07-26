@@ -43,7 +43,6 @@ const ViewDoctor = ({ Id }) => {
   const [specialistOptions, setspecialistOptions] = useState([]);
   const [presentDays, setpresentDays] = useState([])
   const [temp, settemp] = useState({})
-
   const [addTimePostReq, setaddTimePostReq] = useState(
     {
       doctor_id: 131,
@@ -54,7 +53,7 @@ const ViewDoctor = ({ Id }) => {
       ]
     }
   )
-
+  const [addSingleTimeSlot, setaddSingleTimeSlot] = useState({});
 
   const setUpAvailableTime = () => {
   }
@@ -101,7 +100,7 @@ const ViewDoctor = ({ Id }) => {
       `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${131}`, (Data) => {
         // console.log(Data, "API");
         setdoctorTimeTable(Data?.data?.schedules)
-        setspecialistOptions(data?.data?.hospitals.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
+        setspecialistOptions(data?.data?.hospitals?.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
       }
     );
 
@@ -136,7 +135,7 @@ const ViewDoctor = ({ Id }) => {
     let data = specialistOptions.filter((value) => { return value.value === val })[0]?.id
     setaddTimePostReq({
       ...addTimePostReq,
-      schedules: addTimePostReq?.schedules.map((schedule) =>
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
         schedule?.day === dayID ?
           {
             ...schedule,
@@ -161,12 +160,19 @@ const ViewDoctor = ({ Id }) => {
 
   }
 
+
+
   function renderLoop(countDays = [], dayName, dayNumber) {
     let actualDay = countDays[0];
-
     const items = [];
+
+
+    // countDays[0]?.length !== 0 ? setSelectDay({ ...selectDay, [selectDay[dayName].toggle]: false }):setSelectDay(selectDay)
+
+
     for (let i = 0; i < actualDay?.length; i++) {
-      actualDay[i].uniVal =  Math.random().toString(36).substr(2, 9)
+
+      actualDay[i].uniVal = Math.random().toString(36).substr(2, 9)
       let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
       items.push(
@@ -179,10 +185,10 @@ const ViewDoctor = ({ Id }) => {
               </div>
 
               {/* .slice(0, -3) */}
-              <TimeChanger Time={actualDay[i].start_time.slice(0, -3)} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={true} />
+              <TimeChanger Time={actualDay[i]?.start_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={true} />
 
 
-              <TimeChanger Time={actualDay[i].end_time.slice(0, -3)} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={false} />
+              <TimeChanger Time={actualDay[i]?.end_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={false} />
 
             </div>
             {
@@ -290,71 +296,80 @@ const ViewDoctor = ({ Id }) => {
 
     return [filteredSchedules[0]?.time_slots, dayID]
   }
-
-
-
-
-
-  // value from drop down
   const hospitalDopDown = (hosName, id, name, setAblID) => {
+
 
     const index = addTimePostReq?.schedules?.findIndex((schedule) => schedule.day === id);
     const getIndex = specialistOptions?.filter((value) => {
       return value.value === hosName
     })[0]?.id
 
-    if (index !== -1) {
-      const timeSlot = addTimePostReq?.schedules[index]?.time_slots[0];
-      if (timeSlot?.start_time === "" && timeSlot?.end_time === "") {
-        timeSlot.hospital_id = getIndex;
+    // if (index === -1) {
+    //   const timeSlot = addTimePostReq?.schedules[index]?.time_slots[0];
+    //   if (timeSlot?.start_time === "" && timeSlot?.end_time === "") {
+    //     timeSlot.hospital_id = getIndex;
 
-      } else {
-        addTimePostReq?.schedules[index]?.time_slots.push({
-          start_time: "",
-          end_time: "",
-          hospital_id: getIndex,
-          uniVal: Math.random().toString(36).substr(2, 9)
-        });
+    //   } else {
+    //     addTimePostReq?.schedules[index]?.time_slots.push({
+    //       start_time: "",
+    //       end_time: "",
+    //       hospital_id: getIndex,
+    //       uniVal: Math.random().toString(36).substr(2, 9)
+    //     });
+    //   }
+
+    // }
+
+
+    setaddSingleTimeSlot(
+      {
+        start_time: "",
+        end_time: "",
+        hospital_id: getIndex,
+        uniVal: Math.random().toString(36).substr(2, 9)
       }
-    } else {
-      addTimePostReq.schedules.push({
-        day: id,
-        time_slots: [
-          {
-            start_time: "",
-            end_time: "",
-            hospital_id: getIndex,
-            uniVal: Math.random().toString(36).substr(2, 9)
-          },
-        ],
-      });
-      // requestAnimationFrame
-
-    }
-
+    )
   };
+
 
 
 
   const staringTimeDrop = (time, dayId) => {
 
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
-    if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
-      // If the entry with the day value exists, update its start_time field
-      addTimePostReq.schedules[index].time_slots[lastOne].start_time = time;
-    }
+    // const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    // if (index !== -1) {
+    //   let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+    //   // If the entry with the day value exists, update its start_time field
+    //   addTimePostReq.schedules[index].time_slots[lastOne].start_time = time;
+    // }
+
+
+    setaddSingleTimeSlot(
+      addSingleTimeSlot?.hospital_id ?
+        {
+          ...addSingleTimeSlot,
+          start_time: time
+        } : {}
+    )
   }
 
 
 
   const endTimeDrop = (time, dayId) => {
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
-    if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
-      // If the entry with the day value exists, update its start_time field
-      addTimePostReq.schedules[index].time_slots[lastOne].end_time = time;
-    }
+    // const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    // if (index !== -1) {
+    //   let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+    //   // If the entry with the day value exists, update its start_time field
+    //   addTimePostReq.schedules[index].time_slots[lastOne].end_time = time;
+    // }
+
+    setaddSingleTimeSlot(
+      addSingleTimeSlot?.hospital_id ?
+        {
+          ...addSingleTimeSlot,
+          end_time: time
+        } : {}
+    )
   }
 
   const postDoctorAvalibility = () => {
@@ -363,6 +378,7 @@ const ViewDoctor = ({ Id }) => {
     )
   }
   const deleteTimeSlot = (dayName, hospitalID) => {
+
     setaddTimePostReq({
       ...addTimePostReq,
       schedules: addTimePostReq?.schedules?.map((schedule) => {
@@ -378,14 +394,14 @@ const ViewDoctor = ({ Id }) => {
         };
       }),
     });
-    
+
 
 
   };
   const deleteSingleTimeSlot = (day, elementID) => {
     setaddTimePostReq({
       ...addTimePostReq,
-      schedules: addTimePostReq?.schedules.map((schedule) =>
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
         schedule.day === day
           ? {
             ...schedule,
@@ -396,9 +412,25 @@ const ViewDoctor = ({ Id }) => {
     });
   };
 
-  // console.log(addTimePostReq);
+  const appendSingleTimeSlot = (dayIndex) => {
+    if (addSingleTimeSlot?.hospital_id && addSingleTimeSlot?.start_time && addSingleTimeSlot.end_time) {
+      setaddTimePostReq({
+        ...addTimePostReq,
+        schedules: addTimePostReq?.schedules?.map((schedule) =>
+          schedule?.day === dayIndex
+            ? {
+              ...schedule,
+              time_slots: [...schedule?.time_slots, addSingleTimeSlot]
+            }
+            : schedule
+        ),
+      })
+    }
+    setaddSingleTimeSlot({})
+  }
+ 
   return (
-    // <div>ViewDoctor{receivedData?.name}</div>
+
 
     <>
       <div className="row mb-5 pb-lg-5 px-2 pt-4">
@@ -651,7 +683,13 @@ const ViewDoctor = ({ Id }) => {
                             <div className="col-6"></div>
 
                             <div className="col-6 d-flex justify-content-end mt-3">
-                              <button className="apply-filter" onClick={postDoctorAvalibility}>
+                              <button className="apply-filter" onClick={
+                                ()=>{
+                                  postDoctorAvalibility()
+                                  // getTimeTableData()
+                                }
+                            
+                                }>
                                 Save Schedule
                               </button>
                             </div>
@@ -723,7 +761,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("sunday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(1)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -755,6 +793,7 @@ const ViewDoctor = ({ Id }) => {
                                 Monday
                               </span>
                               <Space direction="vertical">
+                                {console.log('check here aliii', addTimePostReq)}
                                 <Switch
                                   size={300}
                                   defaultChecked
@@ -763,7 +802,7 @@ const ViewDoctor = ({ Id }) => {
                                       ...prevState,
                                       monday: {
                                         ...prevState.monday,
-                                        toggle: !prevState.monday.toggle,
+                                        toggle: !addTimePostReq?.schedules[1]?.time_slots.length > 0,
                                       },
                                     }));
                                     selectDay?.monday.toggle ? deleteTimeSlot(2) : deleteTimeSlot()
@@ -772,10 +811,11 @@ const ViewDoctor = ({ Id }) => {
                               </Space>
                             </div>
                           </div>
-
+                          {console.log("toggle", ((addTimePostReq?.schedules[1]?.time_slots.length < 0))
+                          )}
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              selectDay.monday.toggle
+                              ((selectDay.monday.toggle || addTimePostReq?.schedules[1]?.time_slots.length > 0) && selectDay.monday.toggle)
 
                                 ?
                                 <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
@@ -795,7 +835,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("monday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(2)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -862,7 +902,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("tuesday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(3)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -928,7 +968,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("wednesday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(4)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -998,7 +1038,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("thursday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(5)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -1067,7 +1107,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("friday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(6)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -1104,7 +1144,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.saturday.toggle,
                                       },
                                     }));
-                                    selectDay?.thursday.saturday ? deleteTimeSlot(7) : deleteTimeSlot()
+                                    selectDay?.thursday.toggle ? deleteTimeSlot(7) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1132,7 +1172,7 @@ const ViewDoctor = ({ Id }) => {
                                       className="cursor-pointer"
                                       onClick={() => {
                                         increaseDayCount("saturday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        appendSingleTimeSlot(7)
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
@@ -1157,144 +1197,89 @@ const ViewDoctor = ({ Id }) => {
 
                     <div className="row mx-0 ">
                       <div className="col-lg-5 py-4 time-table-border  px-4">
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Monday</span>
-                          </div>
+                        <div>
+                          <div className=" d-flex justify-content-between">
+                            <div>
+                              <img
+                                className="pl-1 pr-2"
+                                src={ClockTimeTable}
+                                alt="img"
+                              />{" "}
+                              <span className="time-table-day">Friday</span>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
+                            </div>
+
+                            <div>
+
+                            </div>
+
+                          </div>
+                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
+                            Medx Medical Care:{" "}
+                            <span className="time-table-time-dynamic">
+                              8.00 - 20.00
+                            </span>{" "}
+                          </div>
+                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
+                            Medx Medical Care:{" "}
+                            <span className="time-table-time-dynamic">
+                              8.00 - 20.00
+                            </span>{" "}
+                          </div>
+                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
+                            Medx Medical Care:{" "}
+                            <span className="time-table-time-dynamic">
+                              8.00 - 20.00
+                            </span>{" "}
                           </div>
                         </div>
+                        <div>
+                          <div className=" d-flex justify-content-between">
+                            <div>
+                              <img
+                                className="pl-1 pr-2"
+                                src={ClockTimeTable}
+                                alt="img"
+                              />{" "}
+                              <span className="time-table-day">Monday</span>
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Tuesday</span>
-                          </div>
+                            </div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
+                            <div>
+
+                            </div>
+
                           </div>
+                          <span className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
+                            Time:{" "}
+                            <span className="time-table-time-dynamic">
+                              8.00 - 20.00
+                            </span>{" "}
+                          </span>
                         </div>
+                        <div>
+                          <div className=" d-flex justify-content-between">
+                            <div>
+                              <img
+                                className="pl-1 pr-2"
+                                src={ClockTimeTable}
+                                alt="img"
+                              />{" "}
+                              <span className="time-table-day">Tuesday</span>
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Wednesday</span>
-                          </div>
+                            </div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                            <div>
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Thursday</span>
-                          </div>
+                            </div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
                           </div>
-                        </div>
-
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Friday</span>
-                          </div>
-
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Saturday</span>
-                          </div>
-
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mb-0 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Sunday</span>
-                          </div>
-
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
+                          <span className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
+                            Time:{" "}
+                            <span className="time-table-time-dynamic">
+                              8.00 - 20.00
+                            </span>{" "}
+                          </span>
                         </div>
                       </div>
 

@@ -12,9 +12,11 @@ const CustomDropDown = ({
   disabled,
   name,
   field,
-  hospitalDopDown, dayId
+  hospitalDopDown, dayId,
+  updatedValue,
+  
 }) => {
-  // console.log(option, "current -->");
+
   const selectAllOption = { value: "all", label: "Select All" };
   const updatedOptions = mode === "multiple" ? [selectAllOption, ...option] : option;
 
@@ -27,9 +29,13 @@ const CustomDropDown = ({
     if (Array.isArray(val) && val.includes("all")) {
       handleSelectAll();
     } else {
-      console.log(val, name, "val-->");
-      handleChangeSelect(val, name);
-      hospitalDopDown(val, dayId)
+    
+      handleChangeSelect(val, name, updatedValue, dayId);
+      if (typeof hospitalDopDown === "function") {
+        hospitalDopDown(val, dayId, name)
+        console.log(val, dayId, name,updatedValue);
+      }
+
     }
   };
 

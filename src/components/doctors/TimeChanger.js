@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import TimeChangerUpArrow from "../../assets/images/doctor/TimeChangerUpArrow.svg";
 import TimeChangerDownArrow from "../../assets/images/doctor/TimeChangerDownArrow.svg";
 
-function TimeInput({ moveNext, currentDate, singleSelector, Time, dayId, staringTimeDrop, endTimeDrop, selector, setaddTimePostReq, addTimePostReq, elementID, dayNumber }) {
+function TimeInput({ moveNext, empetyTime, currentDate, singleSelector, Time, dayId, staringTimeDrop, endTimeDrop, selector, setaddTimePostReq, addTimePostReq, elementID, dayNumber }) {
 
-  const [time, setTime] = useState("12:00"); // Set the initial time value
+  const [time, setTime] = useState(""); // Set the initial time value
 
 
 
@@ -34,11 +34,13 @@ function TimeInput({ moveNext, currentDate, singleSelector, Time, dayId, staring
       if (typeof staringTimeDrop === "function") {
         staringTimeDrop(time, dayId)
       }
+      
     }
     else {
 
       if (typeof endTimeDrop === "function") {
         endTimeDrop(time, dayId)
+
       }
     }
 
@@ -68,7 +70,7 @@ function TimeInput({ moveNext, currentDate, singleSelector, Time, dayId, staring
   };
   const setTimeOnChange = (value) => {
     if (typeof setaddTimePostReq === "function") {
-    
+
       singleSelector ?
         setaddTimePostReq({
           ...addTimePostReq,
@@ -111,11 +113,13 @@ function TimeInput({ moveNext, currentDate, singleSelector, Time, dayId, staring
 
       if (typeof staringTimeDrop === "function" && (singleSelector === undefined || singleSelector === null)) {
         staringTimeDrop(value.target.value, dayId)
+  
       }
     }
     else {
       if (typeof endTimeDrop === "function" && (singleSelector === undefined || singleSelector === null)) {
         endTimeDrop(value.target.value, dayId)
+        
       }
 
     }

@@ -18,7 +18,7 @@ const TimeTable = ({ id = null }) => {
 
     const [docBtn1, setDocBtn1] = useState(0);
 
-   
+
 
 
 
@@ -104,7 +104,7 @@ const TimeTable = ({ id = null }) => {
         console.log(val, name);
     }
     function renderLoop(countDays, dayName) {
-
+        console.log(countDays, "i am here");
         const items = [];
         for (let i = 0; i < countDays; i++) {
             const isLastElement = i === countDays - 1; // Check if it's the last iteration
