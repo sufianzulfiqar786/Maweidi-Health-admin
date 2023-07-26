@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Modal } from "antd";
@@ -53,8 +54,9 @@ const ViewDoctor = ({ Id }) => {
       ]
     }
   )
-  const [addSingleTimeSlot, setaddSingleTimeSlot] = useState({});
 
+  const [addSingleTimeSlot, setaddSingleTimeSlot] = useState({ hospital_id: "", start_time: "", end_time: "" });
+  const [empetyTime, setempetyTime] = useState("")
   const setUpAvailableTime = () => {
   }
   const { postData } = usePost()
@@ -171,7 +173,8 @@ const ViewDoctor = ({ Id }) => {
 
 
     for (let i = 0; i < actualDay?.length; i++) {
-
+      const isLastElement = i === actualDay.length - 1
+      console.log(isLastElement, "isLastElement--->isLastElement");
       actualDay[i].uniVal = Math.random().toString(36).substr(2, 9)
       let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
@@ -192,22 +195,54 @@ const ViewDoctor = ({ Id }) => {
 
             </div>
             {
+              !isLastElement ?
+
+                <span className="pl-lg-3 pl-1">
+                  <img
+                    className="cursor-pointer"
+                    onClick={() => {
+                      deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
+                      // decreaseDayCount(dayName)
+                      // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+
+                    }}
+                    src={TimeTableRemoveBtn}
+                    alt=""
+                    style={{ width: "20px" }}
+                  />
+                </span> :
+                <>
+                  <span className="pl-lg-3 pl-1">
+                    <img
+                      className="cursor-pointer"
+                      onClick={() => {
+                        deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
+                        // decreaseDayCount(dayName)
+                        // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+
+                      }}
+                      src={TimeTableRemoveBtn}
+                      alt=""
+                      style={{ width: "20px" }}
+                    />
+                  </span>
+                  <span className="pl-lg-3 pl-1">
+                    <img
+                      className="cursor-pointer"
+                      onClick={() => {
+                        // increaseDayCount("sunday")
+                        appendSingleTimeSlot(dayNumber)
+                      }}
+                      src={TimeTableAddBtn}
+                      alt=""
 
 
-              <span className="pl-lg-3 pl-1">
-                <img
-                  className="cursor-pointer"
-                  onClick={() => {
-                    deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
-                    // decreaseDayCount(dayName)
-                    // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+                    />
+                  </span>
 
-                  }}
-                  src={TimeTableRemoveBtn}
-                  alt=""
-                  style={{ width: "20px" }}
-                />
-              </span>
+                </>
+
+
             }
 
 
@@ -321,14 +356,14 @@ const ViewDoctor = ({ Id }) => {
     // }
 
 
-    setaddSingleTimeSlot(
-      {
-        start_time: "",
-        end_time: "",
-        hospital_id: getIndex,
-        uniVal: Math.random().toString(36).substr(2, 9)
-      }
-    )
+    // setaddSingleTimeSlot(
+    //   {
+    //     start_time: "",
+    //     end_time: "",
+    //     hospital_id: getIndex,
+    //     uniVal: Math.random().toString(36).substr(2, 9)
+    //   }
+    // )
   };
 
 
@@ -413,22 +448,22 @@ const ViewDoctor = ({ Id }) => {
   };
 
   const appendSingleTimeSlot = (dayIndex) => {
-    if (addSingleTimeSlot?.hospital_id && addSingleTimeSlot?.start_time && addSingleTimeSlot.end_time) {
-      setaddTimePostReq({
-        ...addTimePostReq,
-        schedules: addTimePostReq?.schedules?.map((schedule) =>
-          schedule?.day === dayIndex
-            ? {
-              ...schedule,
-              time_slots: [...schedule?.time_slots, addSingleTimeSlot]
-            }
-            : schedule
-        ),
-      })
-    }
-    setaddSingleTimeSlot({})
+    // if (addSingleTimeSlot?.hospital_id && addSingleTimeSlot?.start_time && addSingleTimeSlot.end_time) {
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
+        schedule?.day === dayIndex
+          ? {
+            ...schedule,
+            time_slots: [...schedule?.time_slots, addSingleTimeSlot],
+          }
+          : schedule
+      ),
+    })
+    // }
+    console.log(addTimePostReq, "addSingleTimeSlot--->");
   }
- 
+
   return (
 
 
@@ -684,12 +719,12 @@ const ViewDoctor = ({ Id }) => {
 
                             <div className="col-6 d-flex justify-content-end mt-3">
                               <button className="apply-filter" onClick={
-                                ()=>{
+                                () => {
                                   postDoctorAvalibility()
                                   // getTimeTableData()
                                 }
-                            
-                                }>
+
+                              }>
                                 Save Schedule
                               </button>
                             </div>
@@ -750,10 +785,10 @@ const ViewDoctor = ({ Id }) => {
                                       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={1} handleChangeSelect={handleChangeSelect} />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} />
+                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} empetyTime={empetyTime} />
 
 
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} />
+                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} empetyTime={empetyTime} />
 
                                   </div>
                                   <span className="pl-lg-3 pl-1">
