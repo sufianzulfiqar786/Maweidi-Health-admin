@@ -7,7 +7,7 @@ import Slider from "react-slick";
 
 // files
 
-import TimeChanger from "../doctors/TimeChanger";
+import TimeChanger from "../../atoms/TimeslotChanger/TimeChanger";
 
 import "../../assets/css/Carousel.scss";
 import "../../assets/css/doctor.scss";
@@ -33,7 +33,7 @@ import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
 import useFetch from "../../customHook/useFetch";
 import useDeleteData from "../../customHook/useDelete";
-import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import CustomDropDown from "../../atoms/CustomDropDown/timeSlotDropDown";
 import usePost from "../../customHook/usePost";
 const ViewDoctor = ({ Id }) => {
   const location = useLocation();
@@ -54,7 +54,7 @@ const ViewDoctor = ({ Id }) => {
       ]
     }
   )
-
+  console.log(addTimePostReq, "addTimePostReq-->");
   const [addSingleTimeSlot, setaddSingleTimeSlot] = useState({ hospital_id: "", start_time: "", end_time: "" });
   const [empetyTime, setempetyTime] = useState("")
   const setUpAvailableTime = () => {
@@ -165,7 +165,7 @@ const ViewDoctor = ({ Id }) => {
 
 
   function renderLoop(countDays = [], dayName, dayNumber) {
-    let actualDay = countDays[0];
+    var actualDay = countDays[0];
     const items = [];
 
 
@@ -174,7 +174,7 @@ const ViewDoctor = ({ Id }) => {
 
     for (let i = 0; i < actualDay?.length; i++) {
       const isLastElement = i === actualDay.length - 1
-      console.log(isLastElement, "isLastElement--->isLastElement");
+
       actualDay[i].uniVal = Math.random().toString(36).substr(2, 9)
       let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
@@ -318,17 +318,6 @@ const ViewDoctor = ({ Id }) => {
 
   let filterTimeAvalibility = (dayID) => {
     let filteredSchedules = addTimePostReq?.schedules?.filter((tableFilter) => tableFilter.day === dayID)
-
-    // const schedulesWithUniqueID = filteredSchedules.map((schedule) => {
-    //   return {
-    //     ...schedule,
-    //     time_slots: schedule.time_slots.map((timeSlot) => ({
-    //       ...timeSlot,
-    //       uniID: Math.random().toString(36).substr(2, 9),
-    //     })),
-    //   };
-    // });
-
     return [filteredSchedules[0]?.time_slots, dayID]
   }
   const hospitalDopDown = (hosName, id, name, setAblID) => {
@@ -463,7 +452,50 @@ const ViewDoctor = ({ Id }) => {
     // }
     console.log(addTimePostReq, "addSingleTimeSlot--->");
   }
+  function convertTo12HourFormat(time24) {
+    const timeParts = time24?.split(":");
+    if (timeParts?.length !== 3 || !/^\d{2}:\d{2}:\d{2}$/.test(time24)) {
+      return "....";
+    }
 
+    const [hours, minutes] = timeParts.slice(0, 2).map(Number);
+    const period = hours >= 12 ? "PM" : "AM";
+    let hours12 = hours % 12 || 12;
+    const paddedHours = hours12.toString().padStart(2, "0");
+    const paddedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${paddedHours}:${paddedMinutes} ${period}`;
+  }
+  const getDayName = (dayNumber) => {
+    let dayName;
+    switch (dayNumber) {
+
+      case 1:
+        dayName = "Sunday";
+        break;
+      case 2:
+        dayName = "Monday";
+        break;
+      case 3:
+        dayName = "Tuesday";
+        break;
+      case 4:
+        dayName = "Wednesday";
+        break;
+      case 5:
+        dayName = "Thursday";
+        break;
+      case 6:
+        dayName = "Friday";
+        break;
+      case 7:
+        dayName = "Saturday";
+        break;
+      default:
+        dayName = "";
+    }
+    return dayName
+  }
   return (
 
 
@@ -536,6 +568,7 @@ const ViewDoctor = ({ Id }) => {
                 <button
                   onClick={() => {
                     setDocBtn(2);
+                    getTimeTableData()
                   }}
                   className={`${docBtn === 2
                     ? "view-doctor-btn"
@@ -776,37 +809,40 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center align-items-start">
 
                             {
-                              selectDay.sunday.toggle
-
+                              // selectDay.sunday.toggle && addTimePostReq?.schedules[1]?.time_slots.length === 0
+                              true
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={1} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                null
+                                //       < div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={1} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} empetyTime={empetyTime} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} empetyTime={empetyTime} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("sunday")
-                                        appendSingleTimeSlot(1)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} empetyTime={empetyTime} />
 
 
-                                    />
-                                  </span>
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} empetyTime={empetyTime} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("sunday")
+                                //         appendSingleTimeSlot(1)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
 
 
-                                </div> : null
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+
+                                : null
                             }
 
                             {
@@ -828,7 +864,7 @@ const ViewDoctor = ({ Id }) => {
                                 Monday
                               </span>
                               <Space direction="vertical">
-                                {console.log('check here aliii', addTimePostReq)}
+
                                 <Switch
                                   size={300}
                                   defaultChecked
@@ -850,35 +886,39 @@ const ViewDoctor = ({ Id }) => {
                           )}
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              ((selectDay.monday.toggle || addTimePostReq?.schedules[1]?.time_slots.length > 0) && selectDay.monday.toggle)
+                              selectDay.monday.toggle
+                                //  &&  addTimePostReq?.schedules[2]?.time_slots.length === 0
 
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={2} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                null
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={2} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={2} selector={true} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={2} selector={false} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("monday")
-                                        appendSingleTimeSlot(2)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={2} selector={true} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={2} selector={false} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("monday")
+                                //         appendSingleTimeSlot(2)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+
+                                : null
                             }
                             {
                               selectDay.monday.toggle &&
@@ -920,32 +960,34 @@ const ViewDoctor = ({ Id }) => {
                               selectDay.tuesday.toggle
 
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={3} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={3} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={3} selector={true} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={3} selector={false} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("tuesday")
-                                        appendSingleTimeSlot(3)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={3} selector={true} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={3} selector={false} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("tuesday")
+                                //         appendSingleTimeSlot(3)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div> 
+                                null
+                                : null
                             }
                             {
                               selectDay.tuesday.toggle &&
@@ -986,32 +1028,34 @@ const ViewDoctor = ({ Id }) => {
                               selectDay.wednesday.toggle
 
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={4} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={4} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={4} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={4} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("wednesday")
-                                        appendSingleTimeSlot(4)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={4} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={4} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("wednesday")
+                                //         appendSingleTimeSlot(4)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
                             {
                               selectDay.wednesday.toggle &&
@@ -1056,32 +1100,34 @@ const ViewDoctor = ({ Id }) => {
                               selectDay.thursday.toggle
 
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={5} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={5} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={5} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={5} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("thursday")
-                                        appendSingleTimeSlot(5)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={5} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={5} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("thursday")
+                                //         appendSingleTimeSlot(5)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div> 
+                                null
+                                : null
                             }
 
                             {
@@ -1125,32 +1171,34 @@ const ViewDoctor = ({ Id }) => {
                               selectDay.friday.toggle
 
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={6} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={6} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={6} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={6} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("friday")
-                                        appendSingleTimeSlot(6)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={6} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={6} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("friday")
+                                //         appendSingleTimeSlot(6)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
                             {
                               selectDay.friday.toggle &&
@@ -1190,33 +1238,35 @@ const ViewDoctor = ({ Id }) => {
                             {
                               selectDay.saturday.toggle
                                 ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={7} handleChangeSelect={handleChangeSelect} />
-                                    </div>
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={7} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={7} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={7} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("saturday")
-                                        appendSingleTimeSlot(7)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-
-                                    />
-                                  </span>
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={7} />
 
 
-                                </div> : null
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={7} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("saturday")
+                                //         appendSingleTimeSlot(7)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
                             {
                               selectDay.saturday.toggle &&
@@ -1232,90 +1282,59 @@ const ViewDoctor = ({ Id }) => {
 
                     <div className="row mx-0 ">
                       <div className="col-lg-5 py-4 time-table-border  px-4">
-                        <div>
-                          <div className=" d-flex justify-content-between">
-                            <div>
-                              <img
-                                className="pl-1 pr-2"
-                                src={ClockTimeTable}
-                                alt="img"
-                              />{" "}
-                              <span className="time-table-day">Friday</span>
+                        {
+                          addTimePostReq?.schedules?.map((value) => {
+                            return <>
+                              <div>
+                                <div className=" d-flex justify-content-between">
+                                  <div>
+                                    <img
+                                      className="pl-1 pr-2"
+                                      src={ClockTimeTable}
+                                      alt="img"
+                                    />{" "}
+                                    <span className="time-table-day">
+                                      {getDayName(value?.day)}
+                                    </span>
 
-                            </div>
+                                  </div>
 
-                            <div>
+                                  <div>
 
-                            </div>
+                                  </div>
 
-                          </div>
-                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
-                            Medx Medical Care:{" "}
-                            <span className="time-table-time-dynamic">
-                              8.00 - 20.00
-                            </span>{" "}
-                          </div>
-                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
-                            Medx Medical Care:{" "}
-                            <span className="time-table-time-dynamic">
-                              8.00 - 20.00
-                            </span>{" "}
-                          </div>
-                          <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
-                            Medx Medical Care:{" "}
-                            <span className="time-table-time-dynamic">
-                              8.00 - 20.00
-                            </span>{" "}
-                          </div>
-                        </div>
-                        <div>
-                          <div className=" d-flex justify-content-between">
-                            <div>
-                              <img
-                                className="pl-1 pr-2"
-                                src={ClockTimeTable}
-                                alt="img"
-                              />{" "}
-                              <span className="time-table-day">Monday</span>
+                                </div>
+                                {
+                                  value?.time_slots.length !== 0 ? value?.time_slots.map((value) => {
+                                    return <>
+                                      <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
 
-                            </div>
+                                        <span className="mx-1">{
+                                          specialistOptions?.filter((e) => { return e?.id === value?.hospital_id })[0]?.label
 
-                            <div>
 
-                            </div>
+                                        }</span>
+                                        <span className="time-table-time-dynamic">
+                                          {convertTo12HourFormat(value?.start_time)} - {convertTo12HourFormat(value?.end_time)}
 
-                          </div>
-                          <span className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
-                            Time:{" "}
-                            <span className="time-table-time-dynamic">
-                              8.00 - 20.00
-                            </span>{" "}
-                          </span>
-                        </div>
-                        <div>
-                          <div className=" d-flex justify-content-between">
-                            <div>
-                              <img
-                                className="pl-1 pr-2"
-                                src={ClockTimeTable}
-                                alt="img"
-                              />{" "}
-                              <span className="time-table-day">Tuesday</span>
+                                        </span>{" "}
+                                      </div>
+                                    </>
+                                  }) :
+                                    <span className="time-table-time-dynamic m-3">
 
-                            </div>
+                                      off
+                                    </span>
+                                }
 
-                            <div>
 
-                            </div>
 
-                          </div>
-                          <span className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
-                            Time:{" "}
-                            <span className="time-table-time-dynamic">
-                              8.00 - 20.00
-                            </span>{" "}
-                          </span>
-                        </div>
+                              </div>
+                            </>
+                          })
+                        }
+
+
                       </div>
 
                       <div className="col mt-lg-0 mt-4 d-flex flex-column justify-content-center align-items-center">
@@ -1369,8 +1388,8 @@ const ViewDoctor = ({ Id }) => {
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 };
