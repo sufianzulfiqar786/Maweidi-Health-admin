@@ -86,7 +86,59 @@ $primary-color: #ff0000;
 
     margin-bottom: 3px;
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
 
 }
 
+.Availbility-container {
+    .react-datepicker-popper {
+        transform: translate3d(29%, 197.8px, 0px) !important;
+        margin-top: -19px !important;
+    }
+
+    .date-picker-availability{
+        height: 400px ;
+
+        // @media (min-width: 0px) and (max-width: 990px) {
+        // margin-right: 90px;
+        // }
+    }
+
+}
+
+.date-picker-appointment {
+    .anticon-calendar {
+        display: none !important;
+    }
+}
+
+.highlighted-dates,
+.full-month-dates {
+    background-color: rgba(0, 128, 0, 0.338);
+    /* Replace 'blue' with the desired color */
+    color: white !important;
+    border: 1px soild red;
+    border-radius: 0;
+    transition: 0.5s all;
+}
+
+.highlighted-dates:hover {
+    background-color: rgba(0, 128, 0, 0.943) !important;
+    /* Replace 'blue' with the desired color */
+    // color: white !important;
+    border-radius: 0 !important;
+}
+
+.special-date {
+    background-color: rgba(255, 0, 0, 0.45) !important;
+    border-radius: 0 !important;
+    color: white !important;
+}
+
+.special-date:hover{
+    background-color: red !important;
+    cursor: not-allowed;
+
+ 
+
+}

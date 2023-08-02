@@ -11,6 +11,7 @@ import useFetch from "../customHook/useFetch";
 
 // img
 import DownIcon from "../assets/images/dashboard/DownIcon.svg";
+import { Link } from "react-router-dom";
 
 const Appointments = () => {
 
@@ -439,14 +440,14 @@ const Appointments = () => {
                 </div>
               </div>
 
-
-              <button
+            <Link to='/appointment/add'> <button
                 type="button"
                 class="add-appointment"
                 onClick={handleAddAppointment}
               >
                 Add Appointment
-              </button>
+              </button> 
+              </Link> 
             </div>
           </div>
 

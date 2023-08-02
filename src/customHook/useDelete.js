@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { CustomToast } from '../atoms/toastMessage';
 
 const useDeleteData = () => {
     const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -17,6 +18,12 @@ const useDeleteData = () => {
             const response = await axios.get(`${BaseURL}/${url}`, config);
             if (response.data?.success === true) {
                 cb(response.data)
+            }
+            else{
+                CustomToast({
+                    type: "error",
+                    message: `${response?.data?.response}`,
+                });
             }
         } catch (error) {
             setError(error);

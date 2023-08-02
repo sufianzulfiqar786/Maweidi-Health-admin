@@ -141,7 +141,7 @@ const AddHospital = ({ Id }) => {
         if (Id) {
             customData.deleteData(`${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`, (val) => {
                 console.log("value", val?.data)
-                setAddHospitalData(val?.data)
+                setAddHospitalData({...val?.data , 'specialties': val?.data?.specialities?.map(l => (l.id))})
                 Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
                     setValue(fieldName, fieldValue);
                 });
@@ -596,11 +596,14 @@ const AddHospital = ({ Id }) => {
                                         <p className="mb-2"> Facebook </p>
                                         <div className="d-flex  ">
                                             <img className="" src={FacebookInput} alt="" />
+                                            {console.log("addHospitalData", addHospitalData)}
                                             <input
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='facebook' value={addHospitalData.facebook || ""} onChange={handleChangeHospital}
+                                                name='facebook' 
+                                                value={addHospitalData.facebook == "null" ? "" : addHospitalData.facebook} 
+                                                onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -613,7 +616,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='instagram' value={addHospitalData.instagram || ""} onChange={handleChangeHospital}
+                                                name='instagram' value={addHospitalData.instagram == "null" ? "" : addHospitalData.instagram} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -630,7 +633,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='linkedin' value={addHospitalData.linkedin || ""} onChange={handleChangeHospital}
+                                                name='linkedin' value={addHospitalData.linkedin == "null" ? "" : addHospitalData.linkedin} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -689,7 +692,7 @@ const AddHospital = ({ Id }) => {
                                     <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
                                         <p className="mb-2"> About Hospital </p>
                                         <textarea id="" className='pt-2' cols="30" rows="7"
-                                            name='about' value={addHospitalData.about || ""} onChange={handleChangeHospital}
+                                            name='about' value={addHospitalData.about == "null" ? "" : addHospitalData.about} onChange={handleChangeHospital}
                                         ></textarea>
                                     </div>
                                 </div>

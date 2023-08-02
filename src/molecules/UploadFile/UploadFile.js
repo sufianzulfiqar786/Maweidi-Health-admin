@@ -28,7 +28,7 @@ const UploadFile = ({ setFormDataState, formDataState }) => {
 
   return (
     <>
-      <div className="doc-setting-input-certificates d-flex justify-content-between align-items-center">
+      <div className="doc-setting-input-certificates d-flex justify-content-between align-items-center" style={{backgroundColor:'white'}}>
         <div>
           {infoData ? (
             <span className="info-message pl-2">{infoData}</span>

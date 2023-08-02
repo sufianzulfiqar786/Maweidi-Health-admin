@@ -19,7 +19,7 @@ const BreadCrum = ({ firstText, firstLink, secondText, }) => {
       {secondText && (
         <>
           <img src={Chevron} />
-          <span className="current-tab"> {secondText}</span>
+          <span className="current-tab" style={{height:'100px'}}> {secondText}</span>
         </>
       )}
     </p>

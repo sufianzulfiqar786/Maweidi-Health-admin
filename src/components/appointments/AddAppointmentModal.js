@@ -40,7 +40,10 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  const { RangePicker } = DatePicker;
+
   const handleDatesChange = (dates) => {
+    console.log("date", dates)
     if (dates && dates.length === 2) {
       setStartDate(dates[0]?.format('DD/MM/YYYY'));
       setEndDate(dates[1]?.format('DD/MM/YYYY'));
@@ -49,6 +52,9 @@ const AddAppointmentModal = ({ open, onClose }) => {
       setEndDate(null);
     }
   };
+
+  console.log("startDate", startDate)
+  console.log("endDate", endDate)
 
   const disabledDate = (current) => {
     if (!startDate || !endDate) {
@@ -95,85 +101,85 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
   let available = [
     {
-        date: "11/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "11/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "18/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "18/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "26/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "26/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "24/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "24/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "23/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "23/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "30/07/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "30/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-        date: "30/06/2023", avail: "AV", arr: [
-            { time: `9:00 - 10:00`, Availability: "AV" },
-            { time: `11:00 - 12:00`, Availability: "AV" },
-            { time: `12:00 - 1:00`, Availability: "AV" },
-            { time: `2:00 - 3:00`, Availability: "NV" },
-            { time: `4:00 - 5:00`, Availability: "AV" },
-            { time: `5:00 - 6:00`, Availability: "NV" },
-        ]
+      date: "30/06/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
-]
+  ]
 
   const isCustomDate = (date) => {
     let mapedvalue = available.map((value) => {
-        return value.date
+      return value.date
     })
 
     return mapedvalue.includes(date)
   }
- 
+
   const getSelectedHospitalId = (hospitalValue) => {
     const selectedHospital = hospitals.find(
       (hospital) => hospital?.value === hospitalValue
@@ -185,11 +191,11 @@ const AddAppointmentModal = ({ open, onClose }) => {
 
   const getSelectedSpecializationId = (specializationValue) => {
     const selectedSpecialization = matchedSpecializations.find(specialization => specialization?.value === specializationValue);
-      if (selectedSpecialization) {
-        setSelectedSpecializationId(selectedSpecialization?.id);
-      };
+    if (selectedSpecialization) {
+      setSelectedSpecializationId(selectedSpecialization?.id);
+    };
   };
-  
+
 
   const findSpecializations = () => {
     console.log("------specializationData-------", matchedSpecializations);
@@ -285,6 +291,13 @@ const AddAppointmentModal = ({ open, onClose }) => {
       phone: "",
     });
   };
+
+  function onChangeRangePicker(value, dateString) {
+    console.log("value suf", value, dateString)
+    console.log('Selected Time: ', value);
+    console.log('Formatted Selected Time: ', dateString);
+  }
+  
 
   return (
     <>
@@ -664,7 +677,14 @@ const AddAppointmentModal = ({ open, onClose }) => {
                 <div class="form-group">
                   <label>Date Range</label>
                   <div className="border" style={{ borderRadius: "5px" }}>
-                  <DatePicker.RangePicker onChange={handleDatesChange} format="DD/MM/YYYY" style={{ border: "none", width: "100%", height: '36.5px' }}/>
+                    <DatePicker.RangePicker onChange={handleDatesChange} format="DD/MM/YYYY" style={{ border: "none", width: "100%", height: '36.5px' }} />
+                    {/* <RangePicker
+                      showTime={{ format: 'HH:mm' }}
+                      format="YYYY-MM-DD HH:mm"
+                      placeholder={['Start Time', 'End Time']}
+                      onChange={onChangeRangePicker}
+                      // onOk={onOk}
+                    /> */}
                   </div>
                   {errors.date && (
                     <span className="error-message">
@@ -685,23 +705,23 @@ const AddAppointmentModal = ({ open, onClose }) => {
                         <DatePicker
                           // disabledDate={disabledDate}
                           dateRender={current => {
-                            if(!disabledDate(current)){
+                            if (!disabledDate(current)) {
                               if (isCustomDate(current.format("DD/MM/YYYY")) === true) {
-                                return(
-                                  <div style={{backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px'}}>
+                                return (
+                                  <div style={{ backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px' }}>
                                     {current.date()}
                                   </div>
                                 )
                               }
                               else {
                                 return (
-                                  <div style={{backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px'}}>
+                                  <div style={{ backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px' }}>
                                     {current.date()}
                                   </div>
                                 );
                               }
                             }
-                            
+
                           }}
                           format="DD/MM/YYYY"
                           style={{ border: "none", width: "100%", height: '36.5px' }}
@@ -843,7 +863,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
                             field.onChange(e.target.value);
                             handleInputChange(e.target.name, e.target.value);
                           }}
-                          onClick={()=> {console.log("----formData------", formData)}}
+                          onClick={() => { console.log("----formData------", formData) }}
                         />
 
                         {errors.age && (

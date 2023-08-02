@@ -56,11 +56,11 @@ const DataTable = ({
     }
 
     const searchQueryLower = searchQuery.toLowerCase();
-    const nameLower = row.patient_name.toLowerCase();
+    const nameLower = row.patient_name?.toLowerCase();
     const civilIDLower = row.docCivilID.toLowerCase();
     if (
-      !nameLower.includes(searchQueryLower) &&
-      !civilIDLower.includes(searchQueryLower)
+      !nameLower?.includes(searchQueryLower) &&
+      !civilIDLower?.includes(searchQueryLower)
     ) {
       return false;
     }
@@ -97,6 +97,7 @@ const DataTable = ({
               <TableCell className="number" align="left">
                 #
               </TableCell>
+              <TableCell align="left">KWD ID</TableCell>
               <TableCell align="left">Patient Id</TableCell>
               <TableCell align="left">Patient Name</TableCell>
               <TableCell align="left">Date</TableCell>
@@ -124,9 +125,8 @@ const DataTable = ({
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="left" className="number">
-                  {row.number}
-                </TableCell>
+                <TableCell align="left" className="number">{row.number}</TableCell>
+                <TableCell align="left" >23324</TableCell>
                 <TableCell align="left">
                   {row.patient_id}
                 </TableCell>

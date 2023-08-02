@@ -47,6 +47,7 @@ const useFetch = (url) => {
 
   // Function to recall the API with the updated URL when paginate prop changes
   const fetchPaginatedData = (refetchurl) => {
+    alert(refetchurl)
     refetch(refetchurl);
   };
 

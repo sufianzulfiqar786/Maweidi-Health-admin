@@ -18,7 +18,8 @@ const usePost = () => {
 
     try {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
-      if (response?.data?.success === true) {
+      // if (response?.data?.success === true) {
+        if (response?.data) {
         cb();
       } else {
         CustomToast({

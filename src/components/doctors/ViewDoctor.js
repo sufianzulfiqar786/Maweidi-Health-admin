@@ -50,7 +50,7 @@ const ViewDoctor = ({ Id }) => {
     schedules: [],
   });
 
-  const setUpAvailableTime = () => {};
+  const setUpAvailableTime = () => { };
   const { postData } = usePost();
   const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData();
   const [selectDay, setSelectDay] = useState({
@@ -122,8 +122,8 @@ const ViewDoctor = ({ Id }) => {
       },
     }));
   };
-  const handleChangeSelect = (val, name) => {};
-  const checkingNew = () => {};
+  const handleChangeSelect = (val, name) => { };
+  const checkingNew = () => { };
 
   function renderLoop(countDays = [], dayName) {
     const items = [];
@@ -378,11 +378,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(0);
                   }}
-                  className={`${
-                    docBtn === 0
+                  className={`${docBtn === 0
                       ? "view-doctor-btn"
                       : "view-doctor-btn-noactive"
-                  }`}
+                    }`}
                   style={{ borderRadius: "6px 0px 0px 6px" }}
                 >
                   Overview
@@ -391,11 +390,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(1);
                   }}
-                  className={`${
-                    docBtn === 1
+                  className={`${docBtn === 1
                       ? "view-doctor-btn"
                       : "view-doctor-btn-noactive"
-                  }`}
+                    }`}
                 >
                   Reviews
                 </button>
@@ -403,11 +401,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(2);
                   }}
-                  className={`${
-                    docBtn === 2
+                  className={`${docBtn === 2
                       ? "view-doctor-btn"
                       : "view-doctor-btn-noactive"
-                  }`}
+                    }`}
                 >
                   Time Table
                 </button>
@@ -415,11 +412,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(3);
                   }}
-                  className={`${
-                    docBtn === 3
+                  className={`${docBtn === 3
                       ? "view-doctor-btn"
                       : "view-doctor-btn-noactive"
-                  }`}
+                    }`}
                   style={{ borderRadius: "0px 6px 6px 0px" }}
                 >
                   Settings
@@ -433,10 +429,30 @@ const ViewDoctor = ({ Id }) => {
                       {data?.data?.about}
                     </p>
                   </div>
-                  <div className="col-12 pt-2 mt-4">
-                    <p className="mb-0 view-doc-special"> Qualification: </p>
+                  <div className="col-6">
+
                     <div className="row">
-                      <div className="col-xl-6">
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special"> Qualification: </p>
+                        <div className="row">
+                          <div className="col-xl-6">
+                            <p className="mb-0 pt-2">
+                              {" "}
+                              <img
+                                className="pr-3 view-doc-sub-special "
+                                src={RightArrowSpec}
+                                alt=""
+                              />{" "}
+                              <span className="view-doc-sub-special">
+                                {data?.data?.qualification}
+                              </span>{" "}
+                            </p>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special"> Specialties: </p>
                         <p className="mb-0 pt-2">
                           {" "}
                           <img
@@ -445,74 +461,10 @@ const ViewDoctor = ({ Id }) => {
                             alt=""
                           />{" "}
                           <span className="view-doc-sub-special">
-                            {data?.data?.qualification}
+                            {data?.data?.specialization?.name}
                           </span>{" "}
                         </p>
-                      </div>
-                      <div className="col-xl-6">
-                        <div
-                          className=" ml-xl-5 mt-3 mt-xl-0 border d-flex justify-content-between align-items-center"
-                          style={{ borderRadius: "10px" }}
-                        >
-                         
-                          <div className="d-flex align-items-center">
-                            <div className=" ">
-                              <div style={{ width: "40px" }}>
-                                <img
-                                  className="w-100 h-100 border"
-                                  src={
-                                    data?.data.certificate
-                                      .split("/")
-                                      .pop()
-                                      .split(".")[1] === "pdf"
-                                      ? PDF_icon
-                                      : `${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`
-                                  }
-                                  alt=""
-                                />
-                              </div>
-                            </div>
-                            <div className=" doc-overview-detail">
-                              <div
-                                className="pl-2 w-sm-50 w-100"
-                                style={{ wordWrap: "break-word" }}
-                              >
-                                {data?.data.certificate.split("/").pop()}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="  d-flex justify-content-end pr-3">
-                            <a
-                              href={`${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`}
-                              download
-                              target="_blank"
-                            >
-                              <div
-                                className="doc-overview-detail cursor-pointer text-right"
-                                style={{ color: "red", fontSize: "14px" }}
-                              >
-                                View Detail
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12 pt-2 mt-4">
-                    <p className="mb-0 view-doc-special"> Specialties: </p>
-                    <p className="mb-0 pt-2">
-                      {" "}
-                      <img
-                        className="pr-3 view-doc-sub-special "
-                        src={RightArrowSpec}
-                        alt=""
-                      />{" "}
-                      <span className="view-doc-sub-special">
-                        {data?.data?.specialization?.name}
-                      </span>{" "}
-                    </p>
-                    {/* <p className="mb-0">
+                        {/* <p className="mb-0">
                       {" "}
                       <img
                         className="pr-3 view-doc-sub-special"
@@ -556,28 +508,124 @@ const ViewDoctor = ({ Id }) => {
                       />{" "}
                       <span className="view-doc-sub-special"> Conclusion </span>
                     </p> */}
-                  </div>
+                      </div>
 
-                  <div className="col-12 pt-2 mt-4">
-                    <p className="mb-0 view-doc-special">
-                      {" "}
-                      <span className="view-doc-special">
-                        {" "}
-                        Consultancy Charges:{" "}
-                      </span>
-                    </p>
-                    <p className="mb-0 pt-2">
-                      {" "}
-                      <img
-                        className="pr-3 view-doc-sub-special"
-                        src={RightArrowSpec}
-                        alt=""
-                      />{" "}
-                      <span className="view-doc-sub-special">
-                        {" "}
-                        $50/Patient{" "}
-                      </span>
-                    </p>
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special">
+                          {" "}
+                          <span className="view-doc-special">
+                            {" "}
+                            Consultancy Charges:{" "}
+                          </span>
+                        </p>
+                        <p className="mb-0 pt-2">
+                          {" "}
+                          <img
+                            className="pr-3 view-doc-sub-special"
+                            src={RightArrowSpec}
+                            alt=""
+                          />{" "}
+                          <span className="view-doc-sub-special">
+                            {" "}
+                            $50/Patient{" "}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="col-xl-6">
+                    <p className="mb-0 view-doc-special mt-4"> Qualification: </p>
+
+                    <div className="row">
+
+                    <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={PDF_icon} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={Group1175} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={PDF_icon} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special  cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={Group1175} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special  cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      
+
+
+                    </div>
+
+                    {/* <div
+                          className="  mt-3 mt-xl-0 border d-flex justify-content-between align-items-center"
+                          style={{ borderRadius: "10px" }}
+                        >
+                         
+                          <div className="d-flex align-items-center">
+                            <div className=" ">
+                              <div style={{ width: "40px" }}>
+                                <img
+                                  className="w-100 h-100 border"
+                                  src={
+                                    data?.data.certificate
+                                      .split("/")
+                                      .pop()
+                                      .split(".")[1] === "pdf"
+                                      ? PDF_icon
+                                      : `${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`
+                                  }
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+                            <div className=" doc-overview-detail">
+                              <div
+                                className="pl-2 w-sm-50 w-100"
+                                style={{ wordWrap: "break-word" }}
+                              >
+                                {data?.data.certificate.split("/").pop()}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="  d-flex justify-content-end pr-3">
+                            <a
+                              href={`${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`}
+                              download
+                              target="_blank"
+                            >
+                              <div
+                                className="doc-overview-detail cursor-pointer text-right"
+                                style={{ color: "red", fontSize: "14px" }}
+                              >
+                                View Detail
+                              </div>
+                            </a>
+                          </div>
+                        </div> */}
                   </div>
                 </>
               )}
@@ -749,14 +797,13 @@ const ViewDoctor = ({ Id }) => {
                                       src={TimeTableAddBtn}
                                       alt=""
                                       style={{
-                                        pointerEvents: `${
-                                          addTimePostReq.schedules[1]
+                                        pointerEvents: `${addTimePostReq.schedules[1]
                                             ?.time_slots[0].start_time === "" ||
-                                          addTimePostReq.schedules[1]
-                                            ?.time_slots[0].end_time === ""
+                                            addTimePostReq.schedules[1]
+                                              ?.time_slots[0].end_time === ""
                                             ? "none"
                                             : ""
-                                        }`,
+                                          }`,
                                       }}
                                     />
                                   </span>
@@ -1280,9 +1327,9 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {selectDay.saturday.toggle |
-                            addTimePostReq?.schedules
-                              .map((schedule) => schedule?.day)
-                              .includes(7) ? (
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(7) ? (
                               <div
                                 className="mb-3"
                                 style={{
