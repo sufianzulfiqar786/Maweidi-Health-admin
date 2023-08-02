@@ -386,7 +386,7 @@ const DataTable = ({ searchQuery }) => {
                                     <TableCell align="left">
                                         <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
                                             {
-                                                "http://localhost:3000/bannerpromo".slice(0, 30)
+                                                "http://localhost:3000/banner-promo".slice(0, 30)
                                             }
                                         </span>
                                     </TableCell>

@@ -21,7 +21,7 @@ import { Modal } from "antd";
 
 const DataTable = ({ rows, searchQuery }) => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteModal, setDeleteModal] = useState(false);
 
   const handleChangePage = (newPage) => {
@@ -30,11 +30,11 @@ const DataTable = ({ rows, searchQuery }) => {
 
   //  Select filter  functionality
   const filteredRows = rows.filter((row) => {
-    const searchQueryLower = searchQuery.toLowerCase();
-    const nameLower = row.name.toLowerCase();
+    const searchQueryLower = searchQuery?.toLowerCase();
+    const nameLower = row.name?.toLowerCase();
 
     if (
-      !nameLower.includes(searchQueryLower)
+      !nameLower?.includes(searchQueryLower)
     ) {
       return false;
     }
@@ -42,7 +42,7 @@ const DataTable = ({ rows, searchQuery }) => {
     return true;
   });
 
-  const totalRows = filteredRows.length;
+  const totalRows = filteredRows?.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
@@ -70,6 +70,7 @@ const DataTable = ({ rows, searchQuery }) => {
                 Id
               </TableCell>
               <TableCell align="left">Patient Name</TableCell>
+              <TableCell align="left">KWD ID</TableCell>
               <TableCell align="left">Appointments</TableCell>
               <TableCell align="left">Mobile Number</TableCell>
               <TableCell align="left">Email</TableCell>
@@ -120,6 +121,7 @@ const DataTable = ({ rows, searchQuery }) => {
                   </Link>
                 </TableCell>
 
+                <TableCell align="left">3245</TableCell>
                 <TableCell align="left">{row.appointments}</TableCell>
                 <TableCell align="left">{row.mobileNo}</TableCell>
                 <TableCell align="left">{row.email}</TableCell>

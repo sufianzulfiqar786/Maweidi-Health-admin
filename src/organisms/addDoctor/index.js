@@ -14,7 +14,7 @@ import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
-import TimeTable from '../../components/doctors/TimeTable';
+import TimeTable from "../../components/doctors/TimeTable";
 // scss
 import "../../assets/css/doctor.scss";
 import { Controller, useForm } from "react-hook-form";
@@ -196,6 +196,7 @@ const DoctorForm = ({ id, rawData }) => {
         setValue(fieldName, fieldValue);
       });
       setValue("first_name", nameParts[0]);
+      setValue("qualification", rawData?.qualification);
       setValue("last_name", nameParts[1]);
       setValue("specialization_id", rawData?.specialization_id);
       setValue("council_registration_no", rawData?.council_registration_no);
@@ -387,43 +388,32 @@ const DoctorForm = ({ id, rawData }) => {
                   }}
                   render={({ field }) => (
                     <>
-                      <Controller
-                        name="gender"
-                        control={control}
-                        rules={{
-                          required: true,
+                      <CustomDropDown
+                        handleChangeSelect={(value, name) => {
+                          field.onChange(value);
+                          handleSelect(value, name);
                         }}
-                        render={({ field }) => (
-                          <>
-                            <CustomDropDown
-                              handleChangeSelect={(value, name) => {
-                                field.onChange(value);
-                                handleSelect(value, name);
-                              }}
-                              option={[
-                                {
-                                  label: "Male​​",
-                                  value: "1",
-                                },
-                                {
-                                  label: "Female",
-                                  value: "0",
-                                },
-                              ]}
-                              name="gender"
-                              field={field}
-                              value={field.value}
-                              onBlur={field.onBlur}
-                            />
-
-                            {errors.gender && (
-                              <span className="error-message">
-                                This field is required
-                              </span>
-                            )}
-                          </>
-                        )}
+                        option={[
+                          {
+                            label: "Male​​",
+                            value: "1",
+                          },
+                          {
+                            label: "Female",
+                            value: "0",
+                          },
+                        ]}
+                        name="gender"
+                        field={field}
+                        value={field.value}
+                        onBlur={field.onBlur}
                       />
+
+                      {errors.gender && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
                     </>
                   )}
                 />
@@ -495,7 +485,7 @@ const DoctorForm = ({ id, rawData }) => {
                   )}
                 />
               </div>
-              <div className="col-lg-4 pr-lg-1 doc-setting-input">
+              <div className="col-lg-4 pr-lg-1 mt-lg-0 mt-3 doc-setting-input">
                 <p className="mb-2"> Qualification </p>
                 <Controller
                   name="qualification"
@@ -526,7 +516,7 @@ const DoctorForm = ({ id, rawData }) => {
                 />
               </div>
 
-              <div className="col-lg-4 mt-lg-0 mt-4 pl-lg-1 doc-setting-input ">
+              <div className="col-lg-4 mt-lg-0 mt-3 pl-lg-1 doc-setting-input ">
                 <p className="mb-2">Experience in years </p>
                 <IncreDecreBtn
                   formDataState={formDataState}

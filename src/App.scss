@@ -190,6 +190,7 @@ $font-size48: 48px;
 .form-control {
   border-color: #E4E3E4 !important;
 }
+
 .loader-overlay {
   position: fixed;
   top: 0;
@@ -201,4 +202,64 @@ $font-size48: 48px;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+input {
+  width: 100%;
+  height: 36.6px;
+  border-radius: 0.3125rem;
+  border: 1px solid #E4E3E4;
+}
+
+.common-btn,
+.common-btn:hover {
+  width: 100%;
+  height: 3rem;
+  text-decoration: none;
+  color: #ffffff;
+  border-radius: 0.3125rem;
+  background: linear-gradient(323.79deg, #125a77 35.68%, #397d99 92.17%);
+}
+
+.common-btn:hover{
+  opacity: 0.8;
+}
+
+.appointment-tab{
+  input{
+    padding-left: 10px;
+  }
+}
+
+.three-side-shadow-hover, .react-datepicker{
+  transition: 0.5s all;
+}
+
+.three-side-shadow-hover:hover{
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); 
+}
+
+.ant-picker.ant-picker-disabled{
+  background-color: white !important;
+}
+
+input[disabled] , button[disabled]{
+  cursor: not-allowed;
+}
+
+.ant-select-selector:hover{
+background-color: white !important;
+}
+
+.Availbility-container{
+  .react-datepicker{
+    box-shadow: 0 0 0 1px #E4E3E4;
+  }
+  .react-datepicker:hover{
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); 
+  }
 }

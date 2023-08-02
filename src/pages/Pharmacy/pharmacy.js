@@ -6,6 +6,7 @@ import "../../assets/css/pharmacy.scss";
 import Searchbar from "../../components/common/Searchbar";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { pharmacies } from "../../Data/PharmactData";
+import { Link } from "react-router-dom";
 
 const Pharmacy = () => {
   const [filterOption, setFilterOption] = useState("today"); // default to "today"
@@ -24,12 +25,17 @@ const Pharmacy = () => {
 
         <div className="col-12  ">
           <div className="row d-flex align-items-end">
-            <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+            <div className="col-lg-9 col-12 mt-lg-0 mt-2">
               <BreadCrum
                 firstLink="/pharmacy"
                 firstText="PHARMACY"
                 secondText="PHARMACY LIST"
               />
+            </div>
+            <div className="col-lg-3 ">
+          <Link className="w-100 d-flex justify-content-end" to='/pharmacy/add'>
+            <button className="common-btn ">Add Pharmacy</button>
+            </Link>    
             </div>
           </div>
         </div>

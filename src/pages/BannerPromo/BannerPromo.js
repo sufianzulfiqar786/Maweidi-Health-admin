@@ -384,8 +384,9 @@ const Pharmacy = () => {
                         </div>
 
                         <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-                            <button onClick={() => setModal1Open(true)} className="btn-add-new-doc mr-2"> Add </button>{" "}
-
+                            <Link to='/banner-promo/add'>
+                                <button className="btn-add-new-doc mr-2 " style={{width:'13rem'}}> Add Banner and Promo </button>
+                            </Link>
 
                         </div>
 

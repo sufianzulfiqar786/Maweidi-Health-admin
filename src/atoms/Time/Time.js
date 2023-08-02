@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 const Time = () => {
   return (
-    <TimePicker placeholder='' width={"100%"} size="large"  style={{border:"0", outline:"none"}} />
+    <TimePicker placeholder='' width={"100%"} size="large"  style={{border:"0", outline:"none",  width:'100%'}} />
   )
 }
 

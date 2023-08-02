@@ -1242,7 +1242,7 @@ const FullScreenMenu = ({
 
 
 
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="bannerpromo">
+      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
           onClick={() => {
@@ -1263,7 +1263,7 @@ const FullScreenMenu = ({
                   }`} alt="" />
               </div>
 
-              <Link className="maweidi-link text-left" to="bannerpromo">
+              <Link className="maweidi-link text-left" to="banner-promo">
                 <span style={{ display: `${menuLeftText}` }}>
                   <p
                     className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${menuDropDownFullScreen.name === "bannerpromo"

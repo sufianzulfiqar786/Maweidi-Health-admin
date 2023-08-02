@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Modal, Select, DatePicker, TimePicker } from "antd";
 import closeIcon from "../../assets/images/common/close.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
@@ -8,9 +8,12 @@ import ClockTimeTable from "../../assets/images/doctor/ClockTimeTable.svg";
 import Phone from "../../atoms/phone";
 import { Controller, useForm } from "react-hook-form";
 import useFetch from "../../customHook/useFetch";
+import moment from 'moment';
 
 const AddAppointmentModal = ({ open, onClose }) => {
-  const { data, isLoading, error } = useFetch(process.env.REACT_APP_GET_HOSPITAL_DATA);
+  const { data: hospitalData } = useFetch(
+    process.env.REACT_APP_GET_HOSPITAL_DATA
+  );
 
   const [formData, setFormData] = useState({
     kwdId: "",
@@ -21,6 +24,7 @@ const AddAppointmentModal = ({ open, onClose }) => {
     doctor_name: "",
     date: "",
     time: "",
+    fees: "",
     age: "",
     email: "",
     phone: "",
@@ -30,17 +34,63 @@ const AddAppointmentModal = ({ open, onClose }) => {
   const [matchedDoctors, setMatchedDoctors] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [hospitals, setHospitals] = useState([]);
+  const [selectedHospitalId, setSelectedHospitalId] = useState();
+  const [selectedSpecializationId, setSelectedSpecializationId] = useState();
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const { RangePicker } = DatePicker;
+
+  const handleDatesChange = (dates) => {
+    console.log("date", dates)
+    if (dates && dates.length === 2) {
+      setStartDate(dates[0]?.format('DD/MM/YYYY'));
+      setEndDate(dates[1]?.format('DD/MM/YYYY'));
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+    }
+  };
+
+  console.log("startDate", startDate)
+  console.log("endDate", endDate)
+
+  const disabledDate = (current) => {
+    if (!startDate || !endDate) {
+      return false;
+    }
+    const startMoment = moment(startDate, 'DD/MM/YYYY');
+    const endMoment = moment(endDate, 'DD/MM/YYYY');
+    return current < startMoment || current > endMoment;
+  };
+
+  const {
+    data: specializationData
+  } = useFetch(
+    process.env.REACT_APP_GET_SPECIALIZATIONS + `/${selectedHospitalId}`
+  );
+
+  const {
+    data: doctorsData,
+    isLoading,
+    error,
+  } = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS_BY_SPEC_HOSPITAL}?hospital_id=${selectedHospitalId}&specialization_id=${selectedSpecializationId}`
+  );
 
   useEffect(() => {
-    if (data) {
-      setHospitals(data?.data.map(({ id, name, specialities }) => ({
-        id,
-        value: name,
-        label: name,
-        specialities,
-      })))
+    if (hospitalData?.success) {
+      setHospitals(
+        hospitalData?.data?.data?.map(({ id, name, specialities }) => ({
+          id,
+          value: name,
+          label: name,
+          specialities,
+        }))
+      );
     }
-  }, [data])
+  }, [hospitalData]);
 
   const {
     register,
@@ -49,103 +99,132 @@ const AddAppointmentModal = ({ open, onClose }) => {
     formState: { errors },
   } = useForm();
 
-  const doctors = [
+  let available = [
     {
-      id: 1,
-      value: "Dr. Drake Boeson",
-      label: "Dr. Drake Boeson",
-      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
+      date: "11/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-      id: 2,
-      value: "Dr. Keegan Dach",
-      label: "Dr. Keegan Dach",
-      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
+      date: "18/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-      id: 3,
-      value: "Dr. Delaney Mangino",
-      label: "Dr. Delaney Mangino",
-      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
+      date: "26/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-      id: 4,
-      value: "Dr. Dustin Jurries",
-      label: "Dr. Dustin Jurries",
-      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
+      date: "24/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
     {
-      id: 5,
-      value: "Dr. Kyleigh Drentlaw",
-      label: "Dr. Kyleigh Drentlaw",
-      availableDates: ['2023-07-15', '2023-07-17', '2023-07-20', '2023-07-23', '2023-07-25']
+      date: "23/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
     },
-  ];
-const specialistOptions = [
-  {
-    id: 1,
-    value: "Cardiology",
-    label: "Cardiology",
-    doctors: [1, 2]
-  },
-  {
-    id: 2,
-    value: "Neurology",
-    label: "Neurology",
-    doctors: [2, 3]
-  },
-  {
-    id: 3,
-    value: "Gynaecology",
-    label: "Gynaecology",
-    doctors: [2, 3, 4]
-  },
-  {
-    id: 4,
-    value: "Ophthalmology",
-    label: "Ophthalmology",
-    doctors: [1, 2, 5]
-  },
-  {
-    id: 5,
-    value: "Urology",
-    label: "Urology",
-    doctors: [1, 3, 5]
-  },
-];
+    {
+      date: "30/07/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
+    },
+    {
+      date: "30/06/2023", avail: "AV", arr: [
+        { time: `9:00 - 10:00`, Availability: "AV" },
+        { time: `11:00 - 12:00`, Availability: "AV" },
+        { time: `12:00 - 1:00`, Availability: "AV" },
+        { time: `2:00 - 3:00`, Availability: "NV" },
+        { time: `4:00 - 5:00`, Availability: "AV" },
+        { time: `5:00 - 6:00`, Availability: "NV" },
+      ]
+    },
+  ]
 
+  const isCustomDate = (date) => {
+    let mapedvalue = available.map((value) => {
+      return value.date
+    })
 
-const findSpecializations = (hospitalValue) => {
-  const selectedHospital = hospitals.find(hospital => hospital.value === hospitalValue);
-    if (selectedHospital) {
-      const specializationsForHospital = selectedHospital.specializations.map((specializationId) => {
-        return specialistOptions.find((specialization) => specialization.id === specializationId);
-      });
-      setMatchedSpecializations(specializationsForHospital);
-    };
-};
-
-const findDoctors = (specializationValue) => {
-  const selectedSpecialization = matchedSpecializations.find(specialization => specialization.value === specializationValue);
-    if (selectedSpecialization) {
-      const doctorsForSpecialization = selectedSpecialization.doctors.map((doctorId) => {
-        return doctors.find((doctor) => doctor.id === doctorId);
-      });
-      setMatchedDoctors(doctorsForSpecialization);
-    };
-};
-
-const findAvailableDates = (doctorValue) => {
-  const selectedDoctor = matchedDoctors.find(doctor => doctor.value === doctorValue);
-  if(selectedDoctor) {
-    setAvailableDates(selectedDoctor.availableDates);
+    return mapedvalue.includes(date)
   }
-}
 
-const isDisabledDate = (current) => {
-  const formattedDate = current.format('YYYY-MM-DD');
-  return !availableDates.includes(formattedDate);
-};
+  const getSelectedHospitalId = (hospitalValue) => {
+    const selectedHospital = hospitals.find(
+      (hospital) => hospital?.value === hospitalValue
+    );
+    if (selectedHospital) {
+      setSelectedHospitalId(selectedHospital?.id);
+    }
+  };
+
+  const getSelectedSpecializationId = (specializationValue) => {
+    const selectedSpecialization = matchedSpecializations.find(specialization => specialization?.value === specializationValue);
+    if (selectedSpecialization) {
+      setSelectedSpecializationId(selectedSpecialization?.id);
+    };
+  };
+
+
+  const findSpecializations = () => {
+    console.log("------specializationData-------", matchedSpecializations);
+    if (specializationData?.success) {
+      setMatchedSpecializations(
+        specializationData?.data?.map(({ id, name }) => ({
+          id,
+          value: name,
+          label: name,
+        }))
+      );
+    }
+    else {
+
+    }
+  };
+  useMemo(() => findSpecializations(), [specializationData?.data]);
+  const findDoctors = () => {
+    if (doctorsData) {
+      setMatchedDoctors(
+        doctorsData?.data?.map(({ id, user }) => ({
+          id,
+          value: user?.name,
+          label: user?.name,
+        }))
+      );
+    }
+  };
+  useMemo(() => findDoctors(), [doctorsData?.data]);
 
   const handleInputChange = (name, value) => {
     setFormData((prevValues) => ({
@@ -155,17 +234,18 @@ const isDisabledDate = (current) => {
   };
 
   const handleHospitalChange = (value) => {
-    findSpecializations(value);
+    getSelectedHospitalId(value);
     handleInputChange("hospital", value);
   };
 
   const handleSpecializationChange = (value) => {
-    findDoctors(value);
+    getSelectedSpecializationId(value);
+    // findDoctors(value);
     handleInputChange("specialization", value);
   };
 
   const handleDoctorsChange = (value) => {
-    findAvailableDates(value);
+    // findAvailableDates(value);
     handleInputChange("doctor_name", value);
   };
 
@@ -187,6 +267,7 @@ const isDisabledDate = (current) => {
       doctor_name: "",
       date: "",
       time: "",
+      fees: "",
       age: "",
       email: "",
       phone: "",
@@ -204,11 +285,19 @@ const isDisabledDate = (current) => {
       doctor_name: "",
       date: "",
       time: "",
+      fees: "",
       age: "",
       email: "",
       phone: "",
     });
   };
+
+  function onChangeRangePicker(value, dateString) {
+    console.log("value suf", value, dateString)
+    console.log('Selected Time: ', value);
+    console.log('Formatted Selected Time: ', dateString);
+  }
+  
 
   return (
     <>
@@ -266,68 +355,68 @@ const isDisabledDate = (current) => {
                 <div class="form-group">
                   <label>Patient Name</label>
                   <Controller
-                  name="patient_name"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        type="text"
-                        name="patient_name"
-                        {...field}
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                          handleInputChange(e.target.name, e.target.value);
-                        }}
-                      />
+                    name="patient_name"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="text"
+                          name="patient_name"
+                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                        />
 
-                      {errors.patient_name && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
+                        {errors.patient_name && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </div>
                 <div class="form-group">
                   <label>Patient ID</label>
                   <Controller
-                  name="patientId"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        type="text"
-                        name="patientId"
-                        {...field}
-                        value={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                          handleInputChange(e.target.name, e.target.value);
-                        }}
-                      />
+                    name="patientId"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="text"
+                          name="patientId"
+                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                        />
 
-                      {errors.patientId && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
+                        {errors.patientId && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
                   />
                 </div>
               </div>
 
               <div class="form-group full-width">
                 <label>Hospital</label>
-                  <Controller
+                <Controller
                   name="hospital"
                   control={control}
                   rules={{
@@ -353,68 +442,68 @@ const isDisabledDate = (current) => {
                       )}
                     </>
                   )}
-                  />
+                />
               </div>
 
               <div class="two-group">
                 <div class="form-group">
                   <label>Specialization</label>
                   <Controller
-                  name="specialization"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <CustomDropDown
-                        handleChangeSelect={(value, name) => {
-                          field.onChange(value);
-                          handleSpecializationChange(value);
-                        }}
-                        option={matchedSpecializations}
-                        field={field}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                      />
+                    name="specialization"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <CustomDropDown
+                          handleChangeSelect={(value, name) => {
+                            field.onChange(value);
+                            handleSpecializationChange(value);
+                          }}
+                          option={matchedSpecializations}
+                          field={field}
+                          value={field.value}
+                          onBlur={field.onBlur}
+                        />
 
-                      {errors.specialization && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
+                        {errors.specialization && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
                   />
                 </div>
                 <div class="form-group">
                   <label>Doctor</label>
                   <Controller
-                  name="doctor_name"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <CustomDropDown
-                        handleChangeSelect={(value, name) => {
-                          field.onChange(value);
-                          handleDoctorsChange(value);
-                        }}
-                        option={matchedDoctors}
-                        field={field}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                      />
+                    name="doctor_name"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <CustomDropDown
+                          handleChangeSelect={(value, name) => {
+                            field.onChange(value);
+                            handleDoctorsChange(value);
+                          }}
+                          option={matchedDoctors}
+                          field={field}
+                          value={field.value}
+                          onBlur={field.onBlur}
+                        />
 
-                      {errors.doctor_name && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
+                        {errors.doctor_name && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
                   />
                   <label style={{ fontSize: "12px", marginBottom: "-15px" }}>
                     Please confirm the doctor's availability and{" "}
@@ -586,28 +675,16 @@ const isDisabledDate = (current) => {
 
               <div class="two-group">
                 <div class="form-group">
-                  <label>Date</label>
+                  <label>Date Range</label>
                   <div className="border" style={{ borderRadius: "5px" }}>
-                  <Controller
-                  name="date"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                      <DatePicker
-                        disabledDate={isDisabledDate}
-                        style={{ border: "none", width: "100%" }}
-                        onChange={(value, name) => {
-                          field.onChange(value);
-                          handleDateChange(value);
-                        }}
-                        field={field}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                      />
-                  )}
-                  />
+                    <DatePicker.RangePicker onChange={handleDatesChange} format="DD/MM/YYYY" style={{ border: "none", width: "100%", height: '36.5px' }} />
+                    {/* <RangePicker
+                      showTime={{ format: 'HH:mm' }}
+                      format="YYYY-MM-DD HH:mm"
+                      placeholder={['Start Time', 'End Time']}
+                      onChange={onChangeRangePicker}
+                      // onOk={onOk}
+                    /> */}
                   </div>
                   {errors.date && (
                     <span className="error-message">
@@ -615,6 +692,59 @@ const isDisabledDate = (current) => {
                     </span>
                   )}
                 </div>
+                <div class="form-group">
+                  <label>Date</label>
+                  <div className="border" style={{ borderRadius: "5px" }}>
+                    <Controller
+                      name="date"
+                      control={control}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({ field }) => (
+                        <DatePicker
+                          // disabledDate={disabledDate}
+                          dateRender={current => {
+                            if (!disabledDate(current)) {
+                              if (isCustomDate(current.format("DD/MM/YYYY")) === true) {
+                                return (
+                                  <div style={{ backgroundColor: '#E4F3E5', color: '#3D8E44', borderRadius: '8px' }}>
+                                    {current.date()}
+                                  </div>
+                                )
+                              }
+                              else {
+                                return (
+                                  <div style={{ backgroundColor: '#FEF1F4', color: 'red', borderRadius: '8px' }}>
+                                    {current.date()}
+                                  </div>
+                                );
+                              }
+                            }
+
+                          }}
+                          format="DD/MM/YYYY"
+                          style={{ border: "none", width: "100%", height: '36.5px' }}
+                          onChange={(value, name) => {
+                            field.onChange(value);
+                            handleDateChange(value);
+                          }}
+                          field={field}
+                          value={field.value}
+                          onBlur={field.onBlur}
+                        />
+                      )}
+                    />
+                  </div>
+                  {errors.date && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div class="two-group">
                 <div class="form-group">
                   <label>Time</label>
                   <div className="appointment-time2 d-flex justify-content-between">
@@ -626,52 +756,52 @@ const isDisabledDate = (current) => {
                       }}
                       render={({ field }) => (
                         <>
-                        <Select
-                        placeholder="Select Time"
-                        style={{
-                        width: "80%",
-                        }}
-                        bordered={true}
-                        onChange={(value, name) => {
-                          field.onChange(value);
-                          handleTimeChange(value);
-                        }}
-                        field={field}
-                        value={field.value}
-                        options={[
-                        {
-                          label: "9:00 AM",
-                          value: "9:00 AM",
-                        },
-                        {
-                          label: "10:00 AM",
-                          value: "11:00 AM",
-                        },
-                        {
-                          label: "11:00 AM",
-                          value: "11:00 AM",
-                        },
-                        {
-                          label: "12:00 AM",
-                          value: "12:00 AM",
-                        },
-                        {
-                          label: "1:00 PM",
-                          value: "1:00 PM",
-                        },
-                        {
-                          label: "2:00 PM",
-                          value: "2:00 PM",
-                        },
-                        {
-                          label: "3:00 PM",
-                          value: "3:00 PM",
-                        },
-                      ]}
+                          <Select
+                            defaultValue="Select Time"
+                            style={{
+                              width: "80%",
+                            }}
+                            bordered={true}
+                            onChange={(value, name) => {
+                              field.onChange(value);
+                              handleTimeChange(value);
+                            }}
+                            field={field}
+                            value={field.value}
+                            options={[
+                              {
+                                label: "9:00 AM",
+                                value: "9:00 AM",
+                              },
+                              {
+                                label: "10:00 AM",
+                                value: "111:00 AM",
+                              },
+                              {
+                                label: "11:00 AM",
+                                value: "11:00 AM",
+                              },
+                              {
+                                label: "12:00 AM",
+                                value: "12:00 AM",
+                              },
+                              {
+                                label: "1:00 PM",
+                                value: "1:00 PM",
+                              },
+                              {
+                                label: "2:00 PM",
+                                value: "2:00 PM",
+                              },
+                              {
+                                label: "3:00 PM",
+                                value: "3:00 PM",
+                              },
+                            ]}
+                          />
+                        </>
+                      )}
                     />
-                    </>
-                  )}
-                  />
                     <img className="pr-1" src={ClockIcon} alt="" />
                   </div>
                   {errors.time && (
@@ -681,22 +811,85 @@ const isDisabledDate = (current) => {
                   )}
                   {/* <TimePicker size="large" style={{ width: "100%" }} /> */}
                 </div>
+                <div class="form-group">
+                  <label>Fees</label>
+                  <Controller
+                    name="fees"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="text"
+                          name="fees"
+                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                        />
+
+                        {errors.fees && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
               </div>
 
               <div class="three-group">
                 <div class="form-group">
                   <label>Age</label>
                   <Controller
-                  name="age"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
+                    name="age"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          type="text"
+                          name="age"
+                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                          onClick={() => { console.log("----formData------", formData) }}
+                        />
+
+                        {errors.age && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="date-input">Email</label>
+                  <Controller
+                    name="email"
+                    control={control}
+                    rules={{
+                      required: true,
+                      pattern:
+                        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                    }}
+                    render={({ field }) => (
                       <input
+                        className=""
                         type="text"
-                        name="age"
+                        name="email"
                         {...field}
                         value={field.value}
                         onChange={(e) => {
@@ -704,79 +897,47 @@ const isDisabledDate = (current) => {
                           handleInputChange(e.target.name, e.target.value);
                         }}
                       />
-
-                      {errors.age && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
+                    )}
                   />
+                  {errors.email && errors.email.type === "required" && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
+                  {errors.email && errors.email.type === "pattern" && (
+                    <span className="error-message">Invalid email address</span>
+                  )}
                 </div>
-                <div class="form-group">
-                  <label for="date-input">Email</label>
+                <div class="form-group" style={{ marginTop: "11px" }}>
                   <Controller
-                  name="email"
-                  control={control}
-                  rules={{
-                    required: true,
-                    pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-                  }}
-                  render={({ field }) => (
-                    <input
-                      className=""
-                      type="text"
-                      name="email"
-                      {...field}
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        handleInputChange(e.target.name, e.target.value)
-                      }}
-                    />
-                  )}
-                />
-                {errors.email && errors.email.type === "required" && (
-                  <span className="error-message">This field is required</span>
-                )}
-                {errors.email && errors.email.type === "pattern" && (
-                  <span className="error-message">Invalid email address</span>
-                )}
-                </div>
-                <div class="form-group" style={{marginTop: '11px'}}>
-                <Controller
-                  name="phone"
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field }) => (
-                    <>
-                      <Phone
-                        name="phone"
-                        field={field}
-                        value={field.value}
-                        handleChange={(e) => {
-                          field.onChange(e);
-                          handleInputChange(e.target.name, e.target.value);
-                        }}
-                      />
-                      {errors.phone && (
-                        <span className="error-message">
-                          This field is required
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
+                    name="phone"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <Phone
+                          name="phone"
+                          field={field}
+                          value={field.value}
+                          handleChange={(e) => {
+                            field.onChange(e);
+                            handleInputChange(e.target.name, e.target.value);
+                          }}
+                        />
+                        {errors.phone && (
+                          <span className="error-message">
+                            This field is required
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                class="submit-button full-width"
-              >
+              <button type="submit" class="submit-button full-width">
                 Book An Appointment
               </button>
             </form>

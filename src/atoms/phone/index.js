@@ -3,7 +3,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./Phone.scss";
 
-const Phone = ({ value, handleChange, name, field }) => {
+const Phone = ({ value, handleChange, name, field, disabled }) => {
   const handleInputChange = (phone) => {
     field.onChange(phone); // Trigger the onChange function provided by the 'react-hook-form' library
     handleChange(phone, name); // Call your own handleChange function
@@ -11,8 +11,9 @@ const Phone = ({ value, handleChange, name, field }) => {
 
   return (
     <>
-      <p className="mb-2">Phone no<span className='error-message'>*</span></p>
+      <p className="mb-2">Phone no</p>
       <PhoneInput
+      disabled={disabled}
         inputProps={{
           name: name,
           ref: field.ref,

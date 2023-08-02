@@ -22,6 +22,7 @@ import TimeTableMessageIcon from "../../assets/images/doctor/TimeTableMessageIco
 import TimeTablePhoneIcon from "../../assets/images/doctor/TimeTablePhoneIcon.svg";
 import TimeTableAddBtn from "../../assets/images/doctor/TimeTableAddBtn.svg";
 import TimeTableRemoveBtn from "../../assets/images/doctor/dash-circle-fill-red.svg";
+import PDF_icon from "../../assets/images/doctor/PDF_icon.png";
 
 import Group1175 from "../../assets/images/doctor/doc1.png";
 import Group1176 from "../../assets/images/doctor/doc2.png";
@@ -38,24 +39,20 @@ const ViewDoctor = ({ Id }) => {
   const location = useLocation();
   const receivedData = location.state?.data;
   const [docBtn, setDocBtn] = useState(0);
-  const [doctorTimeTable, setdoctorTimeTable] = useState([])
+  const [doctorTimeTable, setdoctorTimeTable] = useState([]);
   const [modal2Open, setModal2Open] = useState(false);
   const [specialistOptions, setspecialistOptions] = useState([]);
-  const [presentDays, setpresentDays] = useState([])
+  const [presentDays, setpresentDays] = useState([]);
 
-  const [addTimePostReq, setaddTimePostReq] = useState(
-    {
-      doctor_id: 131,
-      hospital_id: 456,
-      schedules: [
-      ]
-    }
-  )
+  const [addTimePostReq, setaddTimePostReq] = useState({
+    doctor_id: 131,
+    hospital_id: 456,
+    schedules: [],
+  });
 
-  const setUpAvailableTime = () => {
-  }
-  const { postData } = usePost()
-  const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData()
+  const setUpAvailableTime = () => { };
+  const { postData } = usePost();
+  const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData();
   const [selectDay, setSelectDay] = useState({
     sunday: {
       toggle: false,
@@ -87,20 +84,23 @@ const ViewDoctor = ({ Id }) => {
     },
   });
 
-
   const { data, isLoading, error } = useFetch(
     `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
   );
 
   const getTimeTableData = () => {
     deleteData(
-      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${123}`, (Data) => {
-        setdoctorTimeTable(Data?.data?.timetable)
-        setspecialistOptions(data?.data?.hospitals.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
+      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${123}`,
+      (Data) => {
+        setdoctorTimeTable(Data?.data?.timetable);
+        setspecialistOptions(
+          data?.data?.hospitals.map((i) => {
+            return { value: i.name, label: i.name, id: i.id };
+          })
+        );
       }
     );
-
-  }
+  };
 
   // REACT_APP_SET_DOCTOR_AVaAILABILITY
   const increaseDayCount = (day) => {
@@ -111,7 +111,6 @@ const ViewDoctor = ({ Id }) => {
         count: prevState[day].count + 1,
       },
     }));
-
   };
 
   const decreaseDayCount = (day) => {
@@ -122,40 +121,46 @@ const ViewDoctor = ({ Id }) => {
         count: prevState[day].count - 1,
       },
     }));
-
-
   };
-  const handleChangeSelect = (val, name) => {
-
-  }
-  const checkingNew = () => {
-
-  }
+  const handleChangeSelect = (val, name) => { };
+  const checkingNew = () => { };
 
   function renderLoop(countDays = [], dayName) {
-
     const items = [];
     for (let i = 0; i < countDays.length; i++) {
       // const isLastElement = i === 0;
 
       items.push(
         <>
-
-          <div className={`${countDays === 1 ? "" : "pb-3"} `} style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <div
+            className={`${countDays === 1 ? "" : "pb-3"} `}
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
               <div style={{ width: "141px" }}>
-                <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} />
+                <CustomDropDown
+                  option={specialistOptions}
+                  handleChangeSelect={handleChangeSelect}
+                />
               </div>
               {/* .slice(0, -3) */}
               <TimeChanger Time={countDays[i].start_time} />
 
-
               <TimeChanger Time={countDays[i].end_time} />
-
             </div>
             {
-
-
               <span className="pl-lg-3 pl-1">
                 <img
                   className="cursor-pointer"
@@ -166,8 +171,6 @@ const ViewDoctor = ({ Id }) => {
                 />
               </span>
             }
-
-
           </div>
         </>
       );
@@ -175,8 +178,6 @@ const ViewDoctor = ({ Id }) => {
 
     return items;
   }
-
-
 
   let settings = {
     arrows: true,
@@ -227,11 +228,12 @@ const ViewDoctor = ({ Id }) => {
   ];
 
   let filterTimeAvalibility = (dayID) => {
-    let a = addTimePostReq.schedules.filter((tableFilter) => tableFilter.day === dayID)
+    let a = addTimePostReq.schedules.filter(
+      (tableFilter) => tableFilter.day === dayID
+    );
 
-    return a[0]?.time_slots
-  }
-
+    return a[0]?.time_slots;
+  };
 
   // copy all hospital values to update record
   useEffect(() => {
@@ -262,16 +264,15 @@ const ViewDoctor = ({ Id }) => {
       return result;
     }, []);
 
-
-    setaddTimePostReq({ ...addTimePostReq, schedules: mappedArray })
-    setpresentDays(addTimePostReq?.schedules.map((schedule) => schedule?.day))
-
+    setaddTimePostReq({ ...addTimePostReq, schedules: mappedArray });
+    setpresentDays(addTimePostReq?.schedules.map((schedule) => schedule?.day));
   }, [doctorTimeTable]);
-
 
   // value from drop down
   const hospitalDopDown = (hosName, id) => {
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === id);
+    const index = addTimePostReq.schedules.findIndex(
+      (schedule) => schedule.day === id
+    );
 
     if (index !== -1) {
       const timeSlot = addTimePostReq.schedules[index].time_slots[0];
@@ -298,33 +299,34 @@ const ViewDoctor = ({ Id }) => {
     }
   };
 
-
-
   const staringTimeDrop = (time, dayId) => {
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    const index = addTimePostReq.schedules.findIndex(
+      (schedule) => schedule.day === dayId
+    );
     if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1;
       // If the entry with the day value exists, update its start_time field
       addTimePostReq.schedules[index].time_slots[lastOne].start_time = time;
     }
-  }
-
-
+  };
 
   const endTimeDrop = (time, dayId) => {
-    const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    const index = addTimePostReq.schedules.findIndex(
+      (schedule) => schedule.day === dayId
+    );
     if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1;
       // If the entry with the day value exists, update its start_time field
       addTimePostReq.schedules[index].time_slots[lastOne].end_time = time;
     }
-  }
+  };
 
   const postDoctorAvalibility = () => {
     postData(
-      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`, addTimePostReq
-    )
-  }
+      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`,
+      addTimePostReq
+    );
+  };
 
   return (
     // <div>ViewDoctor{receivedData?.name}</div>
@@ -377,8 +379,8 @@ const ViewDoctor = ({ Id }) => {
                     setDocBtn(0);
                   }}
                   className={`${docBtn === 0
-                    ? "view-doctor-btn"
-                    : "view-doctor-btn-noactive"
+                      ? "view-doctor-btn"
+                      : "view-doctor-btn-noactive"
                     }`}
                   style={{ borderRadius: "6px 0px 0px 6px" }}
                 >
@@ -389,8 +391,8 @@ const ViewDoctor = ({ Id }) => {
                     setDocBtn(1);
                   }}
                   className={`${docBtn === 1
-                    ? "view-doctor-btn"
-                    : "view-doctor-btn-noactive"
+                      ? "view-doctor-btn"
+                      : "view-doctor-btn-noactive"
                     }`}
                 >
                   Reviews
@@ -400,8 +402,8 @@ const ViewDoctor = ({ Id }) => {
                     setDocBtn(2);
                   }}
                   className={`${docBtn === 2
-                    ? "view-doctor-btn"
-                    : "view-doctor-btn-noactive"
+                      ? "view-doctor-btn"
+                      : "view-doctor-btn-noactive"
                     }`}
                 >
                   Time Table
@@ -411,8 +413,8 @@ const ViewDoctor = ({ Id }) => {
                     setDocBtn(3);
                   }}
                   className={`${docBtn === 3
-                    ? "view-doctor-btn"
-                    : "view-doctor-btn-noactive"
+                      ? "view-doctor-btn"
+                      : "view-doctor-btn-noactive"
                     }`}
                   style={{ borderRadius: "0px 6px 6px 0px" }}
                 >
@@ -424,30 +426,45 @@ const ViewDoctor = ({ Id }) => {
                 <>
                   <div className="col-12 px-3 my-4 pt-lg-3">
                     <p className="mb-0 doc-overview-detail">
-                      A gynecologist is a surgeon who specializes in the female
-                      reproductive system, which includes the cervix, fallopian
-                      tubes, ovaries, uterus, vagina and vulva. Menstrual
-                      problems, contraception, sexuality, menopause and
-                      infertility issues are diagnosed and treated by a
-                      gynecologist; most gynecologists also provide prenatal
-                      care, and some provide primary care.
+                      {data?.data?.about}
                     </p>
                   </div>
+                  <div className="col-6">
 
-                  <div className="col-12 pt-2 mt-4">
-                    <p className="mb-0 view-doc-special"> Specialties: </p>
-                    <p className="mb-0 pt-2">
-                      {" "}
-                      <img
-                        className="pr-3 view-doc-sub-special "
-                        src={RightArrowSpec}
-                        alt=""
-                      />{" "}
-                      <span className="view-doc-sub-special">
-                        Women's health services
-                      </span>{" "}
-                    </p>
-                    <p className="mb-0">
+                    <div className="row">
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special"> Qualification: </p>
+                        <div className="row">
+                          <div className="col-xl-6">
+                            <p className="mb-0 pt-2">
+                              {" "}
+                              <img
+                                className="pr-3 view-doc-sub-special "
+                                src={RightArrowSpec}
+                                alt=""
+                              />{" "}
+                              <span className="view-doc-sub-special">
+                                {data?.data?.qualification}
+                              </span>{" "}
+                            </p>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special"> Specialties: </p>
+                        <p className="mb-0 pt-2">
+                          {" "}
+                          <img
+                            className="pr-3 view-doc-sub-special "
+                            src={RightArrowSpec}
+                            alt=""
+                          />{" "}
+                          <span className="view-doc-sub-special">
+                            {data?.data?.specialization?.name}
+                          </span>{" "}
+                        </p>
+                        {/* <p className="mb-0">
                       {" "}
                       <img
                         className="pr-3 view-doc-sub-special"
@@ -490,29 +507,125 @@ const ViewDoctor = ({ Id }) => {
                         alt=""
                       />{" "}
                       <span className="view-doc-sub-special"> Conclusion </span>
-                    </p>
-                  </div>
+                    </p> */}
+                      </div>
 
-                  <div className="col-12 pt-2 mt-4">
-                    <p className="mb-0 view-doc-special">
-                      {" "}
-                      <span className="view-doc-special">
-                        {" "}
-                        Consultancy Charges:{" "}
-                      </span>
-                    </p>
-                    <p className="mb-0 pt-2">
-                      {" "}
-                      <img
-                        className="pr-3 view-doc-sub-special"
-                        src={RightArrowSpec}
-                        alt=""
-                      />{" "}
-                      <span className="view-doc-sub-special">
-                        {" "}
-                        $50/Patient{" "}
-                      </span>
-                    </p>
+                      <div className="col-12 pt-2 mt-4">
+                        <p className="mb-0 view-doc-special">
+                          {" "}
+                          <span className="view-doc-special">
+                            {" "}
+                            Consultancy Charges:{" "}
+                          </span>
+                        </p>
+                        <p className="mb-0 pt-2">
+                          {" "}
+                          <img
+                            className="pr-3 view-doc-sub-special"
+                            src={RightArrowSpec}
+                            alt=""
+                          />{" "}
+                          <span className="view-doc-sub-special">
+                            {" "}
+                            $50/Patient{" "}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="col-xl-6">
+                    <p className="mb-0 view-doc-special mt-4"> Qualification: </p>
+
+                    <div className="row">
+
+                    <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={PDF_icon} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={Group1175} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={PDF_icon} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special  cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-6 mt-3">
+                        <div className="border main-certificate" style={{borderRadius:'5px'}}>
+                        <div className=" " style={{height:'130px', width:'100%'}}>
+                          <img className="w-100 h-100"  src={Group1175} alt="" />
+                        </div>
+                        <p className="mb-0 text-center view-doc-sub-special  cursor-pointer">View</p>
+                        </div>
+                      </div>
+
+                      
+
+
+                    </div>
+
+                    {/* <div
+                          className="  mt-3 mt-xl-0 border d-flex justify-content-between align-items-center"
+                          style={{ borderRadius: "10px" }}
+                        >
+                         
+                          <div className="d-flex align-items-center">
+                            <div className=" ">
+                              <div style={{ width: "40px" }}>
+                                <img
+                                  className="w-100 h-100 border"
+                                  src={
+                                    data?.data.certificate
+                                      .split("/")
+                                      .pop()
+                                      .split(".")[1] === "pdf"
+                                      ? PDF_icon
+                                      : `${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`
+                                  }
+                                  alt=""
+                                />
+                              </div>
+                            </div>
+                            <div className=" doc-overview-detail">
+                              <div
+                                className="pl-2 w-sm-50 w-100"
+                                style={{ wordWrap: "break-word" }}
+                              >
+                                {data?.data.certificate.split("/").pop()}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="  d-flex justify-content-end pr-3">
+                            <a
+                              href={`${process.env.REACT_APP_IMAGE_URL}/${data?.data.certificate}`}
+                              download
+                              target="_blank"
+                            >
+                              <div
+                                className="doc-overview-detail cursor-pointer text-right"
+                                style={{ color: "red", fontSize: "14px" }}
+                              >
+                                View Detail
+                              </div>
+                            </a>
+                          </div>
+                        </div> */}
                   </div>
                 </>
               )}
@@ -559,9 +672,8 @@ const ViewDoctor = ({ Id }) => {
                         <img
                           className="cursor-pointer"
                           onClick={() => {
-                            setModal2Open(true)
-                            getTimeTableData()
-
+                            setModal2Open(true);
+                            getTimeTableData();
                           }}
                           src={TimeTablePencil}
                           alt=""
@@ -580,7 +692,10 @@ const ViewDoctor = ({ Id }) => {
                             <div className="col-6"></div>
 
                             <div className="col-6 d-flex justify-content-end mt-3">
-                              <button className="apply-filter" onClick={postDoctorAvalibility}>
+                              <button
+                                className="apply-filter"
+                                onClick={postDoctorAvalibility}
+                              >
                                 Save Schedule
                               </button>
                             </div>
@@ -611,10 +726,10 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(1)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(1)}
                                   onClick={(e) => {
-
-
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       sunday: {
@@ -629,50 +744,76 @@ const ViewDoctor = ({ Id }) => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center align-items-start">
-
                             {
                               // selectDay.sunday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(1)
-                                ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(1) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={1} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={1}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      dayId={1}
+                                      selector={true}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      dayId={1}
+                                      selector={false}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("sunday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("sunday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
-
                                       style={{
-                                        pointerEvents: `${addTimePostReq.schedules[1]?.time_slots[0].start_time === ""
-                                          || addTimePostReq.schedules[1]?.time_slots[0].end_time === "" ?
-                                          "none" : ""
-                                          }`
+                                        pointerEvents: `${addTimePostReq.schedules[1]
+                                            ?.time_slots[0].start_time === "" ||
+                                            addTimePostReq.schedules[1]
+                                              ?.time_slots[0].end_time === ""
+                                            ? "none"
+                                            : ""
+                                          }`,
                                       }}
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
 
                             {
-                            // selectDay.sunday.toggle &&
+                              // selectDay.sunday.toggle &&
                               renderLoop(filterTimeAvalibility(1), "sunday")
-
                             }
                           </div>
                         </div>
@@ -689,7 +830,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(2)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(2)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -708,38 +851,65 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
                               // selectDay.monday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(2)
-                              ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(2) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={2} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={2}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={2} selector={true} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      dayId={2}
+                                      selector={true}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={2} selector={false} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      dayId={2}
+                                      selector={false}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("monday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("monday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
                             {
-                            // selectDay.monday.toggle &&
-                              renderLoop(filterTimeAvalibility(2), "monday")}
+                              // selectDay.monday.toggle &&
+                              renderLoop(filterTimeAvalibility(2), "monday")
+                            }
                           </div>
                         </div>
 
@@ -756,7 +926,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(3)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(3)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -775,38 +947,65 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
                               // selectDay.tuesday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(3)
-                              ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(3) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={3} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={3}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} dayId={3} selector={true} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      dayId={3}
+                                      selector={true}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} dayId={3} selector={false} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      dayId={3}
+                                      selector={false}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("tuesday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("tuesday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
                             {
-                            // selectDay.tuesday.toggle &&
-                              renderLoop(filterTimeAvalibility(3), "tuesday")}
+                              // selectDay.tuesday.toggle &&
+                              renderLoop(filterTimeAvalibility(3), "tuesday")
+                            }
                           </div>
                         </div>
 
@@ -822,7 +1021,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(4)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(4)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -840,42 +1041,66 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.wednesday.toggle 
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(4)
-                              ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              // selectDay.wednesday.toggle
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(4) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={4} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={4}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={4} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      selector={true}
+                                      dayId={4}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={4} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      selector={false}
+                                      dayId={4}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("wednesday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("wednesday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
                             {
-                            // selectDay.wednesday.toggle &&
-                              renderLoop(
-                                filterTimeAvalibility(4),
-                                "wednesday",
-                              )}
+                              // selectDay.wednesday.toggle &&
+                              renderLoop(filterTimeAvalibility(4), "wednesday")
+                            }
                           </div>
                         </div>
 
@@ -891,7 +1116,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(5)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(5)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -910,41 +1137,66 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
                               // selectDay.thursday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(5)
-                              ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(5) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={5} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={5}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={5} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      selector={true}
+                                      dayId={5}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={5} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      selector={false}
+                                      dayId={5}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("thursday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("thursday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
 
                             {
-                            // selectDay.thursday.toggle &&
-                              renderLoop(filterTimeAvalibility(5), "thursday")}
-
-
+                              // selectDay.thursday.toggle &&
+                              renderLoop(filterTimeAvalibility(5), "thursday")
+                            }
                           </div>
                         </div>
 
@@ -960,7 +1212,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(6)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(6)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -979,38 +1233,65 @@ const ViewDoctor = ({ Id }) => {
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
                               // selectDay.friday.toggle
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(6)
-                              ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(6) ? (
+                                <div
+                                  className="mb-3"
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      width: "100%",
+                                    }}
+                                  >
                                     <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={6} handleChangeSelect={handleChangeSelect} />
+                                      <CustomDropDown
+                                        option={specialistOptions}
+                                        hospitalDopDown={hospitalDopDown}
+                                        dayId={6}
+                                        handleChangeSelect={handleChangeSelect}
+                                      />
                                     </div>
 
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={6} />
+                                    <TimeChanger
+                                      staringTimeDrop={staringTimeDrop}
+                                      selector={true}
+                                      dayId={6}
+                                    />
 
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={6} />
-
+                                    <TimeChanger
+                                      endTimeDrop={endTimeDrop}
+                                      selector={false}
+                                      dayId={6}
+                                    />
                                   </div>
                                   <span className="pl-lg-3 pl-1">
                                     <img
                                       className="cursor-pointer"
                                       onClick={() => {
-                                        increaseDayCount("friday")
-                                        setaddTimePostReq(addTimePostReq)
+                                        increaseDayCount("friday");
+                                        setaddTimePostReq(addTimePostReq);
                                       }}
                                       src={TimeTableAddBtn}
                                       alt=""
                                     />
                                   </span>
-
-
-                                </div> : null
+                                </div>
+                              ) : null
                             }
                             {
-                            // selectDay.friday.toggle &&
-                              renderLoop(filterTimeAvalibility(6), "friday")}
+                              // selectDay.friday.toggle &&
+                              renderLoop(filterTimeAvalibility(6), "friday")
+                            }
                           </div>
                         </div>
 
@@ -1026,7 +1307,9 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(7)}
+                                  checked={addTimePostReq?.schedules
+                                    .map((schedule) => schedule?.day)
+                                    .includes(7)}
                                   onClick={() => {
                                     console.log("sdf");
                                     setSelectDay((prevState) => ({
@@ -1043,41 +1326,65 @@ const ViewDoctor = ({ Id }) => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {
-                              selectDay.saturday.toggle |
-                              addTimePostReq?.schedules.map((schedule) => schedule?.day).includes(7)
-                               ?
-                                <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
-                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={7} handleChangeSelect={handleChangeSelect} />
-                                    </div>
-
-                                    <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={7} />
-
-
-                                    <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={7} />
-
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("saturday")
-                                        setaddTimePostReq(addTimePostReq)
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-
+                            {selectDay.saturday.toggle |
+                              addTimePostReq?.schedules
+                                .map((schedule) => schedule?.day)
+                                .includes(7) ? (
+                              <div
+                                className="mb-3"
+                                style={{
+                                  width: "100%",
+                                  display: "flex",
+                                  justifyContent: "space-around",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    width: "100%",
+                                  }}
+                                >
+                                  <div style={{ width: "141px" }}>
+                                    <CustomDropDown
+                                      option={specialistOptions}
+                                      hospitalDopDown={hospitalDopDown}
+                                      dayId={7}
+                                      handleChangeSelect={handleChangeSelect}
                                     />
-                                  </span>
+                                  </div>
 
+                                  <TimeChanger
+                                    staringTimeDrop={staringTimeDrop}
+                                    selector={true}
+                                    dayId={7}
+                                  />
 
-                                </div> : null
-                            }
+                                  <TimeChanger
+                                    endTimeDrop={endTimeDrop}
+                                    selector={false}
+                                    dayId={7}
+                                  />
+                                </div>
+                                <span className="pl-lg-3 pl-1">
+                                  <img
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      increaseDayCount("saturday");
+                                      setaddTimePostReq(addTimePostReq);
+                                    }}
+                                    src={TimeTableAddBtn}
+                                    alt=""
+                                  />
+                                </span>
+                              </div>
+                            ) : null}
                             {
-                            // selectDay.saturday.toggle &&
-                              renderLoop(filterTimeAvalibility(7), "saturday")}
+                              // selectDay.saturday.toggle &&
+                              renderLoop(filterTimeAvalibility(7), "saturday")
+                            }
                           </div>
                         </div>
                       </Modal>
