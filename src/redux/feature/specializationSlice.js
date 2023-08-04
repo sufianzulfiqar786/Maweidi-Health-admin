@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const BaseURL = process.env.REACT_APP_BASE_URL;
 const endpoint = process.env.REACT_APP_GET_SPECIALIZATION;
-const token = "11|FJiHC6mUorgxUbttyr8WSIcX4qtLPicZCL3BOHXX";
+const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
 const config = {
     headers: {
       Authorization: `Bearer ${token}`,
