@@ -127,6 +127,7 @@ const AddAppointments = () => {
     }, [hospitalData]);
 
     const {
+        reset,
         register,
         handleSubmit,
         control,
@@ -318,6 +319,10 @@ const AddAppointments = () => {
             setValue("email", response.data?.user?.email)
             setValue("patient_name", response.data?.user?.name)
             setValue("patientId", response.data?.id)
+            setAppointmentDate({
+                ...appointmentDate, 'patient_id': response?.data?.id
+    
+            })
             // Show an error message
             CustomToast({
                 type: "success",
@@ -369,9 +374,9 @@ const AddAppointments = () => {
         console.log("selectDoctor", selectDoctor?.specialization_id)
         setValue("specialization", selectDoctor?.specialization_id)
         
-        alert(selectDoctor?.specialization_id)
+        // alert(selectDoctor?.specialization_id)
         console.log("selectDoctor///", selectDoctor)
-        setAppointmentDate({ ...appointmentDate, 'doctor_id': 10, 'specialization_id': selectDoctor?.specialization_id })
+        setAppointmentDate({ ...appointmentDate, 'doctor_id': selectDoctor.id, 'specialization_id': selectDoctor?.specialization_id })
 
         handleInputChange("doctor_name", value);
 
@@ -411,10 +416,7 @@ const AddAppointments = () => {
 
     const onSubmit = () => {
 
-        setAppointmentDate({
-            ...appointmentDate, 'patient_id': KWD_ID?.data?.id
-
-        })
+      
 
         setFormData({
             kwdId: "",
@@ -440,17 +442,26 @@ const AddAppointments = () => {
 
             const updatedPostData = {
                 ...appointmentDate,
-                'fee': 2323,
+                fees: 2.30,
                 date: appointmentDate.selected_date,
                 note:'werwer'
             }
 
             addAppointmentBooking?.postData((`${process.env.REACT_APP_ADD_APPOINTMENT}`), updatedPostData, () => {
-                CustomToast({
-                    type: "success",
-                    message: ` ${addAppointmentBooking?.data?.response} ` ,
-                });
+                
+                // setAppointmentDate('')
+                setKWD_ID('')
+                setValue('')
+                reset()
+                appointmentDatePost?.postData((`${process.env.REACT_APP_GET_DOCTOR_AVAILABILITIES}`), appointmentDate, () => {
+                    CustomToast({
+                        type: "success",
+                        message: ` Booked Appointment ` ,
+                    });
+                })
             })
+
+           
 
         }
 
@@ -564,7 +575,7 @@ const AddAppointments = () => {
                                 <div className="row">
                                     <div className="col-9">
                                         <div class="form-group full-width">
-                                            <p class="required">Enter KWD ID</p>
+                                            <p class="required">Enter KWD ID<span className='error-message'>*</span></p>
                                             <Controller
                                                 name="kwdId"
                                                 control={control}
@@ -577,7 +588,7 @@ const AddAppointments = () => {
                                                             type="text"
                                                             name="kwdId"
                                                             {...field}
-                                                            value={field.value}
+                                                            value={field.value || ''}
                                                             onChange={(e) => {
                                                                 field.onChange(e.target.value);
                                                                 handleInputChange(e.target.name, e.target.value);
@@ -621,7 +632,7 @@ const AddAppointments = () => {
                                                     type="text"
                                                     name="patient_name"
                                                     {...field}
-                                                    value={field.value || KWD_ID?.data?.user?.name}
+                                                    value={field.value || KWD_ID?.data?.user?.name || ''}
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         handleInputChange(e.target.name, e.target.value);
@@ -658,7 +669,7 @@ const AddAppointments = () => {
                                                     name="patientId"
                                                     {...field}
                                                     // value={field.value}
-                                                    value={field.value || KWD_ID?.data?.id}
+                                                    value={field.value || KWD_ID?.data?.id || ''}
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         handleInputChange(e.target.name, e.target.value);
@@ -689,7 +700,7 @@ const AddAppointments = () => {
                                                     disabled={true}
                                                     name="phone"
                                                     field={field}
-                                                    value={field.value || KWD_ID.data?.user?.contact}
+                                                    value={field.value || KWD_ID.data?.user?.contact || ''}
                                                     handleChange={(e) => {
                                                         field.onChange(e);
                                                         handleInputChange(e.target.name, e.target.value);
@@ -723,7 +734,7 @@ const AddAppointments = () => {
                                                     type="text"
                                                     name="age"
                                                     {...field}
-                                                    value={field.value || KWD_ID.data?.user?.age}
+                                                    value={field.value || KWD_ID.data?.user?.age || ''}
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         handleInputChange(e.target.name, e.target.value);
@@ -761,7 +772,7 @@ const AddAppointments = () => {
                                                 type="text"
                                                 name="email"
                                                 {...field}
-                                                value={field.value || KWD_ID.data?.user?.email}
+                                                value={field.value || KWD_ID.data?.user?.email || ''}
                                                 onChange={(e) => {
                                                     field.onChange(e.target.value);
                                                     handleInputChange(e.target.name, e.target.value);

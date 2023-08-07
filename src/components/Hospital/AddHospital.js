@@ -215,9 +215,9 @@ const AddHospital = ({ Id }) => {
                     type: "success",
                     message: `${Id ? 'Hospital Details Updated Successfully!' : 'Add Hospital Successfuly!'}`,
                 });
-                !Id ?? setAddHospitalData('')
-                !Id ?? reset()
-                !Id ?? setImage('')
+                !Id && setAddHospitalData({})
+                !Id && reset()
+                !Id && setImage('')
             })
         }
     }
@@ -602,7 +602,7 @@ const AddHospital = ({ Id }) => {
                                                 type="text"
                                                 placeholder="Username"
                                                 name='facebook' 
-                                                value={addHospitalData.facebook == "null" ? "" : addHospitalData.facebook} 
+                                                value={addHospitalData.facebook == "null" ? "" : addHospitalData.facebook || ''} 
                                                 onChange={handleChangeHospital}
                                             />
                                         </div>
@@ -616,7 +616,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='instagram' value={addHospitalData.instagram == "null" ? "" : addHospitalData.instagram} onChange={handleChangeHospital}
+                                                name='instagram' value={addHospitalData.instagram == "null" ? "" : addHospitalData.instagram || ''} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
@@ -633,7 +633,7 @@ const AddHospital = ({ Id }) => {
                                                 className="add-doc-social-input"
                                                 type="text"
                                                 placeholder="Username"
-                                                name='linkedin' value={addHospitalData.linkedin == "null" ? "" : addHospitalData.linkedin} onChange={handleChangeHospital}
+                                                name='linkedin' value={addHospitalData.linkedin == "null" ? "" : addHospitalData.linkedin || ''} onChange={handleChangeHospital}
                                             />
                                         </div>
                                     </div>
