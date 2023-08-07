@@ -28,14 +28,14 @@
   transition: 0.2s all;
   &-certificate-img {
     width: 110px;
-  height: 110px;
+    height: 110px;
 
     img {
       object-fit: cover;
     }
   }
 
-  &:hover{
+  &:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
 }
@@ -93,9 +93,7 @@
     &:hover img {
       transform: scale(1.2);
     }
-
   }
-
 
   &-text1 {
     font-family: $Montserrat-Medium;
@@ -704,7 +702,7 @@
   border: 1px solid #e4e3e4;
   border-radius: 5px;
   width: 100%;
-  font-family: $Poppins-Regular ;
+  font-family: $Poppins-Regular;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -1075,7 +1073,6 @@
 }
 
 @media (min-width: 992px) and (max-width: 1413px) {
-
   .time-table-day,
   .time-table-time-text,
   .time-table-phone-text,
@@ -1108,7 +1105,17 @@
   }
 }
 
-.ant-picker-input>input {
+.ant-picker-input > input {
   display: none;
-  /* Hide the input field */
+}
+.certificates-field {
+  position: relative;
+}
+
+.certificates-field .d-flex {
+  flex-direction: column; /* Display the items in a column layout */
+}
+
+.certificates-field .d-flex .upload-file-container {
+  margin-top: 10px; /* Adjust the margin as needed */
 }

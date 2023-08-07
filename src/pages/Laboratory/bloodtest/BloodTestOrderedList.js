@@ -18,7 +18,7 @@ const BloodTestOrderedList = () => {
   const [rows, setRows] = useState([
     {
       number: 1,
-      pic:pic1,
+      pic: pic1,
       name: "Ahmed Al-Mansour",
       email: "ahmed@example.com",
       address: "Kuwait City",
@@ -30,7 +30,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 2,
-      pic:pic2,
+      pic: pic2,
       name: "Fatima Abdullah",
       email: "fatima@example.com",
       address: "Hawalli",
@@ -42,7 +42,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 3,
-      pic:pic3,
+      pic: pic3,
       name: "Khaled Al-Rashed",
       email: "khaled@example.com",
       address: "Salmiya",
@@ -54,7 +54,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 4,
-      pic:pic4,
+      pic: pic4,
       name: "Layla Hassan",
       email: "layla@example.com",
       address: "Jabriya",
@@ -66,7 +66,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 5,
-      pic:pic5,
+      pic: pic5,
       name: "Mohammed Ali",
       email: "mohammed@example.com",
       address: "Farwaniya",
@@ -78,7 +78,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 6,
-      pic:pic6,
+      pic: pic6,
       name: "Sara Khalid",
       email: "sara@example.com",
       address: "Ahmadi",
@@ -90,7 +90,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 7,
-      pic:pic7,
+      pic: pic7,
       name: "Abdullah Hamad",
       email: "abdullah@example.com",
       address: "Fahaheel",
@@ -102,7 +102,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 8,
-      pic:pic8,
+      pic: pic8,
       name: "Hala Saleh",
       email: "hala@example.com",
       address: "Mangaf",
@@ -114,7 +114,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 9,
-      pic:pic5,
+      pic: pic5,
       name: "Yousef Ahmed",
       email: "yousef@example.com",
       address: "Abbasiya",
@@ -126,7 +126,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 10,
-      pic:pic2,
+      pic: pic2,
       name: "Lina Hassan",
       email: "lina@example.com",
       address: "Rumaithiya",
@@ -138,7 +138,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 11,
-      pic:pic2,
+      pic: pic2,
       name: "Ali Al-Awadhi",
       email: "ali@example.com",
       address: "Salwa",
@@ -150,7 +150,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 12,
-      pic:pic4,
+      pic: pic4,
       name: "Nora Ahmed",
       email: "nora@example.com",
       address: "Jahra",
@@ -162,7 +162,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 13,
-      pic:pic1,
+      pic: pic1,
       name: "Abdulaziz Saleh",
       email: "abdulaziz@example.com",
       address: "Sabah Al-Salem",
@@ -174,7 +174,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 14,
-      pic:pic8,
+      pic: pic8,
       name: "Amira Khalid",
       email: "amira@example.com",
       address: "Shuwaikh",
@@ -186,7 +186,7 @@ const BloodTestOrderedList = () => {
     },
     {
       number: 15,
-      pic:pic7,
+      pic: pic7,
       name: "Omar Hassan",
       email: "omar@example.com",
       address: "Adailiya",
@@ -195,7 +195,7 @@ const BloodTestOrderedList = () => {
       total: "KWD 45.000",
       details: "show",
       status: true,
-    }
+    },
   ]);
   const [searchQuery, setSearchQuery] = useState("");
 

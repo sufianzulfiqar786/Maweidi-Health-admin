@@ -30,7 +30,13 @@ const AddLab = () => {
           <div class="row  m-0 first-row">
             <div class="col-lg-12 ">
               <div class="add-doc-left-col">
-                <NewPharmacyForm />
+                <NewPharmacyForm
+                  lastTextBoxTitle="About Laboratory"
+                  submitButtonText="Add Laboratory"
+                  submitUpdateText="Update Laboratory"
+                  apiEndpoint={process.env.REACT_APP_ADD_LABORATORY_DATA}
+                  customToastMessage="Laboratory Added Successfully"
+                />
               </div>
             </div>
           </div>
