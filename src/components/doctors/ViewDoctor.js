@@ -192,7 +192,6 @@ const ViewDoctor = ({ Id }) => {
               {/* .slice(0, -3) */}
               <TimeChanger Time={actualDay[i]?.start_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={true} />
 
-
               <TimeChanger Time={actualDay[i]?.end_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={false} />
 
             </div>

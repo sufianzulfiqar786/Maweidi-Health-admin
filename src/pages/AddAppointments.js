@@ -371,8 +371,9 @@ const AddAppointments = () => {
 
         const selectDoctor = specializationData?.data?.doctors?.find((item) => item?.id === value)
         // setAppointmentDate({...appointmentDate, 'doctor_id': selectDoctor.id})
-        console.log("selectDoctor", selectDoctor?.specialization_id)
+        console.log("selectDoctor", selectDoctor)
         setValue("specialization", selectDoctor?.specialization_id)
+        setValue("fees", selectDoctor?.fees)
         
         // alert(selectDoctor?.specialization_id)
         console.log("selectDoctor///", selectDoctor)
@@ -1095,10 +1096,12 @@ const AddAppointments = () => {
                                         render={({ field }) => (
                                             <>
                                                 <input
+                                                style={{backgroundColor:'white'}}
+                                                disabled
                                                     type="text"
                                                     name="fees"
                                                     {...field}
-                                                    value={field.value}
+                                                    value={field.value || ''}
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         handleInputChange(e.target.name, e.target.value);

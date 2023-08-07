@@ -649,6 +649,7 @@ const DoctorForm = ({ id, rawData }) => {
                     setShowDoctorFee={setShowDoctorFee}
                     setFeeData={setFeeData}
                     feeData={feeData}
+                    id={id}
                     selectdedHospital={selectdedHospital}
                   />
                 )}
