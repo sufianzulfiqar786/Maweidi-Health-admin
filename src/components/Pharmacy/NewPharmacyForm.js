@@ -14,6 +14,7 @@ import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import useDeleteData from "../../customHook/useDelete";
+import UploadFile from "../../molecules/UploadFile/UploadFile";
 import Modal from "antd";
 
 const TimePicker = ({ label, name, value, onChange }) => {
@@ -51,6 +52,7 @@ const NewPharmacyForm = ({
   const [showMap, setShowMap] = useState(false);
   const [locationProp, setLocationProp] = useState("");
   const customData = useDeleteData();
+  const [documentFile, setDocumentFile] = useState(null);
 
   const handleDoctorImageClick = () => {
     const input = document.createElement("input");
@@ -74,7 +76,7 @@ const NewPharmacyForm = ({
       setImage(URL.createObjectURL(file));
       setAddPharmacyData({
         ...addPharmacyData,
-        profile_picture: URL.createObjectURL(file),
+        profile_picture: file,
       });
     };
     input.click();
@@ -152,23 +154,27 @@ const NewPharmacyForm = ({
       setErrorMessage("No Error");
     }
   };
-
+  console.log(formDataState?.certificate);
   const handleFormSubmit = (formData) => {
     validation();
     if (errorMessage === "No Error") {
       console.log("Form Data:", formData);
+      const FarmData = new FormData();
 
       const completeFormData = {
         ...formData,
-        profile_picture: image,
+        profile_picture: addPharmacyData.profile_picture,
         state: addPharmacyData.state,
         facebook: addPharmacyData.facebook,
         instagram: addPharmacyData.instagram,
         linkedin: addPharmacyData.linkedin,
         description: addPharmacyData.description,
+        document: formDataState?.certificate,
       };
-
-      postData(apiEndpoint, completeFormData, () => {
+      Object.keys(completeFormData).map((ey) =>
+        FarmData.append(ey, completeFormData[ey])
+      );
+      postData(apiEndpoint, FarmData, () => {
         CustomToast({
           type: "success",
           message: customToastMessage,
@@ -176,6 +182,7 @@ const NewPharmacyForm = ({
         setAddPharmacyData("");
         reset();
         setImage("");
+        setDocumentFile(null);
       });
     }
   };
@@ -549,7 +556,20 @@ const NewPharmacyForm = ({
                 />
               </div>
             </div>
+
+            <div className="col-lg-6 pr-lg-1 doc-setting-input certificates-field">
+              <p className="mb-2"> Certificates </p>
+              <div className="d-flex">
+                <span className="upload-icon">
+                  <UploadFile
+                    formDataState={formDataState}
+                    setFormDataState={setFormDataState}
+                  />
+                </span>
+              </div>
+            </div>
           </div>
+
           <div className="mt-4">
             <button>Time Table</button>
           </div>
