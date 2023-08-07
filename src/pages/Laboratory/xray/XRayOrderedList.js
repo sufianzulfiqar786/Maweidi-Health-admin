@@ -124,7 +124,7 @@ const XRayOrderedList = () => {
     <>
       <div className="row pl-3 pr-2 pt-4 orderedlist-tab">
         <div className="col-12">
-          <p className="mb-0 orderedlist-heading">Ordered List</p>
+          <p className="mb-0 orderedlist-heading">Test Requests</p>
         </div>
 
         <div className="col-12 my-4">
@@ -135,7 +135,7 @@ const XRayOrderedList = () => {
                 <img src={Chevron} />
                 <span> LABORATORY</span>
                 <img src={Chevron} />
-                <span className="current-tab"> ORDERED LIST</span>
+                <span className="current-tab"> TEST REQUEST</span>
               </p>
             </div>
           </div>
@@ -145,7 +145,11 @@ const XRayOrderedList = () => {
         </div>
 
         <div className="col-12 mb-5 pb-5">
-          <OrderListTable  xrayorderlist="xrayorderlist" rows={rows} searchQuery={searchQuery} />
+          <OrderListTable
+            xrayorderlist="xrayorderlist"
+            rows={rows}
+            searchQuery={searchQuery}
+          />
         </div>
       </div>
     </>
