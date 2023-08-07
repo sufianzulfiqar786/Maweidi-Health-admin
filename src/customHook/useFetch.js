@@ -30,7 +30,7 @@ const useFetch = (url) => {
     onSuccess: (data) => {
       setData(data);
       setIsLoading(false);
-      console.log(data);
+
     },
     onError: (error) => {
       setError(error);

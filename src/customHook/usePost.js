@@ -18,13 +18,17 @@ const usePost = () => {
 
     try {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
-      // if (response?.data?.success === true) {
-        if (response?.data) {
+      console.log(response, "API response?.data?.success");
+      if (response?.status === 200) {
+        CustomToast({
+          type: "success",
+          message: "Success",
+        });
         cb(response?.data);
       } else {
         CustomToast({
           type: "error",
-          message: "SomeThing Went Wrong Please try Again !",
+          message: "Successfully Updated",
         });
       }
       setData(response.data);

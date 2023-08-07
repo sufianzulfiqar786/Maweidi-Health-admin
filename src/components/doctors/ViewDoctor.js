@@ -1,12 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Modal } from "antd";
 import { Space, Switch } from "antd";
 import Slider from "react-slick";
 
+
 // files
 
-import TimeChanger from "../doctors/TimeChanger";
+import TimeChanger from "../../atoms/TimeslotChanger/TimeChanger";
 
 import "../../assets/css/Carousel.scss";
 import "../../assets/css/doctor.scss";
@@ -22,67 +24,76 @@ import TimeTableMessageIcon from "../../assets/images/doctor/TimeTableMessageIco
 import TimeTablePhoneIcon from "../../assets/images/doctor/TimeTablePhoneIcon.svg";
 import TimeTableAddBtn from "../../assets/images/doctor/TimeTableAddBtn.svg";
 import TimeTableRemoveBtn from "../../assets/images/doctor/dash-circle-fill-red.svg";
-import PDF_icon from "../../assets/images/doctor/PDF_icon.png";
 
 import Group1175 from "../../assets/images/doctor/doc1.png";
 import Group1176 from "../../assets/images/doctor/doc2.png";
 import Group1177 from "../../assets/images/doctor/doc3.png";
 import Group1178 from "../../assets/images/doctor/doc4.png";
+import PDF_icon from "../../assets/images/doctor/PDF_icon.png";
 import CrouselCard from "../DashboardComponents/CrouselCard";
 import DoctorSetting from "./DoctorSetting";
 import ReviewPagination from "../../organisms/ReviewPagination";
 import useFetch from "../../customHook/useFetch";
 import useDeleteData from "../../customHook/useDelete";
-import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import CustomDropDown from "../../atoms/CustomDropDown/timeSlotDropDown";
 import usePost from "../../customHook/usePost";
 const ViewDoctor = ({ Id }) => {
   const location = useLocation();
   const receivedData = location.state?.data;
   const [docBtn, setDocBtn] = useState(0);
-  const [doctorTimeTable, setdoctorTimeTable] = useState([]);
+  const [doctorTimeTable, setdoctorTimeTable] = useState([])
   const [modal2Open, setModal2Open] = useState(false);
   const [specialistOptions, setspecialistOptions] = useState([]);
-  const [presentDays, setpresentDays] = useState([]);
+  const [presentDays, setpresentDays] = useState([])
+  const [temp, settemp] = useState({})
+  const [addTimePostReq, setaddTimePostReq] = useState(
+    {
+      doctor_id: 131,
+      schedules: [
+        {
 
-  const [addTimePostReq, setaddTimePostReq] = useState({
-    doctor_id: 131,
-    hospital_id: 456,
-    schedules: [],
-  });
-
-  const setUpAvailableTime = () => {};
-  const { postData } = usePost();
-  const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData();
+        }
+      ]
+    }
+  )
+  console.log(addTimePostReq, "addTimePostReq-->");
+  const [addSingleTimeSlot, setaddSingleTimeSlot] = useState({ hospital_id: "", start_time: "", end_time: "" });
+  const [empetyTime, setempetyTime] = useState("")
+  const setUpAvailableTime = () => {
+  }
+  const { postData } = usePost()
+  const { deleteData, isLoadingTimeTable, errorTimeTable } = useDeleteData()
   const [selectDay, setSelectDay] = useState({
     sunday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     monday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     tuesday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     wednesday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     thursday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     friday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
     saturday: {
-      toggle: false,
+      toggle: true,
       count: 1,
     },
   });
+  const [moveNext, setmoveNext] = useState(true)
 
   const { data, isLoading, error } = useFetch(
     `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
@@ -90,19 +101,15 @@ const ViewDoctor = ({ Id }) => {
 
   const getTimeTableData = () => {
     deleteData(
-      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${123}`,
-      (Data) => {
-        setdoctorTimeTable(Data?.data?.timetable);
-        setspecialistOptions(
-          data?.data?.hospitals.map((i) => {
-            return { value: i.name, label: i.name, id: i.id };
-          })
-        );
+      `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${131}`, (Data) => {
+        // console.log(Data, "API");
+        setdoctorTimeTable(Data?.data?.schedules)
+        setspecialistOptions(data?.data?.hospitals?.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
       }
     );
-  };
 
-  // REACT_APP_SET_DOCTOR_AVaAILABILITY
+  }
+
   const increaseDayCount = (day) => {
     setSelectDay((prevState) => ({
       ...prevState,
@@ -111,6 +118,7 @@ const ViewDoctor = ({ Id }) => {
         count: prevState[day].count + 1,
       },
     }));
+
   };
 
   const decreaseDayCount = (day) => {
@@ -121,56 +129,125 @@ const ViewDoctor = ({ Id }) => {
         count: prevState[day].count - 1,
       },
     }));
-  };
-  const handleChangeSelect = (val, name) => {};
-  const checkingNew = () => {};
 
-  function renderLoop(countDays = [], dayName) {
+
+  };
+
+
+  const handleChangeSelect = (val, name, updatedValue, dayID, setAblID) => {
+
+    let data = specialistOptions.filter((value) => { return value.value === val })[0]?.id
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
+        schedule?.day === dayID ?
+          {
+            ...schedule,
+            time_slots: schedule?.time_slots?.map((timeSlot) =>
+              timeSlot?.uniVal === updatedValue
+                ? {
+                  ...timeSlot,
+                  hospital_id: data,
+                }
+                : timeSlot
+            ),
+
+          } : schedule
+
+      )
+    })
+
+
+  }
+
+  const checkingNew = () => {
+
+  }
+
+
+
+  function renderLoop(countDays = [], dayName, dayNumber) {
+    var actualDay = countDays[0];
     const items = [];
-    for (let i = 0; i < countDays.length; i++) {
-      // const isLastElement = i === 0;
+
+
+    // countDays[0]?.length !== 0 ? setSelectDay({ ...selectDay, [selectDay[dayName].toggle]: false }):setSelectDay(selectDay)
+
+
+    for (let i = 0; i < actualDay?.length; i++) {
+      const isLastElement = i === actualDay.length - 1
+
+      actualDay[i].uniVal = Math.random().toString(36).substr(2, 9)
+      let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
       items.push(
         <>
-          <div
-            className={`${countDays === 1 ? "" : "pb-3"} `}
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <div style={{ width: "141px" }}>
-                <CustomDropDown
-                  option={specialistOptions}
-                  handleChangeSelect={handleChangeSelect}
-                />
-              </div>
-              {/* .slice(0, -3) */}
-              <TimeChanger Time={countDays[i].start_time} />
 
-              <TimeChanger Time={countDays[i].end_time} />
+          <div className={`${countDays === 1 ? "" : "pb-3"} `} style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <div style={{ width: "141px" }}>
+                <CustomDropDown option={specialistOptions} handleChangeSelect={handleChangeSelect} setAblID={actualDay[i]?.hospital_id} value={hospitalName ?? actualDay[i]?.hospital_id} updatedValue={actualDay[i]?.uniVal} dayId={dayNumber} />
+              </div>
+
+              {/* .slice(0, -3) */}
+              <TimeChanger Time={actualDay[i]?.start_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={true} />
+
+
+              <TimeChanger Time={actualDay[i]?.end_time} setaddTimePostReq={setaddTimePostReq} addTimePostReq={addTimePostReq} elementID={actualDay[i].uniVal} dayNumber={dayNumber} singleSelector={false} />
+
             </div>
             {
-              <span className="pl-lg-3 pl-1">
-                <img
-                  className="cursor-pointer"
-                  onClick={() => decreaseDayCount(dayName)}
-                  src={TimeTableRemoveBtn}
-                  alt=""
-                  style={{ width: "20px" }}
-                />
-              </span>
+              !isLastElement ?
+
+                <span className="pl-lg-3 pl-1">
+                  <img
+                    className="cursor-pointer"
+                    onClick={() => {
+                      deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
+                      // decreaseDayCount(dayName)
+                      // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+
+                    }}
+                    src={TimeTableRemoveBtn}
+                    alt=""
+                    style={{ width: "20px" }}
+                  />
+                </span> :
+                <>
+                  <span className="pl-lg-3 pl-1">
+                    <img
+                      className="cursor-pointer"
+                      onClick={() => {
+                        deleteSingleTimeSlot(countDays[1], actualDay[i]?.uniVal)
+                        // decreaseDayCount(dayName)
+                        // deleteTimeSlot(dayName, countDays[i]?.hospital_id)
+
+                      }}
+                      src={TimeTableRemoveBtn}
+                      alt=""
+                      style={{ width: "20px" }}
+                    />
+                  </span>
+                  <span className="pl-lg-3 pl-1">
+                    <img
+                      className="cursor-pointer"
+                      onClick={() => {
+                        // increaseDayCount("sunday")
+                        appendSingleTimeSlot(dayNumber)
+                      }}
+                      src={TimeTableAddBtn}
+                      alt=""
+
+
+                    />
+                  </span>
+
+                </>
+
+
             }
+
+
           </div>
         </>
       );
@@ -178,6 +255,20 @@ const ViewDoctor = ({ Id }) => {
 
     return items;
   }
+  //Set Doctor Time Table.
+  useEffect(() => {
+    setaddTimePostReq(
+      {
+        ...addTimePostReq,
+        schedules: [
+          ...doctorTimeTable
+
+        ]
+      }
+
+    )
+  }, [doctorTimeTable]);
+
 
   let settings = {
     arrows: true,
@@ -228,108 +319,187 @@ const ViewDoctor = ({ Id }) => {
   ];
 
   let filterTimeAvalibility = (dayID) => {
-    let a = addTimePostReq.schedules.filter(
-      (tableFilter) => tableFilter.day === dayID
-    );
+    let filteredSchedules = addTimePostReq?.schedules?.filter((tableFilter) => tableFilter.day === dayID)
+    return [filteredSchedules[0]?.time_slots, dayID]
+  }
+  const hospitalDopDown = (hosName, id, name, setAblID) => {
 
-    return a[0]?.time_slots;
+
+    const index = addTimePostReq?.schedules?.findIndex((schedule) => schedule.day === id);
+    const getIndex = specialistOptions?.filter((value) => {
+      return value.value === hosName
+    })[0]?.id
+
+    // if (index === -1) {
+    //   const timeSlot = addTimePostReq?.schedules[index]?.time_slots[0];
+    //   if (timeSlot?.start_time === "" && timeSlot?.end_time === "") {
+    //     timeSlot.hospital_id = getIndex;
+
+    //   } else {
+    //     addTimePostReq?.schedules[index]?.time_slots.push({
+    //       start_time: "",
+    //       end_time: "",
+    //       hospital_id: getIndex,
+    //       uniVal: Math.random().toString(36).substr(2, 9)
+    //     });
+    //   }
+
+    // }
+
+
+    // setaddSingleTimeSlot(
+    //   {
+    //     start_time: "",
+    //     end_time: "",
+    //     hospital_id: getIndex,
+    //     uniVal: Math.random().toString(36).substr(2, 9)
+    //   }
+    // )
   };
 
-  // copy all hospital values to update record
-  useEffect(() => {
-    const mappedArray = doctorTimeTable.reduce((result, item) => {
-      const existingDayEntry = result.find((entry) => entry.day === item.day);
 
-      if (existingDayEntry) {
-        // If the day exists, push a new time_slots object to the existing entry
-        existingDayEntry.time_slots.push({
-          start_time: item.start_time.slice(0, -3),
-          end_time: item.end_time.slice(0, -3),
-          hospital_id: item.hospital_id,
-        });
-      } else {
-        // If the day doesn't exist, create a new entry and add it to the result array
-        result.push({
-          day: item.day,
-          time_slots: [
-            {
-              start_time: item.start_time.slice(0, -3),
-              end_time: item.end_time.slice(0, -3),
-              hospital_id: item.hospital_id,
-            },
-          ],
-        });
-      }
 
-      return result;
-    }, []);
-
-    setaddTimePostReq({ ...addTimePostReq, schedules: mappedArray });
-    setpresentDays(addTimePostReq?.schedules.map((schedule) => schedule?.day));
-  }, [doctorTimeTable]);
-
-  // value from drop down
-  const hospitalDopDown = (hosName, id) => {
-    const index = addTimePostReq.schedules.findIndex(
-      (schedule) => schedule.day === id
-    );
-
-    if (index !== -1) {
-      const timeSlot = addTimePostReq.schedules[index].time_slots[0];
-      if (timeSlot.start_time === "" && timeSlot.end_time === "") {
-        timeSlot.hospital_id = hosName;
-      } else {
-        addTimePostReq.schedules[index].time_slots.push({
-          start_time: "",
-          end_time: "",
-          hospital_id: hosName,
-        });
-      }
-    } else {
-      addTimePostReq.schedules.push({
-        day: id,
-        time_slots: [
-          {
-            start_time: "",
-            end_time: "",
-            hospital_id: hosName,
-          },
-        ],
-      });
-    }
-  };
 
   const staringTimeDrop = (time, dayId) => {
-    const index = addTimePostReq.schedules.findIndex(
-      (schedule) => schedule.day === dayId
-    );
-    if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1;
-      // If the entry with the day value exists, update its start_time field
-      addTimePostReq.schedules[index].time_slots[lastOne].start_time = time;
-    }
-  };
+
+    // const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    // if (index !== -1) {
+    //   let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+    //   // If the entry with the day value exists, update its start_time field
+    //   addTimePostReq.schedules[index].time_slots[lastOne].start_time = time;
+    // }
+
+
+    setaddSingleTimeSlot(
+      addSingleTimeSlot?.hospital_id ?
+        {
+          ...addSingleTimeSlot,
+          start_time: time
+        } : {}
+    )
+  }
+
+
 
   const endTimeDrop = (time, dayId) => {
-    const index = addTimePostReq.schedules.findIndex(
-      (schedule) => schedule.day === dayId
-    );
-    if (index !== -1) {
-      let lastOne = addTimePostReq.schedules[index].time_slots.length - 1;
-      // If the entry with the day value exists, update its start_time field
-      addTimePostReq.schedules[index].time_slots[lastOne].end_time = time;
-    }
-  };
+    // const index = addTimePostReq.schedules.findIndex((schedule) => schedule.day === dayId);
+    // if (index !== -1) {
+    //   let lastOne = addTimePostReq.schedules[index].time_slots.length - 1
+    //   // If the entry with the day value exists, update its start_time field
+    //   addTimePostReq.schedules[index].time_slots[lastOne].end_time = time;
+    // }
+
+    setaddSingleTimeSlot(
+      addSingleTimeSlot?.hospital_id ?
+        {
+          ...addSingleTimeSlot,
+          end_time: time
+        } : {}
+    )
+  }
 
   const postDoctorAvalibility = () => {
     postData(
-      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`,
-      addTimePostReq
-    );
+      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`, addTimePostReq
+    )
+  }
+  const deleteTimeSlot = (dayName, hospitalID) => {
+
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) => {
+        if (schedule.day === dayName) {
+          return {
+            ...schedule,
+            time_slots: [],
+          };
+        }
+        return {
+          ...schedule,
+          time_slots: [...(schedule?.time_slots || [])],
+        };
+      }),
+    });
+
+
+
+  };
+  const deleteSingleTimeSlot = (day, elementID) => {
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
+        schedule.day === day
+          ? {
+            ...schedule,
+            time_slots: schedule.time_slots.filter((timeSlot) => timeSlot.uniVal !== elementID),
+          }
+          : schedule
+      ),
+    });
   };
 
+  const appendSingleTimeSlot = (dayIndex) => {
+    // if (addSingleTimeSlot?.hospital_id && addSingleTimeSlot?.start_time && addSingleTimeSlot.end_time) {
+    setaddTimePostReq({
+      ...addTimePostReq,
+      schedules: addTimePostReq?.schedules?.map((schedule) =>
+        schedule?.day === dayIndex
+          ? {
+            ...schedule,
+            time_slots: [...schedule?.time_slots, addSingleTimeSlot],
+          }
+          : schedule
+      ),
+    })
+    // }
+    console.log(addTimePostReq, "addSingleTimeSlot--->");
+  }
+  function convertTo12HourFormat(time24) {
+    const timeParts = time24?.split(":");
+    if (timeParts?.length !== 3 || !/^\d{2}:\d{2}:\d{2}$/.test(time24)) {
+      return "....";
+    }
+
+    const [hours, minutes] = timeParts.slice(0, 2).map(Number);
+    const period = hours >= 12 ? "PM" : "AM";
+    let hours12 = hours % 12 || 12;
+    const paddedHours = hours12.toString().padStart(2, "0");
+    const paddedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${paddedHours}:${paddedMinutes} ${period}`;
+  }
+  const getDayName = (dayNumber) => {
+    let dayName;
+    switch (dayNumber) {
+
+      case 1:
+        dayName = "Sunday";
+        break;
+      case 2:
+        dayName = "Monday";
+        break;
+      case 3:
+        dayName = "Tuesday";
+        break;
+      case 4:
+        dayName = "Wednesday";
+        break;
+      case 5:
+        dayName = "Thursday";
+        break;
+      case 6:
+        dayName = "Friday";
+        break;
+      case 7:
+        dayName = "Saturday";
+        break;
+      default:
+        dayName = "";
+    }
+    return dayName
+  }
   return (
-    // <div>ViewDoctor{receivedData?.name}</div>
+
 
     <>
       <div className="row mb-5 pb-lg-5 px-2 pt-4">
@@ -378,11 +548,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(0);
                   }}
-                  className={`${
-                    docBtn === 0
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 0
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                   style={{ borderRadius: "6px 0px 0px 6px" }}
                 >
                   Overview
@@ -391,23 +560,22 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(1);
                   }}
-                  className={`${
-                    docBtn === 1
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 1
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                 >
                   Reviews
                 </button>
                 <button
                   onClick={() => {
                     setDocBtn(2);
+                    getTimeTableData()
                   }}
-                  className={`${
-                    docBtn === 2
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 2
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                 >
                   Time Table
                 </button>
@@ -415,11 +583,10 @@ const ViewDoctor = ({ Id }) => {
                   onClick={() => {
                     setDocBtn(3);
                   }}
-                  className={`${
-                    docBtn === 3
-                      ? "view-doctor-btn"
-                      : "view-doctor-btn-noactive"
-                  }`}
+                  className={`${docBtn === 3
+                    ? "view-doctor-btn"
+                    : "view-doctor-btn-noactive"
+                    }`}
                   style={{ borderRadius: "0px 6px 6px 0px" }}
                 >
                   Settings
@@ -722,8 +889,9 @@ const ViewDoctor = ({ Id }) => {
                         <img
                           className="cursor-pointer"
                           onClick={() => {
-                            setModal2Open(true);
-                            getTimeTableData();
+                            setModal2Open(true)
+                            getTimeTableData()
+
                           }}
                           src={TimeTablePencil}
                           alt=""
@@ -742,10 +910,13 @@ const ViewDoctor = ({ Id }) => {
                             <div className="col-6"></div>
 
                             <div className="col-6 d-flex justify-content-end mt-3">
-                              <button
-                                className="apply-filter"
-                                onClick={postDoctorAvalibility}
-                              >
+                              <button className="apply-filter" onClick={
+                                () => {
+                                  postDoctorAvalibility()
+                                  // getTimeTableData()
+                                }
+
+                              }>
                                 Save Schedule
                               </button>
                             </div>
@@ -776,10 +947,10 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(1)}
+                                  defaultChecked
                                   onClick={(e) => {
+
+
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       sunday: {
@@ -787,6 +958,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.sunday.toggle,
                                       },
                                     }));
+                                    selectDay?.sunday.toggle ? deleteTimeSlot(1) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -794,77 +966,49 @@ const ViewDoctor = ({ Id }) => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center align-items-start">
+
                             {
-                              // selectDay.sunday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(1) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={1}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              // selectDay.sunday.toggle && addTimePostReq?.schedules[1]?.time_slots.length === 0
+                              true
+                                ?
+                                null
+                                //       < div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={1} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      dayId={1}
-                                      selector={true}
-                                    />
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={1} selector={true} empetyTime={empetyTime} />
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      dayId={1}
-                                      selector={false}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("sunday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                      style={{
-                                        pointerEvents: `${
-                                          addTimePostReq.schedules[1]
-                                            ?.time_slots[0].start_time === "" ||
-                                          addTimePostReq.schedules[1]
-                                            ?.time_slots[0].end_time === ""
-                                            ? "none"
-                                            : ""
-                                        }`,
-                                      }}
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={1} selector={false} empetyTime={empetyTime} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("sunday")
+                                //         appendSingleTimeSlot(1)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+
+
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+
+                                : null
                             }
 
                             {
-                              // selectDay.sunday.toggle &&
-                              renderLoop(filterTimeAvalibility(1), "sunday")
+                              selectDay.sunday.toggle &&
+
+                              renderLoop(filterTimeAvalibility(1), "sunday", 1)
+
                             }
                           </div>
                         </div>
@@ -879,88 +1023,65 @@ const ViewDoctor = ({ Id }) => {
                                 Monday
                               </span>
                               <Space direction="vertical">
+
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(2)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       monday: {
                                         ...prevState.monday,
-                                        toggle: !prevState.monday.toggle,
+                                        toggle: !addTimePostReq?.schedules[1]?.time_slots.length > 0,
                                       },
                                     }));
+                                    selectDay?.monday.toggle ? deleteTimeSlot(2) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
                             </div>
                           </div>
-
+                          {console.log("toggle", ((addTimePostReq?.schedules[1]?.time_slots.length < 0))
+                          )}
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.monday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(2) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={2}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              selectDay.monday.toggle
+                                //  &&  addTimePostReq?.schedules[2]?.time_slots.length === 0
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      dayId={2}
-                                      selector={true}
-                                    />
+                                ?
+                                null
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={2} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      dayId={2}
-                                      selector={false}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("monday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={2} selector={true} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={2} selector={false} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("monday")
+                                //         appendSingleTimeSlot(2)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+
+                                : null
                             }
                             {
-                              // selectDay.monday.toggle &&
-                              renderLoop(filterTimeAvalibility(2), "monday")
-                            }
+                              selectDay.monday.toggle &&
+                              renderLoop(filterTimeAvalibility(2), "monday", 2)}
                           </div>
                         </div>
 
@@ -977,11 +1098,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(3)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       tuesday: {
@@ -989,6 +1107,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.tuesday.toggle,
                                       },
                                     }));
+                                    selectDay?.tuesday.toggle ? deleteTimeSlot(3) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -997,66 +1116,41 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.tuesday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(3) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={3}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              selectDay.tuesday.toggle
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      dayId={3}
-                                      selector={true}
-                                    />
+                                ?
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={3} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      dayId={3}
-                                      selector={false}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("tuesday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} dayId={3} selector={true} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} dayId={3} selector={false} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("tuesday")
+                                //         appendSingleTimeSlot(3)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div> 
+                                null
+                                : null
                             }
                             {
-                              // selectDay.tuesday.toggle &&
-                              renderLoop(filterTimeAvalibility(3), "tuesday")
-                            }
+                              selectDay.tuesday.toggle &&
+                              renderLoop(filterTimeAvalibility(3), "tuesday", 3)}
                           </div>
                         </div>
 
@@ -1072,11 +1166,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(4)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       wednesday: {
@@ -1084,6 +1175,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.wednesday.toggle,
                                       },
                                     }));
+                                    selectDay?.wednesday.toggle ? deleteTimeSlot(4) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1092,66 +1184,45 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.wednesday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(4) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={4}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              selectDay.wednesday.toggle
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      selector={true}
-                                      dayId={4}
-                                    />
+                                ?
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={4} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      selector={false}
-                                      dayId={4}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("wednesday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={4} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={4} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("wednesday")
+                                //         appendSingleTimeSlot(4)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
                             {
-                              // selectDay.wednesday.toggle &&
-                              renderLoop(filterTimeAvalibility(4), "wednesday")
-                            }
+                              selectDay.wednesday.toggle &&
+                              renderLoop(
+                                filterTimeAvalibility(4),
+                                "wednesday",
+                                4
+                              )}
                           </div>
                         </div>
 
@@ -1167,11 +1238,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(5)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       thursday: {
@@ -1179,6 +1247,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.thursday.toggle,
                                       },
                                     }));
+                                    selectDay?.thursday.toggle ? deleteTimeSlot(5) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1187,67 +1256,44 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.thursday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(5) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={5}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              selectDay.thursday.toggle
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      selector={true}
-                                      dayId={5}
-                                    />
+                                ?
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={5} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      selector={false}
-                                      dayId={5}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("thursday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={5} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={5} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("thursday")
+                                //         appendSingleTimeSlot(5)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div> 
+                                null
+                                : null
                             }
 
                             {
-                              // selectDay.thursday.toggle &&
-                              renderLoop(filterTimeAvalibility(5), "thursday")
-                            }
+                              selectDay.thursday.toggle &&
+                              renderLoop(filterTimeAvalibility(5), "thursday", 5)}
+
+
                           </div>
                         </div>
 
@@ -1263,11 +1309,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(6)}
+                                  defaultChecked
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       friday: {
@@ -1275,6 +1318,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.friday.toggle,
                                       },
                                     }));
+                                    selectDay?.friday.toggle ? deleteTimeSlot(6) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1283,66 +1327,41 @@ const ViewDoctor = ({ Id }) => {
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
                             {
-                              // selectDay.friday.toggle
-                              addTimePostReq?.schedules
-                                .map((schedule) => schedule?.day)
-                                .includes(6) ? (
-                                <div
-                                  className="mb-3"
-                                  style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      width: "100%",
-                                    }}
-                                  >
-                                    <div style={{ width: "141px" }}>
-                                      <CustomDropDown
-                                        option={specialistOptions}
-                                        hospitalDopDown={hospitalDopDown}
-                                        dayId={6}
-                                        handleChangeSelect={handleChangeSelect}
-                                      />
-                                    </div>
+                              selectDay.friday.toggle
 
-                                    <TimeChanger
-                                      staringTimeDrop={staringTimeDrop}
-                                      selector={true}
-                                      dayId={6}
-                                    />
+                                ?
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={6} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
 
-                                    <TimeChanger
-                                      endTimeDrop={endTimeDrop}
-                                      selector={false}
-                                      dayId={6}
-                                    />
-                                  </div>
-                                  <span className="pl-lg-3 pl-1">
-                                    <img
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        increaseDayCount("friday");
-                                        setaddTimePostReq(addTimePostReq);
-                                      }}
-                                      src={TimeTableAddBtn}
-                                      alt=""
-                                    />
-                                  </span>
-                                </div>
-                              ) : null
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={6} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={6} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("friday")
+                                //         appendSingleTimeSlot(6)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
                             {
-                              // selectDay.friday.toggle &&
-                              renderLoop(filterTimeAvalibility(6), "friday")
-                            }
+                              selectDay.friday.toggle &&
+                              renderLoop(filterTimeAvalibility(6), "friday", 6)}
                           </div>
                         </div>
 
@@ -1358,11 +1377,8 @@ const ViewDoctor = ({ Id }) => {
                               <Space direction="vertical">
                                 <Switch
                                   size={300}
-                                  checked={addTimePostReq?.schedules
-                                    .map((schedule) => schedule?.day)
-                                    .includes(7)}
+                                  defaultChecked={true}
                                   onClick={() => {
-                                    console.log("sdf");
                                     setSelectDay((prevState) => ({
                                       ...prevState,
                                       saturday: {
@@ -1370,6 +1386,7 @@ const ViewDoctor = ({ Id }) => {
                                         toggle: !prevState.saturday.toggle,
                                       },
                                     }));
+                                    selectDay?.thursday.toggle ? deleteTimeSlot(7) : deleteTimeSlot()
                                   }}
                                 />
                               </Space>
@@ -1377,65 +1394,42 @@ const ViewDoctor = ({ Id }) => {
                           </div>
 
                           <div className="col-lg-8 d-flex  flex-column  align-items-lg-end align-items-md-center">
-                            {selectDay.saturday.toggle |
-                            addTimePostReq?.schedules
-                              .map((schedule) => schedule?.day)
-                              .includes(7) ? (
-                              <div
-                                className="mb-3"
-                                style={{
-                                  width: "100%",
-                                  display: "flex",
-                                  justifyContent: "space-around",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    width: "100%",
-                                  }}
-                                >
-                                  <div style={{ width: "141px" }}>
-                                    <CustomDropDown
-                                      option={specialistOptions}
-                                      hospitalDopDown={hospitalDopDown}
-                                      dayId={7}
-                                      handleChangeSelect={handleChangeSelect}
-                                    />
-                                  </div>
-
-                                  <TimeChanger
-                                    staringTimeDrop={staringTimeDrop}
-                                    selector={true}
-                                    dayId={7}
-                                  />
-
-                                  <TimeChanger
-                                    endTimeDrop={endTimeDrop}
-                                    selector={false}
-                                    dayId={7}
-                                  />
-                                </div>
-                                <span className="pl-lg-3 pl-1">
-                                  <img
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                      increaseDayCount("saturday");
-                                      setaddTimePostReq(addTimePostReq);
-                                    }}
-                                    src={TimeTableAddBtn}
-                                    alt=""
-                                  />
-                                </span>
-                              </div>
-                            ) : null}
                             {
-                              // selectDay.saturday.toggle &&
-                              renderLoop(filterTimeAvalibility(7), "saturday")
+                              selectDay.saturday.toggle
+                                ?
+                                // <div className="mb-3" style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>
+                                //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                                //     <div style={{ width: "141px" }}>
+                                //       <CustomDropDown option={specialistOptions} hospitalDopDown={hospitalDopDown} dayId={7} handleChangeSelect={handleChangeSelect} />
+                                //     </div>
+
+                                //     <TimeChanger staringTimeDrop={staringTimeDrop} selector={true} dayId={7} />
+
+
+                                //     <TimeChanger endTimeDrop={endTimeDrop} selector={false} dayId={7} />
+
+                                //   </div>
+                                //   <span className="pl-lg-3 pl-1">
+                                //     <img
+                                //       className="cursor-pointer"
+                                //       onClick={() => {
+                                //         increaseDayCount("saturday")
+                                //         appendSingleTimeSlot(7)
+                                //       }}
+                                //       src={TimeTableAddBtn}
+                                //       alt=""
+
+                                //     />
+                                //   </span>
+
+
+                                // </div>
+                                null
+                                : null
                             }
+                            {
+                              selectDay.saturday.toggle &&
+                              renderLoop(filterTimeAvalibility(7), "saturday", 7)}
                           </div>
                         </div>
                       </Modal>
@@ -1447,145 +1441,59 @@ const ViewDoctor = ({ Id }) => {
 
                     <div className="row mx-0 ">
                       <div className="col-lg-5 py-4 time-table-border  px-4">
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Monday</span>
-                          </div>
+                        {
+                          addTimePostReq?.schedules?.map((value) => {
+                            return <>
+                              <div>
+                                <div className=" d-flex justify-content-between">
+                                  <div>
+                                    <img
+                                      className="pl-1 pr-2"
+                                      src={ClockTimeTable}
+                                      alt="img"
+                                    />{" "}
+                                    <span className="time-table-day">
+                                      {getDayName(value?.day)}
+                                    </span>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                                  </div>
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Tuesday</span>
-                          </div>
+                                  <div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                                  </div>
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Wednesday</span>
-                          </div>
+                                </div>
+                                {
+                                  value?.time_slots.length !== 0 ? value?.time_slots.map((value) => {
+                                    return <>
+                                      <div className="ml-2  time-table-time-text" style={{ fontSize: '10px', fontWeight: "bold" }}>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                                        <span className="mx-1">{
+                                          specialistOptions?.filter((e) => { return e?.id === value?.hospital_id })[0]?.label
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Thursday</span>
-                          </div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                                        }</span>
+                                        <span className="time-table-time-dynamic">
+                                          {convertTo12HourFormat(value?.start_time)} - {convertTo12HourFormat(value?.end_time)}
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Friday</span>
-                          </div>
+                                        </span>{" "}
+                                      </div>
+                                    </>
+                                  }) :
+                                    <span className="time-table-time-dynamic m-3">
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+                                      off
+                                    </span>
+                                }
 
-                        <div className="mb-2 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Saturday</span>
-                          </div>
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="mb-0 d-flex justify-content-between">
-                          <div>
-                            <img
-                              className="pl-1 pr-2"
-                              src={ClockTimeTable}
-                              alt=""
-                            />{" "}
-                            <span className="time-table-day">Sunday</span>
-                          </div>
+                              </div>
+                            </>
+                          })
+                        }
 
-                          <div>
-                            <span className=" pr-1 time-table-time-text">
-                              Time:{" "}
-                              <span className="time-table-time-dynamic">
-                                8.00 - 20.00
-                              </span>{" "}
-                            </span>
-                          </div>
-                        </div>
+
                       </div>
 
                       <div className="col mt-lg-0 mt-4 d-flex flex-column justify-content-center align-items-center">
@@ -1639,8 +1547,8 @@ const ViewDoctor = ({ Id }) => {
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 };
