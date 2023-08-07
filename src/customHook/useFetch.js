@@ -6,7 +6,7 @@ const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = "15|ErlB5AkM0cJkebRZ9q7doxTa86PMmvHKtEJjXBqS";
+  const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
   const BaseURL = process.env.REACT_APP_BASE_URL;
 
   // Function to fetch data from the API

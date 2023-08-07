@@ -7,7 +7,7 @@ const usePost = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = "11|FJiHC6mUorgxUbttyr8WSIcX4qtLPicZCL3BOHXX";
+  const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
   const postData = async (url, postData, cb) => {
     setIsLoading(true);
     const config = {
@@ -20,7 +20,7 @@ const usePost = () => {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
       // if (response?.data?.success === true) {
         if (response?.data) {
-        cb();
+        cb(response?.data);
       } else {
         CustomToast({
           type: "error",

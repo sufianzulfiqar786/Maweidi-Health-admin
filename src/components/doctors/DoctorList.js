@@ -17,11 +17,11 @@ const App = () => {
     `${process.env.REACT_APP_GET_DOCTORS}?per_page=10&page=${page}`
   );
   useEffect(() => {
-    if (data) {
+    if (data?.data) {
       setDocData([...docdata, ...data?.data?.data]);
     }
   }, [data]);
-
+console.log("dataqqq", data)
   const loadMoreData = () => {
     if (isLoading) {
       return;

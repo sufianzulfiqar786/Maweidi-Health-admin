@@ -190,54 +190,45 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
     }, [startDate, endDate]);
 
     const handleDateChange = (dates) => {
-
         setSelectedDate(dates);
-
+      
         const day = dates.getDate().toString().padStart(2, '0');
         const month = (dates.getMonth() + 1).toString().padStart(2, '0');
         const year = dates.getFullYear();
-
+      
         // Concatenate the formatted day, month, and year.
         const formattedDate = `${year}-${month}-${day}`;
-
-        setAppointmentDate({ ...appointmentDate, 'selected_date': formattedDate })
-
-        // setValue('date', formattedDate)
-
-        setErrorHanding(formattedDate)
-
-        console.log("formattedDateeee=>", formattedDate)
-
+      
+        setAppointmentDate({ ...appointmentDate, 'selected_date': formattedDate });
+      
+        setErrorHanding(formattedDate);
+      
         const slotDataFind = slotData?.data?.find((item) => {
-
-            if (formattedDate == item.date) {
-                return item?.slots
-            }
-        })
-
-        console.log("slotDataFind", slotDataFind?.slots)
-
-        setSlotsdate(slotDataFind?.slots)
-
+          return formattedDate === item.date;
+        });
+      
+        if (slotDataFind) {
+            console.log("slotDataFind",slotDataFind?.slots)
+          setSlotsdate(slotDataFind.slots);
+        } 
+      
         const { start, end } = dates;
-
-        console.log("datessss", dates)
-
+      
         // If the start date is changed, log the start date of the selected month
         if (start) {
-            const startMonth = new Date(start);
-            console.log('Start Date:', startMonth);
-            setStartDate(startMonth);
+          const startMonth = new Date(start);
+          console.log('Start Date:', startMonth);
+          setStartDate(startMonth);
         }
-
+      
         // If the end date is changed, log the end date of the selected month
         if (end) {
-            const endMonth = new Date(end);
-            console.log('End Date:', endMonth);
-            setEndDate(endMonth);
+          const endMonth = new Date(end);
+          setEndDate(endMonth);
         }
-    };
-
+      };
+      
+console.log("slotsdate",slotsdate)
     useEffect(() => {
         setAppointmentDate({ ...appointmentDate, 'selected_date': appointmentDate.start_date })
         const slotDataFind = slotData?.data?.find((item) => {
@@ -245,9 +236,9 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
                 return item?.slots
             }
         })
+        
         setSlotsdate(slotDataFind?.slots)
-        console.log("appointmentDateappointmentDate", appointmentDate.start_date)
-    }, [appointmentDate?.start_date, slotData?.data])
+    }, [slotData?.data?.length])
 
     const handleMonthChange = (date) => {
         // Log the start date of the current month when the month changes
@@ -271,6 +262,7 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
 
     useEffect(() => {
         logNext30Days()
+        // setSelectedDate('')
     }, [])
 
     const logNext30Days = () => {
@@ -339,6 +331,7 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
 
                     <DatePicker
                         open
+                        selected={selectedDate}
                         minDate={new Date()}
                         maxDate={maxDate}
                         format="YYYY-MM-DD" // Set the date format
@@ -360,17 +353,20 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
 
                 </div>
                 <div className="border pl-3 py-2 three-side-shadow-hover" style={{ marginTop: "50px", height: '14.3rem', overflowY: "scroll", borderRadius: '3px' }}>
-                    {slotsdate ? slotsdate?.map((slot) => {
+                    {slotsdate?.length > 0 ? slotsdate?.map((slot,i) => {
                         const { start_time, end_time, doctor_availability_slot_id, is_available } = slot;
+                        
                         return (
-                            <div className="times-selector d-flex justify-content-between align-items-center " key={doctor_availability_slot_id}>
+                            <div className="times-selector d-flex justify-content-between align-items-center " key={i}>
+                            
                                 <div className="d-flex align-items-center">
+                                
                                     <div className="d-flex" style={{ width: '15px', height: "15px", marginBottom: "1.3rem" }}>
                                         <input id={doctor_availability_slot_id} disabled={!is_available} type="radio" name="time_slot" value={doctor_availability_slot_id} onChange={() => handleChange(doctor_availability_slot_id, start_time, end_time)} />
                                     </div>
                                     <p className="mb-0 pl-2" style={{ fontWeight: "700" }}>{start_time.slice(0, 5)} - {end_time.slice(0, 5)}</p>
                                 </div>
-                                {is_available !== 1 ? (
+                                {is_available != 1 ? (
                                     <div className="mt-2 pr-3 d-flex justify-content-end" style={{ width: "50%" }}>
                                         <h6 style={{ fontWeight: "500", color: 'red' }}>Not Available</h6>
                                     </div>
