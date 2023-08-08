@@ -15,8 +15,8 @@ import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import useDeleteData from "../../customHook/useDelete";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
-import Modal from "antd";
-
+import { Modal } from "antd";
+import TimeModal from "../TimeTable/TimeModal";
 const TimePicker = ({ label, name, value, onChange }) => {
   return (
     <div className="d-inline-flex time-picker time-picker-Pharmacy py-1 px-2">
@@ -53,6 +53,11 @@ const NewPharmacyForm = ({
   const [locationProp, setLocationProp] = useState("");
   const customData = useDeleteData();
   const [documentFile, setDocumentFile] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [addTimePostReq, setaddTimePostReq] = useState({
+    doctor_id: 131,
+    schedules: [{}],
+  });
 
   const handleDoctorImageClick = () => {
     const input = document.createElement("input");
@@ -82,6 +87,10 @@ const NewPharmacyForm = ({
     input.click();
   };
 
+  const handleModalToggle = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   const handleChangeSelect = (value, name) => {
     setAddPharmacyData({ ...addPharmacyData, [name]: value });
   };
@@ -108,6 +117,13 @@ const NewPharmacyForm = ({
   };
   const handleLocationIconClick = () => {
     !showMap ? setShowMap(true) : setShowMap(false);
+  };
+
+  const postDoctorAvalibility = () => {
+    postData(
+      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`,
+      addTimePostReq
+    );
   };
 
   const { data, isLoading, error, postData } = usePost();
@@ -571,7 +587,9 @@ const NewPharmacyForm = ({
           </div>
 
           <div className="mt-4">
-            <button>Time Table</button>
+            <button type="button" onClick={handleModalToggle}>
+              Time Table
+            </button>
           </div>
           <div className="row mt-4">
             <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
@@ -610,6 +628,29 @@ const NewPharmacyForm = ({
             <div className="col-lg-6"></div>
           </div>
         </div>
+        <Modal
+          visible={isModalVisible}
+          onCancel={handleModalToggle}
+          footer={
+            <div className="row px-3 mt-4 mb-2">
+              <div className="col-6"></div>
+
+              <div className="col-6 d-flex justify-content-end mt-3">
+                <button
+                  className="apply-filter"
+                  onClick={() => {
+                    postDoctorAvalibility();
+                    // getTimeTableData()
+                  }}
+                >
+                  Save Schedule
+                </button>
+              </div>
+            </div>
+          }
+        >
+          <TimeModal />
+        </Modal>
       </form>
     </>
   );
