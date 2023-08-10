@@ -8,7 +8,7 @@ const usePost = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
+  const token = "50|gja8w9naaHdp7aK75ukMrbw5SXQ0BRG1hmAqiQb8";
   const postData = async (url, postData, cb) => {
     setIsLoading(true);
     const config = {
@@ -16,7 +16,7 @@ const usePost = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    
+
     try {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
       console.log(response, "API response?.data?.success");

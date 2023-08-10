@@ -1110,12 +1110,35 @@
 }
 .certificates-field {
   position: relative;
+  margin-right: 0px;
 }
 
 .certificates-field .d-flex {
-  flex-direction: column; /* Display the items in a column layout */
+  flex-direction: column;
 }
 
 .certificates-field .d-flex .upload-file-container {
-  margin-top: 10px; /* Adjust the margin as needed */
+  margin-top: 10px;
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 102.3%;
+  height: 36.6px;
+}
+
+.input-field-label {
+  flex-grow: 1;
+}
+
+.input-field-icon {
+  width: 15px;
+  height: 20px;
+  margin-left: 0.5rem;
 }

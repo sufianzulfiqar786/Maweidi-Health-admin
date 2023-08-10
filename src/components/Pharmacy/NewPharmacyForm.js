@@ -12,11 +12,14 @@ import GoogleMap from "../common/GoogleMap.js";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
+import TwitterInput from "../../assets/images/doctor/Twitter.png";
+import WebInput from "../../assets/images/doctor/website.png";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
+import TimeTablePencil from "../../assets/images/doctor/TimeTablePencil.svg";
 import useDeleteData from "../../customHook/useDelete";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import { Modal } from "antd";
-import TimeModal from "../TimeTable/TimeModal";
+import PharmacyTimings from "./PharmacyTimings";
 const TimePicker = ({ label, name, value, onChange }) => {
   return (
     <div className="d-inline-flex time-picker time-picker-Pharmacy py-1 px-2">
@@ -41,6 +44,9 @@ const NewPharmacyForm = ({
   submitButtonText = "Add Pharmacy",
   submitUpdateText = "Update Pharmacy",
   apiEndpoint = process.env.REACT_APP_ADD_PHARMACY_DATA,
+  timeApiEndPoint = process.env.REACT_APP_SET_PHARMACY_SLOT,
+  entityType = "pharmacy",
+
   customToastMessage = "Pharmacy Added Successfully",
 }) => {
   const [errorData, setErrorData] = useState(0);
@@ -48,15 +54,16 @@ const NewPharmacyForm = ({
   const [addPharmacyData, setAddPharmacyData] = useState("");
   const [image, setImage] = useState(null);
   const [nameData, setNameData] = useState("");
-  const [formDataState, setFormDataState] = useState({});
+  const [formDataState, setFormDataState] = useState({ country: "Kuwait" });
   const [showMap, setShowMap] = useState(false);
   const [locationProp, setLocationProp] = useState("");
   const customData = useDeleteData();
   const [documentFile, setDocumentFile] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [addedTimings, setAddedTimings] = useState([]);
   const [addTimePostReq, setaddTimePostReq] = useState({
     doctor_id: 131,
-    schedules: [{}],
+    schedules: [{ day: 0, time_slots: [{ start_time: "", end_time: "" }] }],
   });
 
   const handleDoctorImageClick = () => {
@@ -104,6 +111,8 @@ const NewPharmacyForm = ({
     return formattedTime;
   };
 
+  console.log("addTimePostReqQQ", addTimePostReq);
+
   const handleChangePharmacy = (e) => {
     const { name, value } = e.target;
     if (name === "start_time" || name === "end_time") {
@@ -119,13 +128,24 @@ const NewPharmacyForm = ({
     !showMap ? setShowMap(true) : setShowMap(false);
   };
 
-  const postDoctorAvalibility = () => {
-    postData(
-      `${process.env.REACT_APP_SET_DOCTOR_AVaAILABILITY}`,
-      addTimePostReq
-    );
-  };
+  console.log("addTimePostReq.schedules", addTimePostReq.schedules);
 
+  const savePharmacySchedule = (res) => {
+    console.log("response", res);
+    const requestBody = {
+      [`${entityType}_id`]: res.id,
+      schedules: addTimePostReq.schedules,
+    };
+
+    postData(timeApiEndPoint, requestBody, () => {
+      CustomToast({
+        type: "success",
+        message: "Schedule saved successfully",
+      });
+
+      setAddedTimings(addTimePostReq.schedules);
+    });
+  };
   const { data, isLoading, error, postData } = usePost();
   const {
     handleSubmit,
@@ -170,8 +190,8 @@ const NewPharmacyForm = ({
       setErrorMessage("No Error");
     }
   };
-  console.log(formDataState?.certificate);
-  const handleFormSubmit = (formData) => {
+  console.log(formDataState?.country);
+  const handleFormSubmit = async (formData) => {
     validation();
     if (errorMessage === "No Error") {
       console.log("Form Data:", formData);
@@ -187,25 +207,53 @@ const NewPharmacyForm = ({
         description: addPharmacyData.description,
         document: formDataState?.certificate,
       };
-      Object.keys(completeFormData).map((ey) =>
-        FarmData.append(ey, completeFormData[ey])
+
+      Object.keys(completeFormData).forEach((key) =>
+        FarmData.append(key, completeFormData[key])
       );
-      postData(apiEndpoint, FarmData, () => {
+
+      try {
+        await postData(apiEndpoint, FarmData, (response) => {
+          savePharmacySchedule(response?.data);
+        });
         CustomToast({
           type: "success",
           message: customToastMessage,
         });
+
         setAddPharmacyData("");
         reset();
         setImage("");
         setDocumentFile(null);
-      });
+      } catch (error) {}
     }
   };
+
   const handleChange = (name, value) => {
     setFormDataState((prev) => ({ ...prev, [name]: value }));
   };
-  console.log(formDataState);
+
+  function getDayName(dayNumber) {
+    switch (dayNumber) {
+      case 1:
+        return "Sunday";
+      case 2:
+        return "Monday";
+      case 3:
+        return "Tuesday";
+      case 4:
+        return "Wednesday";
+      case 5:
+        return "Thursday";
+      case 6:
+        return "Friday";
+      case 7:
+        return "Saturday";
+      default:
+        return null;
+    }
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -362,12 +410,85 @@ const NewPharmacyForm = ({
 
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
+              <p className="mb-2">
+                Customer Support Email<span className="error-message">*</span>{" "}
+              </p>
+              <Controller
+                name="customer_email"
+                control={control}
+                rules={{
+                  required: true,
+                  pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                }}
+                render={({ field }) => (
+                  <>
+                    <input
+                      className=""
+                      type="text"
+                      name="customer_email"
+                      {...field}
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        handleChange(e.target.name, e.target.value);
+                      }}
+                    />
+                    {errors.customer_email &&
+                      errors.customer_email.type === "required" && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    {errors.customer_email &&
+                      errors.customer_email.type === "pattern" && (
+                        <span className="error-message">
+                          Invalid email address
+                        </span>
+                      )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+              <Controller
+                name="customer_phone"
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field }) => (
+                  <>
+                    <Phone
+                      label="Customer Support No"
+                      name="customer_phone"
+                      field={field}
+                      value={field.value}
+                      handleChange={(e) => {
+                        field.onChange(e);
+                        handleChange(e.target.name, e.target.value);
+                      }}
+                    />
+                    {errors.customer_phone && (
+                      <span className="error-message">
+                        This field is required
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="row mt-4">
+            <div className="col-lg-6 pr-lg-1 doc-setting-input">
               <Controller
                 name="country"
                 control={control}
                 rules={{
                   required: true,
                 }}
+                defaultValue="Kuwait"
                 render={({ field }) => (
                   <>
                     <SelectCountry
@@ -375,13 +496,12 @@ const NewPharmacyForm = ({
                         field.onChange(value);
                         handleChange(name, value);
                         handleChangeSelect(value, name);
-
-                        // setAddPharmacyData({ ...addPharmacyData, state: '' })
                       }}
                       name="country"
                       field={field}
                       value={field.value}
                       onBlur={field.onBlur}
+                      isDisabled={true}
                     />
 
                     {errors.country && (
@@ -396,10 +516,10 @@ const NewPharmacyForm = ({
 
             <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
               <SelectState
-                country={addPharmacyData?.country}
-                disabled={!addPharmacyData?.country && true}
+                country={formDataState?.country}
+                disabled={!formDataState?.country}
                 name="state"
-                value={addPharmacyData?.state || ""}
+                value={formDataState?.state || ""}
                 handleChange={handleChangeSelect}
               />
             </div>
@@ -474,16 +594,13 @@ const NewPharmacyForm = ({
 
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
-              <p className="mb-2">
-                {" "}
-                Zip Code<span className="error-message">*</span>{" "}
-              </p>
+              <p className="mb-2"> Zip Code </p>
               <div className="d-flex align-items-center">
                 <Controller
                   name="zip"
                   control={control}
                   rules={{
-                    required: true,
+                    required: false,
                   }}
                   render={({ field }) => (
                     <>
@@ -559,6 +676,54 @@ const NewPharmacyForm = ({
 
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
+              <p className="mb-2"> Twitter </p>
+              <div className="d-flex">
+                <img className="" src={TwitterInput} alt="" />
+                <input
+                  className="add-doc-social-input"
+                  type="text"
+                  placeholder="Username"
+                  name="twitter"
+                  value={addPharmacyData.twitter || ""}
+                  onChange={handleChangePharmacy}
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+              <p className="mb-2"> Website URL </p>
+              <div className="d-flex">
+                <img className="" src={WebInput} alt="" />
+                <Controller
+                  name="website"
+                  control={control}
+                  rules={{
+                    required: false,
+                    pattern:
+                      /^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+)\.([a-zA-Z]{2,})(:[0-9]+)?([a-zA-Z0-9\/?=_-]*)$/,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <input
+                        className="add-doc-social-input"
+                        type="text"
+                        placeholder="Enter Web URL"
+                        {...field}
+                      />
+                      {errors.website && (
+                        <span className="error-message">
+                          Invalid website URL
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="row mt-4">
+            <div className="col-lg-6 pr-lg-1 doc-setting-input">
               <p className="mb-2"> LinkedIn </p>
               <div className="d-flex">
                 <img className="" src={LinkedInInput} alt="" />
@@ -573,23 +738,54 @@ const NewPharmacyForm = ({
               </div>
             </div>
 
-            <div className="col-lg-6 pr-lg-1 doc-setting-input certificates-field">
+            <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
               <p className="mb-2"> Certificates </p>
               <div className="d-flex">
-                <span className="upload-icon">
-                  <UploadFile
-                    formDataState={formDataState}
-                    setFormDataState={setFormDataState}
-                  />
-                </span>
+                <UploadFile
+                  formDataState={formDataState}
+                  setFormDataState={setFormDataState}
+                />
               </div>
             </div>
           </div>
 
-          <div className="mt-4">
-            <button type="button" onClick={handleModalToggle}>
-              Time Table
-            </button>
+          <div className="row mt-4">
+            <div className="col-lg-6 doc-setting-input">
+              <p className="mb-2">Pharmacy Timings</p>
+              <div className="d-flex w-100 justify-content-between flex-column border">
+                <div className="d-flex w-100 justify-content-between ">
+                  <span className="">Set Schedule</span>
+                  <img
+                    onClick={handleModalToggle}
+                    src={TimeTablePencil}
+                    alt="TimeTablePencil"
+                    className="input-field-icon"
+                  />
+                </div>
+                {/* <hr />
+                <div className="d-flex w-100 justify-content-between ">
+                  <span>Day</span>
+                  <span>Opening Time</span>
+                  <span>Closing Time</span>
+                </div>
+                {addTimePostReq?.schedules?.length > 0 &&
+                  addTimePostReq?.schedules.map((time) => {
+                    const hasTimeSlots =
+                      time?.time_slots && time?.time_slots.length > 0;
+                    return (
+                      <div className="d-flex w-100 justify-content-between">
+                        <div>{getDayName(time?.day)}</div>
+                        {hasTimeSlots ? (
+                          <>
+                            <div>{time?.time_slots[0]?.start_time}</div>
+                            <div>{time?.time_slots[0]?.end_time}</div>
+                          </>
+                        ) : null}
+                      </div> */}
+                {/* );
+                  })} */}
+              </div>
+            </div>
           </div>
           <div className="row mt-4">
             <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
@@ -629,27 +825,29 @@ const NewPharmacyForm = ({
           </div>
         </div>
         <Modal
+          title="Time Table"
           visible={isModalVisible}
           onCancel={handleModalToggle}
           footer={
             <div className="row px-3 mt-4 mb-2">
               <div className="col-6"></div>
-
               <div className="col-6 d-flex justify-content-end mt-3">
-                <button
-                  className="apply-filter"
-                  onClick={() => {
-                    postDoctorAvalibility();
-                    // getTimeTableData()
-                  }}
-                >
+                <button className="apply-filter" onClick={handleModalToggle}>
                   Save Schedule
                 </button>
               </div>
             </div>
           }
         >
-          <TimeModal />
+          <hr />
+          <div className="row px-3 mt-4">
+            <p className=" mb-0 time-edit-text1">Set Standard Hours</p>
+          </div>
+          <br />
+          <PharmacyTimings
+            addTimePostReq={addTimePostReq}
+            setaddTimePostReq={setaddTimePostReq}
+          />
         </Modal>
       </form>
     </>

@@ -6,7 +6,7 @@ const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
+  const token = "50|gja8w9naaHdp7aK75ukMrbw5SXQ0BRG1hmAqiQb8";
   const BaseURL = process.env.REACT_APP_BASE_URL;
 
   // Function to fetch data from the API
@@ -30,7 +30,6 @@ const useFetch = (url) => {
     onSuccess: (data) => {
       setData(data);
       setIsLoading(false);
-
     },
     onError: (error) => {
       setError(error);
@@ -47,7 +46,7 @@ const useFetch = (url) => {
 
   // Function to recall the API with the updated URL when paginate prop changes
   const fetchPaginatedData = (refetchurl) => {
-    alert(refetchurl)
+    alert(refetchurl);
     refetch(refetchurl);
   };
 

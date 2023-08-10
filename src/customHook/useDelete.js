@@ -1,38 +1,37 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { CustomToast } from '../atoms/toastMessage';
+import { useState } from "react";
+import axios from "axios";
+import { CustomToast } from "../atoms/toastMessage";
 
 const useDeleteData = () => {
-    const BaseURL = process.env.REACT_APP_BASE_URL;
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR"
-    const deleteData = async (url, cb) => {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        };
-        setIsLoading(true);
-        try {
-            const response = await axios.get(`${BaseURL}/${url}`, config);
-            if (response.data?.success === true) {
-                cb(response.data)
-            }
-            else{
-                CustomToast({
-                    type: "error",
-                    message: `${response?.data?.response}`,
-                });
-            }
-        } catch (error) {
-            setError(error);
-        } finally {
-            setIsLoading(false);
-        }
+  const BaseURL = process.env.REACT_APP_BASE_URL;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const token = "50|gja8w9naaHdp7aK75ukMrbw5SXQ0BRG1hmAqiQb8";
+  const deleteData = async (url, cb) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${BaseURL}/${url}`, config);
+      if (response.data?.success === true) {
+        cb(response.data);
+      } else {
+        CustomToast({
+          type: "error",
+          message: `${response?.data?.response}`,
+        });
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return { isLoading, error, deleteData };
+  return { isLoading, error, deleteData };
 };
 
 export default useDeleteData;
