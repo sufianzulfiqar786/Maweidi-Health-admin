@@ -71,6 +71,8 @@ const ProfileDropDown = () => {
             <span
               onClick={() => {
                 localStorage.removeItem("token");
+                localStorage.removeItem("userRole");
+                localStorage.removeItem("doctors");
                 window.location.href = "/";
               }}
               className="profile-drop-down-logout-text pl-4 cursor-pointer"

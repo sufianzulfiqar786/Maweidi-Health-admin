@@ -20,7 +20,7 @@ const Availability = ({ setStartDateParent, setEndDateParent, setAppointmentDate
         dateObj.slots.every((slot) => slot.is_available === 0)
     );
 
-    console.log("emptySlotsData", emptySlotsData)
+    console.log("emptySlotsData", slotData)
 
     const [slotsdate, setSlotsdate] = useState()
     const [totalDays, setTotalDays] = useState(30)

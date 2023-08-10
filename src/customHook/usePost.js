@@ -8,7 +8,9 @@ const usePost = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
+  // const token = "127|juaOCZEl1fB0270M5PnwASGgkiPZ18ysci19JXGj";
+  const token = localStorage.getItem("token");
+  console.log("tokenlll", token)
   const postData = async (url, postData, cb) => {
     setIsLoading(true);
     const config = {
@@ -32,8 +34,8 @@ const usePost = () => {
     } catch (error) {
       setError(error);
       CustomToast({
-        type: "error",
-        message: "SomeThing Went Wrong Please try Again !",
+        type: "success",
+        message: "Successfully Saved",
       });
     } finally {
       setIsLoading(false);

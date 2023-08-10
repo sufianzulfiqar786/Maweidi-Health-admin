@@ -13,6 +13,8 @@ const ValidateRoute = (currentPath) => {
         "/bloodtest/orderlist/bloodtestcartdetail",
         "/xray/orderlist/xraycartdetail",
         "/laboratory/add",
+        "/hospitals",
+        "/hospitals/add",
         // "/pharmacy",
         // "/pharmacy/shop",
         // "/pharmacyshopdetail",
@@ -60,10 +62,12 @@ const ValidateRoute = (currentPath) => {
         "/appointment",
         "/doctors",
         "/doctors/add",
-        "/doctors/detail"
+        "/doctors/detail",
+        "/treatment-sponsor",
+        "/needy-patients",
     ]
 
-    const userRole = JSON.parse(localStorage.getItem("userRole")) ?? "";
+    const userRole = localStorage.getItem("userRole") ?? "";
 
 
     let allowedRoutes = [];
@@ -86,7 +90,7 @@ const ValidateRoute = (currentPath) => {
 };
 
 const ValidUI = (validation) => {
-    return JSON.parse(localStorage.getItem("userRole")) ?? "";
+    return localStorage.getItem("userRole") ?? "";
 }
 
 const DefultRoute = () => {

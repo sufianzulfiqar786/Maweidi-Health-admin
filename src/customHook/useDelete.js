@@ -6,7 +6,9 @@ const useDeleteData = () => {
     const BaseURL = process.env.REACT_APP_BASE_URL;
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR"
+    // const token = "127|juaOCZEl1fB0270M5PnwASGgkiPZ18ysci19JXGj"
+    const token = localStorage.getItem("token");
+  console.log("tokenlll", token)
     const deleteData = async (url, cb) => {
         const config = {
             headers: {

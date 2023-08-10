@@ -22,6 +22,15 @@ const Signup = () => {
   const [emailError, setEmailError] = useState(0);
   const [password, setPassword] = useState(0);
   const [passwordError, setPasswordError] = useState(0);
+  const [passwordType, setPasswordType] = useState("password");
+
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text")
+      return;
+    }
+    setPasswordType("password")
+  }
 
   useEffect(() => {
     if (!empty.email) {
@@ -241,13 +250,21 @@ const Signup = () => {
                       <p className="mb-2 ">
                         Password<span className="signup-staric-color">*</span>
                       </p>
+                      <div className="d-flex border " style={{height:'36px', borderRadius:'5px'}}>
                       <input
-                        type="password"
+                      style={{border:'none', backgroundColor:'transparent', paddingBottom:'5px'}}
+                        type={passwordType}
                         onChange={handleInput}
                         name="password"
                         value={empty.password}
                         ref={passwordReference}
                       />
+                      <div className=" loginPasswordPositionBottom input-group-btn " >
+                        <h1 className="eyeBtn btn " onMouseUp={togglePassword} onMouseDown={togglePassword} onTouchStart={togglePassword} ontouchend={togglePassword} >
+                          <p style={{ width: "10px", height: "5px", color: "Black", border: "none" }}>{passwordType === "password" ? <i class="fa fa-eye-slash" aria-hidden="true"></i> : <i class="fa fa-eye" aria-hidden="true"></i>}</p>
+                        </h1>
+                      </div>
+                      </div>
 
                       {password ? (
                         <p

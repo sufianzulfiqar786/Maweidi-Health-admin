@@ -347,7 +347,7 @@ const AddAppointments = () => {
         console.log("first", value, name)
         const selectHospital = hospitals?.find((item) => (item.value === value))
         //  setAppointmentDate({...appointmentDate, 'hospital_id': selectHospital.id})
-        setAppointmentDate({ ...appointmentDate, 'hospital_id': 1 })
+        setAppointmentDate({ ...appointmentDate, 'hospital_id': selectHospital?.id })
         console.log("selectHospital", selectHospital?.id)
         getSelectedHospitalId(value);
         handleInputChange("hospital", value);
