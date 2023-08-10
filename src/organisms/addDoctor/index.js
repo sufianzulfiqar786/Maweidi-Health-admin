@@ -13,6 +13,8 @@ import IncreDecreBtn from "../../components/doctors/IncreDecreBtn";
 import LinkedInInput from "../../assets/images/doctor/LinkedInInput.png";
 import InstaInput from "../../assets/images/doctor/InstaInput.png";
 import FacebookInput from "../../assets/images/doctor/FacebookInput.png";
+import TwitterInput from "../../assets/images/doctor/Twitter.png";
+import WebInput from "../../assets/images/doctor/website.png";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
 import TimeTable from "../../components/doctors/TimeTable";
 // scss
@@ -378,6 +380,74 @@ const DoctorForm = ({ id, rawData }) => {
             </div>
 
             <div className="row mt-3">
+              <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> Customer Support Email </p>
+
+                <Controller
+                  name="customer_email"
+                  control={control}
+                  rules={{
+                    required: true,
+                    pattern:
+                      /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                  }}
+                  render={({ field }) => (
+                    <input
+                      className=""
+                      type="text"
+                      name="customer_email"
+                      {...field}
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        handleChange(e);
+                      }}
+                    />
+                  )}
+                />
+                {errors.customer_email &&
+                  errors.customer_email.type === "required" && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )}
+                {errors.customer_email &&
+                  errors.customer_email.type === "pattern" && (
+                    <span className="error-message">Invalid email address</span>
+                  )}
+              </div>
+
+              <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                <Controller
+                  name="customer_phone"
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <Phone
+                        label="Customer Support No"
+                        name="customer_phone"
+                        field={field}
+                        value={field.value}
+                        handleChange={(e) => {
+                          field.onChange(e);
+                          handleChange(e);
+                        }}
+                      />
+                      {errors.customer_phone && (
+                        <span className="error-message">
+                          This field is required
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="row mt-3">
               <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input">
                 <p className="mb-2"> Gender </p>
                 <Controller
@@ -579,6 +649,54 @@ const DoctorForm = ({ id, rawData }) => {
                     value={formDataState.linkedin}
                     placeholder="Username"
                     onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row mt-3">
+              <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                <p className="mb-2"> Twitter </p>
+                <div className="d-flex  ">
+                  <img className="" src={TwitterInput} alt="" />
+                  <input
+                    className="add-doc-social-input"
+                    type="text"
+                    placeholder="Username"
+                    name="twitter"
+                    value={formDataState.twitter}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
+                <p className="mb-2"> Website URL </p>
+                <div className="d-flex">
+                  <img className="" src={WebInput} alt="" />
+                  <Controller
+                    name="website"
+                    control={control}
+                    rules={{
+                      required: false,
+                      pattern:
+                        /^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+)\.([a-zA-Z]{2,})(:[0-9]+)?([a-zA-Z0-9\/?=_-]*)$/,
+                    }}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          className="add-doc-social-input"
+                          type="text"
+                          placeholder="Enter Web URL"
+                          {...field}
+                        />
+                        {errors.website && (
+                          <span className="error-message">
+                            Invalid website URL
+                          </span>
+                        )}
+                      </>
+                    )}
                   />
                 </div>
               </div>

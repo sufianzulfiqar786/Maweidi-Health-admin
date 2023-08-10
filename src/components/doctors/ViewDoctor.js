@@ -46,6 +46,7 @@ const ViewDoctor = ({ Id }) => {
   const [specialistOptions, setspecialistOptions] = useState([]);
   const [presentDays, setpresentDays] = useState([])
   const [temp, settemp] = useState({})
+  console.log("Ideee", Id)
   const [addTimePostReq, setaddTimePostReq] = useState(
     {
       doctor_id: Id,

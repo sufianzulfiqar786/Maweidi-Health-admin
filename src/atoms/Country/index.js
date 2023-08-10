@@ -4,7 +4,7 @@ import CustomDropDown from "../CustomDropDown/Index";
 
 const Countries = Country.getAllCountries();
 
-const SelectCountry = ({ value, name, handleChange }) => {
+const SelectCountry = ({ value, name, handleChange, isDisabled }) => {
   const Cont = () => {
     const res = Countries.map((val) => ({
       label: val.name,
@@ -18,10 +18,13 @@ const SelectCountry = ({ value, name, handleChange }) => {
   return (
     <>
       <div class="">
-        <p className=" doc-add-filter-text">Country<span className='error-message'>*</span> </p>
+        <p className=" doc-add-filter-text">
+          Country<span className="error-message">*</span>{" "}
+        </p>
         <CustomDropDown
           option={option}
-          handleChangeSelect={(val) => handleChange( val, name)}
+          disabled={isDisabled}
+          handleChangeSelect={(val) => handleChange(val, name)}
           value={value}
         />
       </div>

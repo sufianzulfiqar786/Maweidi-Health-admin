@@ -32,7 +32,6 @@ const useFetch = (url) => {
     onSuccess: (data) => {
       setData(data);
       setIsLoading(false);
-
     },
     onError: (error) => {
       setError(error);
@@ -49,7 +48,7 @@ const useFetch = (url) => {
 
   // Function to recall the API with the updated URL when paginate prop changes
   const fetchPaginatedData = (refetchurl) => {
-    alert(refetchurl)
+    alert(refetchurl);
     refetch(refetchurl);
   };
 

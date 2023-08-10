@@ -35,6 +35,8 @@ const AddLab = () => {
                   submitButtonText="Add Laboratory"
                   submitUpdateText="Update Laboratory"
                   apiEndpoint={process.env.REACT_APP_ADD_LABORATORY_DATA}
+                  timeApiEndPoint={process.env.REACT_APP_SET_LABORATORY_SLOT}
+                  entityType="laboratory"
                   customToastMessage="Laboratory Added Successfully"
                 />
               </div>
