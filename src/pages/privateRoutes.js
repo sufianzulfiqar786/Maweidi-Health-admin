@@ -22,6 +22,7 @@ const ValidateRoute = (currentPath) => {
         // "/pharmacy/add",
         // "/pharmacy/detail",
         "/appointment",
+        "/appointment/add",
         "/doctors",
         "/doctors/add",
         "/doctors/detail",
@@ -60,9 +61,10 @@ const ValidateRoute = (currentPath) => {
     ];
     let Doctor = [
         "/appointment",
+        "/appointment/add",
         "/doctors",
         "/doctors/add",
-        "/doctors/detail",
+        "/doctors/detail/3",
         "/treatment-sponsor",
         "/needy-patients",
     ]

@@ -235,7 +235,7 @@ const Dashboard = () => {
                   ) 
                   : location.pathname.startsWith("/doctors/detail") ? (
                     <ViewDoctor
-                      Id={ValidateRoute(location.pathname).split("/")[3]}
+                      Id={(location.pathname).split("/")[3]}
                     />
                   ) 
                   : ValidateRoute(location.pathname) === "/hospitals" ? (

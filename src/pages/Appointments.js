@@ -443,7 +443,7 @@ const Appointments = () => {
             <Link to='/appointment/add'> <button
                 type="button"
                 class="add-appointment"
-                onClick={handleAddAppointment}
+                // onClick={handleAddAppointment}
               >
                 Add Appointment
               </button> 

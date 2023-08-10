@@ -2,30 +2,24 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const BaseURL = process.env.REACT_APP_BASE_URL;
 const endpoint = process.env.REACT_APP_GET_SPECIALIZATION;
-const token = "45|uRCrjPfZCMNc7D9F3Ln8XTpmjC1u1kh30NaQQ5YR";
+const token = "50|gja8w9naaHdp7aK75ukMrbw5SXQ0BRG1hmAqiQb8";
 const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 export const fetchSpecialization = createAsyncThunk(
   "specialization/fetchSpecialization",
   async () => {
-
     try {
-      const response = await fetch(`${BaseURL}/${endpoint}`,config);
+      const response = await fetch(`${BaseURL}/${endpoint}`, config);
       const data = await response.json();
       return data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 );
-
-
-
-
-
 
 const specializationSlice = createSlice({
   name: "specialization",

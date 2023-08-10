@@ -18,7 +18,7 @@ const usePost = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    
+
     try {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
       console.log(response, "API response?.data?.success");

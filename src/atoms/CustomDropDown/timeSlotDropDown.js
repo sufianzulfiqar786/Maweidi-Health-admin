@@ -12,13 +12,13 @@ const CustomDropDown = ({
   disabled,
   name,
   field,
-  hospitalDopDown, dayId,
+  hospitalDopDown,
+  dayId,
   updatedValue,
-  
 }) => {
-
   const selectAllOption = { value: "all", label: "Select All" };
-  const updatedOptions = mode === "multiple" ? [selectAllOption, ...option] : option;
+  const updatedOptions =
+    mode === "multiple" ? [selectAllOption, ...option] : option;
 
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);
@@ -29,16 +29,14 @@ const CustomDropDown = ({
     if (Array.isArray(val) && val.includes("all")) {
       handleSelectAll();
     } else {
-    
       handleChangeSelect(val, name, updatedValue, dayId);
       if (typeof hospitalDopDown === "function") {
-        hospitalDopDown(val, dayId, name)
+        hospitalDopDown(val, dayId, name);
       }
-
     }
   };
 
-  const renderOptions = updatedOptions.map((opt) => {
+  const renderOptions = updatedOptions?.map((opt) => {
     if (opt && opt.label) {
       return (
         <Option key={opt.value} value={opt.value}>
@@ -48,7 +46,7 @@ const CustomDropDown = ({
     }
     return null;
   });
-console.log("valueeeee", value)
+  console.log("valueeeee", value);
   return (
     <div>
       <Select
@@ -56,11 +54,12 @@ console.log("valueeeee", value)
         className="custom-dropDown"
         name={name}
         mode={mode}
-        value={value? value :"Select Hospital" }
+        value={value ? value : "Select Hospital"}
         showSearch
         optionFilterProp="children"
         filterOption={(input, option) =>
-          option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          option.children &&
+          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
         disabled={disabled}
         field={field}

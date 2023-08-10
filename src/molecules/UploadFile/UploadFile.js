@@ -29,7 +29,7 @@ const UploadFile = ({ setFormDataState, formDataState }) => {
   return (
     <>
       <div
-        className="doc-setting-input-certificates d-flex justify-content-between align-items-center"
+        className="doc-setting-input-certificates d-flex justify-content-between align-items-center w-100"
         style={{ backgroundColor: "white" }}
       >
         <div>
@@ -41,7 +41,7 @@ const UploadFile = ({ setFormDataState, formDataState }) => {
             )
           )}
         </div>
-        <div className="pr-2 d-flex justify-content-between align-items-center">
+        <div className="pr-2 d-flex justify-content-end align-items-center w-100">
           {formDataState?.certificate ? (
             <img
               className="cursor-pointer"
