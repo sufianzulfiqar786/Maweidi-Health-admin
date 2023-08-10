@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { CustomToast } from "../atoms/toastMessage";
+import { useParams } from "react-router-dom";
 
 const usePost = () => {
   const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -15,15 +16,11 @@ const usePost = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-
+    
     try {
       const response = await axios.post(`${BaseURL}/${url}`, postData, config);
       console.log(response, "API response?.data?.success");
       if (response?.status === 200) {
-        CustomToast({
-          type: "success",
-          message: "Success",
-        });
         cb(response?.data);
       } else {
         CustomToast({

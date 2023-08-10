@@ -218,6 +218,15 @@ const ViewDoctor = ({ Id }) => {
                 dayNumber={dayNumber}
                 singleSelector={false}
               />
+
+              <TimeChanger
+                Time={actualDay[i]?.end_time}
+                setaddTimePostReq={setaddTimePostReq}
+                addTimePostReq={addTimePostReq}
+                elementID={actualDay[i].uniVal}
+                dayNumber={dayNumber}
+                singleSelector={false}
+              />
             </div>
             {!isLastElement ? (
               <span className="pl-lg-3 pl-1">
