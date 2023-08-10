@@ -4,6 +4,8 @@ import maweidi_logo from "../assets/images/common/maweidi_logo.svg";
 import { useNavigate, Link } from "react-router-dom";
 import "../assets/css/Signin.scss";
 import CustomCheckbox from "../components/common/CustomCheckbox";
+import usePost from "../customHook/usePost";
+import { CustomToast } from "../atoms/toastMessage";
 
 const Signin = () => {
   let navigate = useNavigate();
@@ -13,11 +15,23 @@ const Signin = () => {
   const [empty, setEmpty] = useState(0);
   const [email, setEmail] = useState(0);
   const [password, setPassword] = useState(0);
+  const [passwordType, setPasswordType] = useState("password");
   const [selectedOption, setSelectedOption] = useState('');
+  const { data, isLoading, error, postData } = usePost()
+
   const handleOptionChange = (event) => {
     setSelectedOption();
-    localStorage.setItem("userRole", JSON.stringify(event.target.value));
+    console.log("event.target.value", event.target.value)
+    // localStorage.setItem("userRole", JSON.stringify(event.target.value));
   };
+
+  const togglePassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text")
+      return;
+    }
+    setPasswordType("password")
+  }
 
   useEffect(() => {
     if (!empty.email) {
@@ -41,6 +55,10 @@ const Signin = () => {
   };
 
   const handleSubmit = async (event) => {
+
+
+
+
     event.preventDefault();
 
     if (!empty.email) {
@@ -55,10 +73,46 @@ const Signin = () => {
       setEmail(0);
       setPassword(0);
 
-      // navigate("/dashboard");
-      navigate("/");
 
-      localStorage.setItem("token", "save");
+      console.log("email", empty)
+
+      postData((`${process.env.REACT_APP_SIGN_IN}`), empty, (response) => {
+        CustomToast({
+          type: "success",
+          message: `${'Add Hospital Successfuly!'}`,
+        });
+        console.log("datadddd", response?.data?.roles)
+        console.log("tokenwww", response?.data?.token)
+        localStorage.setItem("token", response?.data?.token);
+
+
+        if (response?.data?.roles?.doctor) {
+          localStorage.setItem("userRole", 'Doctor');
+          localStorage.setItem("doctors", response?.data?.roles?.doctor);
+        } else if (response?.data?.roles?.length === 0) {
+          localStorage.setItem("userRole", 'superAdmin');
+        } else if (response?.data?.roles?.technologist) {
+          localStorage.setItem("userRole", 'LaboratoryAdmin');
+        } else if (response?.data?.roles?.pharmacist) {
+          localStorage.setItem("userRole", 'PharmacyAdmin');
+        } else if (response?.data?.roles?.hospitaladmin) {
+          localStorage.setItem("userRole", 'HospitalAdmin');
+        }
+
+
+        window.location.href = "/";
+
+      })
+
+
+
+
+
+
+      // navigate("/dashboard");
+      // navigate("/");
+
+
 
 
 
@@ -72,9 +126,7 @@ const Signin = () => {
       // superAdmin
 
 
-      // window.location.reload()
-      // window.location.href = "/dashboard";
-      window.location.href = "/";
+
     }
   };
 
@@ -131,14 +183,21 @@ const Signin = () => {
                       <p className="mb-2 ">
                         Password<span className="signup-staric-color">*</span>
                       </p>
+                      <div className="d-flex border " style={{height:'36px', borderRadius:'5px'}}>
                       <input
-                        type="password"
+                      style={{border:'none', backgroundColor:'transparent', paddingBottom:'5px'}}
+                        type={passwordType}
                         onChange={handleInput}
                         name="password"
                         value={empty.password}
                         ref={passwordReference}
                       />
-
+                      <div className=" loginPasswordPositionBottom input-group-btn " >
+                        <h1 className="eyeBtn btn " onMouseUp={togglePassword} onMouseDown={togglePassword} onTouchStart={togglePassword} ontouchend={togglePassword} >
+                          <p style={{ width: "10px", height: "5px", color: "Black", border: "none" }}>{passwordType === "password" ? <i class="fa fa-eye-slash" aria-hidden="true"></i> : <i class="fa fa-eye" aria-hidden="true"></i>}</p>
+                        </h1>
+                      </div>
+                      </div>
                       {password ? (
                         <p className="mb-0 ">
                           {" "}
@@ -150,6 +209,8 @@ const Signin = () => {
                         ""
                       )}
                     </div>
+
+
 
                     <div className="col-12 mt-2 mb-1 signup-input-label-accept  signup-input-label">
                       <div className="row">
@@ -186,15 +247,15 @@ const Signin = () => {
                         </div>
                       </div>
                     </div>
-                    <select value={selectedOption} onChange={handleOptionChange}>
+                    {/* <select value={selectedOption} onChange={handleOptionChange}>
                       <option value="">Select an option</option>
                       <option value="superAdmin">superAdmin</option>
                       <option value="HospitalAdmin">HospitalAdmin</option>
                       <option value="LaboratoryAdmin">LaboratoryAdmin</option>
                       <option value="PharmacyAdmin">PharmacyAdmin</option>
-                      
+
                       <option value="Doctor">Doctor</option>
-                    </select>
+                    </select> */}
 
                     <div className="col-12 mt-4 resgister-button">
                       <button onClick={handleSubmit}>Sign in</button>

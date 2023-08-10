@@ -162,7 +162,9 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* hospital  */}
-      {ValidUI() === "superAdmin" ? (
+      {ValidUI() === "superAdmin" ||
+       ValidUI() === "HospitalAdmin" 
+       ? (
         <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
@@ -1037,7 +1039,7 @@ const FullScreenMenu = ({
 
       {/* Treatment Sponsor */}
 
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? (
+      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" || ValidUI() === "Doctor" ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -1226,7 +1228,7 @@ const FullScreenMenu = ({
         </div>
       ) : null}
 
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? (
+      { ValidUI() === "superAdmin" ? (
         <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}

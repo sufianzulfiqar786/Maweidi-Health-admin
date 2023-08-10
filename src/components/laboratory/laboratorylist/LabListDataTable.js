@@ -47,7 +47,7 @@ const DataTable = ({
   const { isLoading, error, deleteData } = useDeleteData();
 
   const getLaboratory = useFetch(
-    `${process.env.REACT_APP_GET_Laboratory_DATA}?per_page=${rowsPerPage}&page=${page}`
+    `${process.env.REACT_APP_GET_LABORATORY_DATA}?per_page=${rowsPerPage}&page=${page}`
   );
 
   const rows = getLaboratory.data;
