@@ -7,7 +7,7 @@ const CustomDropDown = ({
   mode,
   value,
   selectLabel = "Select",
-  option,
+  option=[],
   handleChangeSelect,
   disabled,
   name,

@@ -14,6 +14,7 @@ import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 // images png
 import useFetch from "../../customHook/useFetch";
 import { useEffect } from "react";
+import { ValidUI } from "../privateRoutes";
 
 const Hospital = () => {
 
@@ -51,12 +52,17 @@ const Hospital = () => {
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
               {" "}
-              <button className="btn-add-new-doc">
-                <Link className="add-doc-link-color" to="/hospitals/add">
-                  {" "}
-                  Add Hospital{" "}
-                </Link>
-              </button>{" "}
+              {
+                  ValidUI() === "superAdmin" ?
+                  <button className="btn-add-new-doc">
+                    <Link className="add-doc-link-color" to="/hospitals/add">
+                      {" "}
+                      Add Hospital{" "}
+                    </Link>
+                  </button>
+
+              : null
+}
             </div>
           </div>
         </div>

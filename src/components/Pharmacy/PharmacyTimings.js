@@ -29,7 +29,6 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
     setToggleStates(updatedStates);
 
     const updatedSchedules = updatedStates.map((item) => {
-      console.log("itemmm", item.toggle);
       return {
         day: daysOfWeek.indexOf(item.day) + 1,
         time_slots: item.toggle
@@ -43,7 +42,10 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
       };
     });
 
-    setaddTimePostReq((prev) => ({ ...prev, schedules: updatedSchedules }));
+    setaddTimePostReq((prev) => ({
+      ...prev,
+      schedules: updatedSchedules,
+    }));
   };
 
   const handleOpeningTimeChange = (day, time) => {
@@ -52,8 +54,24 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
         ? { ...item, openingTime: time ? time.format("HH:mm") : null }
         : item
     );
-    console.log("asDSAD", time);
     setToggleStates(updatedStates);
+
+    setaddTimePostReq((prev) => ({
+      ...prev,
+      schedules: prev.schedules.map((schedule) =>
+        schedule.day === daysOfWeek.indexOf(day) + 1
+          ? {
+              ...schedule,
+              time_slots: [
+                {
+                  start_time: time ? time.format("HH:mm") : "",
+                  end_time: schedule.time_slots[0]?.end_time || "",
+                },
+              ],
+            }
+          : schedule
+      ),
+    }));
   };
 
   const handleClosingTimeChange = (day, time) => {
@@ -63,6 +81,23 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
         : item
     );
     setToggleStates(updatedStates);
+
+    setaddTimePostReq((prev) => ({
+      ...prev,
+      schedules: prev.schedules.map((schedule) =>
+        schedule.day === daysOfWeek.indexOf(day) + 1
+          ? {
+              ...schedule,
+              time_slots: [
+                {
+                  start_time: schedule.time_slots[0]?.start_time || "",
+                  end_time: time ? time.format("HH:mm") : "",
+                },
+              ],
+            }
+          : schedule
+      ),
+    }));
   };
 
   return (
@@ -91,20 +126,25 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
             style={{ marginLeft: "20px", marginTop: "10px" }}
           />
           {toggle && (
-            <div style={{ marginLeft: "38px", marginTop: "10px" }}>
+            <div className="pharmacy-schedule d-flex" style={{ marginLeft: "38px", marginTop: "10px" }}>
+              <div className="border  w-100 " style={{borderRadius:'5px'}}>
               <TimePicker
                 value={openingTime ? moment(openingTime, "HH:mm") : null}
                 onChange={(time) => handleOpeningTimeChange(day, time)}
                 format="HH:mm"
                 placeholder="Opening Time"
-                style={{ marginRight: "10px" }}
+                style={{ border:'none' }}
               />
+              </div>
+              <div className="border w-100 ml-2" style={{borderRadius:'5px'}}>
               <TimePicker
+              style={{ border:'none'}}
                 value={closingTime ? moment(closingTime, "HH:mm") : null}
                 onChange={(time) => handleClosingTimeChange(day, time)}
                 format="HH:mm"
                 placeholder="Closing Time"
               />
+              </div>
             </div>
           )}
         </div>

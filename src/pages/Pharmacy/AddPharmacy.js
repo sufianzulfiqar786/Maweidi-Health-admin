@@ -15,10 +15,10 @@ const AddPharmacy = ({ Id }) => {
     setFormDataState({ ...formDataState, [name]: value });
   };
   const handleChangeCountry = (value) => {
-    setFormDataState({ ...formDataState, "country": value });
+    setFormDataState({ ...formDataState, country: value });
   };
   const handleChangeState = (value) => {
-    setFormDataState({ ...formDataState, "state": value });
+    setFormDataState({ ...formDataState, state: value });
   };
   //edit pharmacy
   useEffect(() => {
@@ -58,7 +58,7 @@ const AddPharmacy = ({ Id }) => {
                   formDataState={formDataState}
                   handleChangeCountry={handleChangeCountry}
                   handleChangeState={handleChangeState}
-                  Id={Id}
+                  id={Id}
                 />
               </div>
             </div>

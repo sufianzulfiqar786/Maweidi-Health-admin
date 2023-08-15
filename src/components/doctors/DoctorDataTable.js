@@ -1,107 +1,150 @@
 import React, { useState } from "react";
-import "../../assets/css/common/datatable.scss";
-import CustomPagination from "../common/CustomPagination";
-
-// images png
-import pic1 from "../../assets/images/doctor/doc1.png";
-
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Avatar from "@mui/material/Avatar";
 import { Link } from "react-router-dom";
+import CustomPagination from "../common/CustomPagination";
+import CardHeader from "@mui/material/CardHeader";
+import { Box } from "@mui/material";
 
-const DataTable = ({ rows, handleChangePage, rowsPerPage, page }) => {
-  const totalRows = rows?.total;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-
-  const startIndex = page * rowsPerPage;
-  const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  // const visibleRows = rows?.slice(startIndex, endIndex);
+const DataTable = ({
+  doctors,
+  handleChangePage,
+  rowsPerPage,
+  page,
+  totalDoctors,
+  rows,
+}) => {
+  const totalPages = Math.ceil(totalDoctors / rowsPerPage);
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = Math.min(startIndex + rowsPerPage, totalDoctors);
   const visibleRows = rows?.data;
+  console.log("visibleRows", visibleRows);
 
   return (
-    <>
-      <div className="row  ml-0 mx-2 " style={{ overflowX: "hidden" }}>
-        {visibleRows ? (
-          visibleRows?.map(
-            ({
-              id,
+    <div className="row ml-0 mx-2" style={{ overflowX: "hidden" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ backgroundColor: "#FFFFFF" }}
+        className="custom-scroll"
+      >
+        <Table aria-label="simple table">
+          <TableHead
+            sx={{
+              "& th": {
+                color: "#193F52",
+                whiteSpace: "nowrap",
+                wordWrap: "break-word",
+              },
+            }}
+          >
+            <TableRow>
+              <TableCell className="number" align="left">
+                #
+              </TableCell>
+              <TableCell align="center">Name</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Qualification</TableCell>
+              <TableCell align="center">Experience (Years)</TableCell>
+              <TableCell align="center">Contact</TableCell>
 
-              reviews,
-              departments,
-              rating,
-              reviewNmber,
-              user: { name, profile_pic },
-            }) => {
-              return (
-                <>
-                  <div className="col-md-3  col-12 px-2 mt-lg-5 pt-lg-3 mt-3">
-                    <div className="doc-card pb-1 d-flex flex-column  align-items-center">
-                      <div className="doc-card-img">
-                        <img
-                          className=""
-                          src={
-                            `${process.env.REACT_APP_IMAGE_URL}/${profile_pic}` ||
-                            pic1
-                          }
-                          alt=""
-                        />
-                      </div>
+              <TableCell align="center">View Profile</TableCell>
+            </TableRow>
+          </TableHead>
 
-                      <p className="mb-0 doc-card-text1 text-center pt-2 mt-1">
-                        {name}
-                      </p>
-                      <p className="mb-0 doc-card-text2 text-center pt-1">
-                        {departments}
-                      </p>
-                      <p className="mb-0 doc-card-text3 text-center pt-1 ">
-                        {4}{" "}
-                        <i
-                          class="fa-solid fa-star "
-                          style={{ color: "#FFCA28", paddingLeft: "1.3px" }}
-                        ></i>{" "}
-                      </p>
-                      <p className="mb-0 doc-card-text4 text-center pt-1">
-                        Patient Reviews
-                        <span className="pl-1">{reviews?.length}</span>{" "}
-                      </p>
+          <TableBody
+            className="w-100"
+            sx={{
+              "& td": {
+                color: "#767676",
+                whiteSpace: "nowrap",
+                wordWrap: "break-word",
+              },
+            }}
+          >
+            {visibleRows?.map(
+              (
+                {
+                  id,
+                  user: { name, email, contact, profile_pic },
+                  qualification,
+                  experience_years,
+                },
+                index
+              ) => (
+                <TableRow
+                  key={id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="left" className="number">
+                    {startIndex + index + 1}
+                  </TableCell>
+                  <TableCell align="left">
+                    <CardHeader
+                      sx={{ padding: "0px" }}
+                      avatar={
+                        <Box
+                          sx={{
+                            filter:
+                              "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))",
+                          }}
+                        >
+                          <Avatar
+                            alt={`Doctor Pic`}
+                            src={`${process.env.REACT_APP_IMAGE_URL}/${profile_pic}`}
+                          />
+                        </Box>
+                      }
+                      title={name}
+                    />
+                  </TableCell>
+                  <TableCell align="left">{email}</TableCell>
+                  <TableCell align="center">{qualification}</TableCell>
+                  <TableCell align="center">{experience_years}</TableCell>
+                  <TableCell align="center">{contact}</TableCell>
+                  <TableCell align="center">
+                    <Link
+                      to={`/doctors/detail/${id}`}
+                      state={{
+                        data: {
+                          profile_pic,
+                          name,
+                          qualification,
+                          email,
+                          experience_years,
+                        },
+                      }}
+                      className="d-flex justify-content-center"
+                      style={{ width: "100%" }}
+                    >
+                      View Profile
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-                      <Link
-                        to={`/doctors/detail/${id}`}
-                        state={{
-                          data: { profile_pic, name, departments, rating },
-                        }}
-                        className="d-flex justify-content-center"
-                        style={{ width: "100%" }}
-                      >
-                        <button className="doc-card-btn mt-2 mb-2 ">
-                          View Profile
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                </>
-              );
-            }
-          )
-        ) : (
-          <div className="col-12 text-center my-4">
-            <h4>No Data Found</h4>
-          </div>
-        )}
-      </div>
-      {visibleRows ? (
-        <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
-          <div className="pagination-detail">
-            Showing {(page - 1) * rowsPerPage + 1} -{" "}
-            {rows?.to} of{" "}
-            {rows?.total}
-          </div>
+      <div className="pagination-container px-md-3 ml-md-1 mt-md-2">
+        <div className="pagination-detail">
+          Showing {startIndex + 1} of {visibleRows?.length}
+        </div>
+        <div className="doc-pagination">
           <CustomPagination
             page={page}
             totalPages={totalPages}
             onChangePage={handleChangePage}
           />
         </div>
-      ) : null}
-    </>
+      </div>
+    </div>
   );
 };
 

@@ -707,7 +707,10 @@ const AllRolesDataTables = ({ searchQuery }) => {
 
 
                                     <TableCell >
-                                        <img className='' src={EditIcon} onClick={() => { setModal1Open(true) }} /> <img className='' onClick={() => setDeleteModal(true)} src={DeleteIcon} />
+                                    <Link to={`/role/edit/${id}`}
+                                    >   <img className='' src={EditIcon}  /> 
+                                     </Link>
+                                        <img className='' onClick={() => setDeleteModal(true)} src={DeleteIcon} />
                                     </TableCell>
                                 </TableRow>
                             ))}

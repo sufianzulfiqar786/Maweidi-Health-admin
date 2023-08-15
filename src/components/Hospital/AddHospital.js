@@ -37,6 +37,7 @@ import { useSelector } from "react-redux";
 import { useMemo } from "react";
 import ButtonLoader from "../../atoms/buttonLoader";
 import { CustomToast } from "../../atoms/toastMessage";
+import MuiltiplesImages from "../../atoms/MuiltiplesImages/MuiltiplesImages";
 
 const AddHospital = ({ Id }) => {
   const customData = useDeleteData();
@@ -51,6 +52,7 @@ const AddHospital = ({ Id }) => {
   const [newItem, setNewItem] = useState("");
   const [addHospitalData, setAddHospitalData] = useState({ country: "Kuwait" });
 
+ 
   const specializationData = useSelector(
     (state) => state.specialization.specializationData
   );
@@ -218,11 +220,10 @@ const AddHospital = ({ Id }) => {
         () => {
           CustomToast({
             type: "success",
-            message: `${
-              Id
-                ? "Hospital Details Updated Successfully!"
-                : "Add Hospital Successfuly!"
-            }`,
+            message: `${Id
+              ? "Hospital Details Updated Successfully!"
+              : "Add Hospital Successfuly!"
+              }`,
           });
           !Id && setAddHospitalData({});
           !Id && reset();
@@ -901,6 +902,9 @@ const AddHospital = ({ Id }) => {
                     ></textarea>
                   </div>
                 </div>
+
+               <MuiltiplesImages/>
+
                 <div className="row my-5 pt-2 pb-3 ">
                   <div className="col-lg-6">
                     <button

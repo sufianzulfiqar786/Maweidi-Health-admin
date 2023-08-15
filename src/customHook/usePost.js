@@ -10,7 +10,7 @@ const usePost = () => {
   const [error, setError] = useState(null);
   // const token = "127|juaOCZEl1fB0270M5PnwASGgkiPZ18ysci19JXGj";
   const token = localStorage.getItem("token");
-  console.log("tokenlll", token)
+  // console.log("tokenlll", token)
   const postData = async (url, postData, cb) => {
     setIsLoading(true);
     const config = {

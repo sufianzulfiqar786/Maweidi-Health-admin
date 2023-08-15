@@ -6,12 +6,14 @@ import "../assets/css/Signin.scss";
 import CustomCheckbox from "../components/common/CustomCheckbox";
 import usePost from "../customHook/usePost";
 import { CustomToast } from "../atoms/toastMessage";
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthentication } from '../redux/feature/AuthSlice';
 
 const Signin = () => {
   let navigate = useNavigate();
   const emailReference = useRef(null);
   const passwordReference = useRef(null);
-
+  const dispatch = useDispatch();
   const [empty, setEmpty] = useState(0);
   const [email, setEmail] = useState(0);
   const [password, setPassword] = useState(0);
@@ -77,14 +79,22 @@ const Signin = () => {
       console.log("email", empty)
 
       postData((`${process.env.REACT_APP_SIGN_IN}`), empty, (response) => {
-        CustomToast({
-          type: "success",
-          message: `${'Add Hospital Successfuly!'}`,
-        });
-        console.log("datadddd", response?.data?.roles)
+        if (response?.data) {
+          CustomToast({
+            type: "success",
+            message: `${response?.data?.user?.name} is Sign in`,
+          })
+        }
+        console.log("datadddd", response?.data?.user?.profile_pic)
         console.log("tokenwww", response?.data?.token)
         localStorage.setItem("token", response?.data?.token);
 
+        // Update the authentication state in the Redux store
+        dispatch(setAuthentication({
+          user: response?.data?.user?.name,
+          token: response?.data?.token,
+          profile_pic: response?.data?.user?.profile_pic, // Set this variable based on your logic
+        }));
 
         if (response?.data?.roles?.doctor) {
           localStorage.setItem("userRole", 'Doctor');
@@ -183,20 +193,20 @@ const Signin = () => {
                       <p className="mb-2 ">
                         Password<span className="signup-staric-color">*</span>
                       </p>
-                      <div className="d-flex border " style={{height:'36px', borderRadius:'5px'}}>
-                      <input
-                      style={{border:'none', backgroundColor:'transparent', paddingBottom:'5px'}}
-                        type={passwordType}
-                        onChange={handleInput}
-                        name="password"
-                        value={empty.password}
-                        ref={passwordReference}
-                      />
-                      <div className=" loginPasswordPositionBottom input-group-btn " >
-                        <h1 className="eyeBtn btn " onMouseUp={togglePassword} onMouseDown={togglePassword} onTouchStart={togglePassword} ontouchend={togglePassword} >
-                          <p style={{ width: "10px", height: "5px", color: "Black", border: "none" }}>{passwordType === "password" ? <i class="fa fa-eye-slash" aria-hidden="true"></i> : <i class="fa fa-eye" aria-hidden="true"></i>}</p>
-                        </h1>
-                      </div>
+                      <div className="d-flex border " style={{ height: '36px', borderRadius: '5px' }}>
+                        <input
+                          style={{ border: 'none', backgroundColor: 'transparent', paddingBottom: '5px' }}
+                          type={passwordType}
+                          onChange={handleInput}
+                          name="password"
+                          value={empty.password}
+                          ref={passwordReference}
+                        />
+                        <div className=" loginPasswordPositionBottom input-group-btn " >
+                          <h1 className="eyeBtn btn " onMouseUp={togglePassword} onMouseDown={togglePassword} onTouchStart={togglePassword} ontouchend={togglePassword} >
+                            <p style={{ width: "10px", height: "5px", color: "Black", border: "none" }}>{passwordType === "password" ? <i class="fa fa-eye-slash" aria-hidden="true"></i> : <i class="fa fa-eye" aria-hidden="true"></i>}</p>
+                          </h1>
+                        </div>
                       </div>
                       {password ? (
                         <p className="mb-0 ">
@@ -247,6 +257,7 @@ const Signin = () => {
                         </div>
                       </div>
                     </div>
+
                     {/* <select value={selectedOption} onChange={handleOptionChange}>
                       <option value="">Select an option</option>
                       <option value="superAdmin">superAdmin</option>
