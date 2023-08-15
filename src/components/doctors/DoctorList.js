@@ -21,7 +21,7 @@ const App = () => {
       setDocData([...docdata, ...data?.data?.data]);
     }
   }, [data]);
-console.log("dataqqq", data)
+  console.log("dataqqq", data);
   const loadMoreData = () => {
     if (isLoading) {
       return;

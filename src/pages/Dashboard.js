@@ -217,28 +217,21 @@ const Dashboard = () => {
                 >
                   {ValidateRoute(location.pathname) === "/dashboard" ? (
                     <DashboardCom />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/appointment" ? (
+                  ) : ValidateRoute(location.pathname) === "/appointment" ? (
                     <Appointments />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/appointment/add" ? (
+                  ) : ValidateRoute(location.pathname) ===
+                    "/appointment/add" ? (
                     <AddAppointments />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/doctors" ? (
+                  ) : ValidateRoute(location.pathname) === "/doctors" ? (
                     <AllDoctor />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/doctors/add" ? (
+                  ) : ValidateRoute(location.pathname) === "/doctors/add" ? (
                     <AddDoctor />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/doctors/availability" ? (
-                    <Availability/>
-                  ) 
-                  : location.pathname.startsWith("/doctors/detail") ? (
-                    <ViewDoctor
-                      Id={(location.pathname).split("/")[3]}
-                    />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/hospitals" ? (
+                  ) : ValidateRoute(location.pathname) ===
+                    "/doctors/availability" ? (
+                    <Availability />
+                  ) : location.pathname.startsWith("/doctors/detail") ? (
+                    <ViewDoctor Id={location.pathname.split("/")[3]} />
+                  ) : ValidateRoute(location.pathname) === "/hospitals" ? (
                     <Hospital />
                   ) : ValidateRoute(location.pathname) === "/hospitals/add" ? (
                     <AddHospital />
@@ -260,10 +253,8 @@ const Dashboard = () => {
                     <AddPharmacy />
                   ) : location.pathname.startsWith("/pharmacy/update/") &&
                     (ValidUI() === "superAdmin") |
-                    (ValidUI() === "PharmacyAdmin") ? (
-                    <AddPharmacy
-                      Id={ValidateRoute(location.pathname).split("/")[3]}
-                    />
+                      (ValidUI() === "PharmacyAdmin") ? (
+                    <AddPharmacy Id={location.pathname.split("/")[3]} />
                   ) : ValidateRoute(location.pathname) === "/pharmacy/shop" ? (
                     <PharmacyShop />
                   ) : ValidateRoute(location.pathname) ===
@@ -276,6 +267,12 @@ const Dashboard = () => {
                     <LaboratoryList />
                   ) : ValidateRoute(location.pathname) === "/laboratory/add" ? (
                     <AddLab />
+                  ) : location.pathname.startsWith("/laboratory/update/") &&
+                    (ValidUI() === "superAdmin") |
+                      (ValidUI() === "LaboratoryAdmin") ? (
+                    <AddPharmacy
+                      Id={ValidateRoute(location.pathname).split("/")[3]}
+                    />
                   ) : ValidateRoute(location.pathname) === "/bloodtest" ? (
                     <BloodTest />
                   ) : ValidateRoute(location.pathname) ===
@@ -293,14 +290,12 @@ const Dashboard = () => {
                     <XRayCartDetails />
                   ) : ValidateRoute(location.pathname) === "/blood-donation" ? (
                     <BloodDonation />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/banner-promo" ? (
+                  ) : ValidateRoute(location.pathname) === "/banner-promo" ? (
                     <BannerPromo />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/banner-promo/add" ? (
+                  ) : ValidateRoute(location.pathname) ===
+                    "/banner-promo/add" ? (
                     <AddBannerPromo />
-                  ) 
-                  : ValidateRoute(location.pathname) === "/manageroles" ? (
+                  ) : ValidateRoute(location.pathname) === "/manageroles" ? (
                     <ManageRoles />
                   ) : ValidateRoute(location.pathname) === "/rolepermission" ? (
                     <RolePermission />

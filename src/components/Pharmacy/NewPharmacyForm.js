@@ -18,8 +18,11 @@ import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 import TimeTablePencil from "../../assets/images/doctor/TimeTablePencil.svg";
 import useDeleteData from "../../customHook/useDelete";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
+import { useNavigate } from "react-router-dom";
+
 import { Modal } from "antd";
 import PharmacyTimings from "./PharmacyTimings";
+import { Link } from "react-router-dom";
 const TimePicker = ({ label, name, value, onChange }) => {
   return (
     <div className="d-inline-flex time-picker time-picker-Pharmacy py-1 px-2">
@@ -39,15 +42,18 @@ const TimePicker = ({ label, name, value, onChange }) => {
 };
 
 const NewPharmacyForm = ({
-  Id,
+  id,
   lastTextBoxTitle = "About Pharmacy",
   submitButtonText = "Add Pharmacy",
   submitUpdateText = "Update Pharmacy",
   apiEndpoint = process.env.REACT_APP_ADD_PHARMACY_DATA,
-  timeApiEndPoint = process.env.REACT_APP_SET_PHARMACY_SLOT,
+  updateApiEndPoint = process.env.REACT_APP_UPDATE_PHARMACY_DATA,
+  timeSetApi = process.env.REACT_APP_SET_PHARMACY_SLOT,
+  timeGetApi = process.env.REACT_APP_GET_PHARMACY_SLOT,
+  getByIdAPI = process.env.REACT_APP_GET_PHARMACY_DATA_ID,
   entityType = "pharmacy",
-
   customToastMessage = "Pharmacy Added Successfully",
+  updateToastMessage = "Pharmacy Details Updated Successfully!",
 }) => {
   const [errorData, setErrorData] = useState(0);
   const [errorMessage, setErrorMessage] = useState(0);
@@ -65,7 +71,7 @@ const NewPharmacyForm = ({
     doctor_id: 131,
     schedules: [{ day: 0, time_slots: [{ start_time: "", end_time: "" }] }],
   });
-
+  const navigate = useNavigate();
   const handleDoctorImageClick = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -137,7 +143,7 @@ const NewPharmacyForm = ({
       schedules: addTimePostReq.schedules,
     };
 
-    postData(timeApiEndPoint, requestBody, () => {
+    postData(timeSetApi, requestBody, () => {
       CustomToast({
         type: "success",
         message: "Schedule saved successfully",
@@ -154,28 +160,23 @@ const NewPharmacyForm = ({
     setValue,
     reset,
   } = useForm();
-
+  const { deleteData } = useDeleteData();
   useEffect(() => {
-    if (Id) {
-      customData.deleteData(
-        `${process.env.REACT_APP_DELETE_HOSPITAL_DETAIL}/${Id}`,
-        (val) => {
-          console.log("value", val?.data);
-          setAddPharmacyData({
-            ...val?.data,
-            email: val?.data?.email?.map((l) => l.id),
-          });
-          Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
-            setValue(fieldName, fieldValue);
-          });
-          setValue(
-            "email",
-            val?.data?.email?.map((l) => l.id)
-          );
-        }
-      );
+    if (id) {
+      deleteData(`${getByIdAPI}/${id}`, (response) => {
+        Object.entries(response?.data).forEach(([fieldName, fieldValue]) => {
+          setValue(fieldName, fieldValue);
+        });
+        setFormDataState((prev) => ({ ...prev, state: response?.data.state }));
+        setFormDataState((prev) => ({
+          ...prev,
+          certificate: response?.data.document,
+        }));
+        setAddPharmacyData(response?.data);
+        console.log("responseeee", response, data);
+      });
     }
-  }, [Id]);
+  }, [id]);
 
   const validation = () => {
     if (!addPharmacyData.profile_picture) {
@@ -212,19 +213,27 @@ const NewPharmacyForm = ({
         FarmData.append(key, completeFormData[key])
       );
 
-      try {
-        await postData(apiEndpoint, FarmData, (response) => {
-          savePharmacySchedule(response?.data);
-        });
-        CustomToast({
-          type: "success",
-          message: customToastMessage,
-        });
+      Object.keys(completeFormData).forEach((key) =>
+        FarmData.append(key, completeFormData[key])
+      );
 
-        setAddPharmacyData("");
-        reset();
-        setImage("");
-        setDocumentFile(null);
+      try {
+        postData(
+          id ? `${updateApiEndPoint}/${id}` : `${apiEndpoint}`,
+          FarmData,
+          (response) => {
+            savePharmacySchedule(response?.data);
+            CustomToast({
+              type: "success",
+              message: `${id ? updateToastMessage : customToastMessage}`,
+            });
+            !id && setAddPharmacyData({});
+            !id && reset();
+            !id && setImage("");
+
+            navigate("/Pharmacy");
+          }
+        );
       } catch (error) {}
     }
   };
@@ -274,6 +283,7 @@ const NewPharmacyForm = ({
                   className="w-100 h-100 add-doc-camera-upload-1st"
                   src={
                     process.env.REACT_APP_IMAGE_URL +
+                    "/" +
                     addPharmacyData.profile_picture
                   }
                   alt=""
@@ -744,86 +754,98 @@ const NewPharmacyForm = ({
                 <UploadFile
                   formDataState={formDataState}
                   setFormDataState={setFormDataState}
+                  value={formDataState?.certificate || ""}
                 />
               </div>
             </div>
           </div>
 
           <div className="row mt-4">
-            <div className="col-lg-6 doc-setting-input">
+            <div className="col-lg-6 pr-lg-1 doc-setting-input">
               <p className="mb-2">Pharmacy Timings</p>
               <div className="d-flex w-100 justify-content-between flex-column border">
-                <div className="d-flex w-100 justify-content-between ">
-                  <span className="">Set Schedule</span>
+                <div className="d-flex w-100 justify-content-between px-2">
+                  <span className="mb-2 pharmacy-timings input-field-timings">
+                    Set Schedule
+                  </span>
                   <img
                     onClick={handleModalToggle}
                     src={TimeTablePencil}
                     alt="TimeTablePencil"
-                    className="input-field-icon"
+                    className="input-field-icon input-field-timings"
                   />
                 </div>
-                {/* <hr />
-                <div className="d-flex w-100 justify-content-between ">
-                  <span>Day</span>
-                  <span>Opening Time</span>
-                  <span>Closing Time</span>
-                </div>
-                {addTimePostReq?.schedules?.length > 0 &&
-                  addTimePostReq?.schedules.map((time) => {
-                    const hasTimeSlots =
-                      time?.time_slots && time?.time_slots.length > 0;
-                    return (
-                      <div className="d-flex w-100 justify-content-between">
-                        <div>{getDayName(time?.day)}</div>
-                        {hasTimeSlots ? (
-                          <>
-                            <div>{time?.time_slots[0]?.start_time}</div>
-                            <div>{time?.time_slots[0]?.end_time}</div>
-                          </>
-                        ) : null}
-                      </div> */}
-                {/* );
-                  })} */}
               </div>
-            </div>
-          </div>
-          <div className="row mt-4">
-            <div className="col-12 mt-lg-0 mt-0  doc-setting-input">
-              <p className="mb-2">{lastTextBoxTitle}</p>
-              <textarea
-                id=""
-                className="pt-2"
-                cols="30"
-                rows="7"
-                name="description"
-                value={addPharmacyData.description || ""}
-                onChange={handleChangePharmacy}
-              ></textarea>
-            </div>
-          </div>
 
-          <div className="row my-5 pt-2 pb-3 ">
-            <div className="col-lg-6">
-              <button
-                type="submit"
-                className="apply-filter add-doc-changes"
-                disabled={isLoading}
-              >
-                {!isLoading ? (
-                  addPharmacyData.id ? (
-                    submitUpdateText
-                  ) : (
-                    submitButtonText
-                  )
-                ) : (
-                  <ButtonLoader />
-                )}
-              </button>
+              <table className="table table-borderless">
+                <thead>
+                  <tr>
+                    <th className="text-left pharmacy-timings pl-4">Day</th>
+                    <th className="text-center pharmacy-timings">
+                      Opening Time
+                    </th>
+                    <th className="text-right pharmacy-timings pr-4">
+                      Closing Time
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {addTimePostReq?.schedules.map((time) => {
+                    const hasTimeSlots = time?.time_slots;
+                    return (
+                      <tr key={time.day}>
+                        <td>{getDayName(time?.day)}</td>
+                        <td className="text-center">
+                          {hasTimeSlots ? time?.time_slots[0]?.start_time : ""}
+                        </td>
+                        <td className="text-center pl-5">
+                          {hasTimeSlots ? time?.time_slots[0]?.end_time : ""}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-
-            <div className="col-lg-6"></div>
           </div>
         </div>
+        <div className="row mt-4 px-3">
+          <div className="col-12 mt-lg-0 mt-0 doc-setting-input">
+            <p className="mb-2">{lastTextBoxTitle}</p>
+            <textarea
+              id=""
+              className="pt-2"
+              cols="30"
+              rows="7"
+              name="description"
+              value={addPharmacyData.description || ""}
+              onChange={handleChangePharmacy}
+            ></textarea>
+          </div>
+        </div>
+
+        <div className="row my-5 pt-2 pb-3 ">
+          <div className="col-lg-6">
+            <button
+              type="submit"
+              className="apply-filter add-doc-changes"
+              disabled={isLoading}
+            >
+              {!isLoading ? (
+                addPharmacyData.id ? (
+                  submitUpdateText
+                ) : (
+                  submitButtonText
+                )
+              ) : (
+                <ButtonLoader />
+              )}
+            </button>
+          </div>
+
+          <div className="col-lg-6"></div>
+        </div>
+
         <Modal
           title="Time Table"
           visible={isModalVisible}

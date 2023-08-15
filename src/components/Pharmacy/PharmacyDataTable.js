@@ -8,27 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
-import { Button, Modal, Rate, Select, Slider } from "antd";
-import sohaibavatar from "../../assets/images/dashboard/sohaibavatar.png";
 import "../../assets/css/common/datatable.scss";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import CustomPagination from "../common/CustomPagination";
-import prescriptionSVG from "../../assets/images/common/prescription.svg";
-import Edit from "../common/Edit.js";
-import Delete from "../common/Delete.js";
-import Cross from "../common/Cross";
-import Tick from "../common/Tick.js";
 
 // img svg
 import DeleteIcon from "../../assets/images/pharmacy/DeleteIcon.svg";
 import EditIcon from "../../assets/images/pharmacy/EditIcon.svg";
-import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
 
 import { Link } from "react-router-dom";
 import useDeleteData from "../../customHook/useDelete";
-import { useMemo } from "react";
-import { useEffect } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
 import ButtonLoader from "../../atoms/buttonLoader";
 import ImagePreview from "../../atoms/ImagePreview";
 import DeletConfirmation from "../../atoms/deletConfirmation";
@@ -70,20 +59,17 @@ const DataTable = ({
 
   const handleDelete = () => {
     deleteData(
-      `${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${deleteState}`,
+      `${process.env.REACT_APP_DELETE_PHARMACY_DATA}/${deleteState}`,
       () => {
         setDeleteModal(false);
         getPharmacy.fetchPaginatedData(
-          `${process.env.REACT_APP_GET_PHARMACY_DATA}?per_page=${rowsPerPage}&page=${page}`
+          `${process.env.REACT_APP_GET_PHARMACY_DATA}`
         );
         console.log("API Response:", getPharmacy.data);
-        // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
         CustomToast({
           type: "success",
           message: "Pharmacy Delete Successfuly!",
         });
-
-        // setRows(filter)
       }
     );
   };
@@ -101,7 +87,6 @@ const DataTable = ({
     setImagePreviewUrl(imageUrl);
     setIsPreviewOpen(true);
   };
-  // Function to close the preview
   const closeImagePreview = () => {
     setIsPreviewOpen(false);
   };
@@ -195,11 +180,8 @@ const DataTable = ({
                               }}
                             >
                               <Avatar
-                                alt="Pharmacy Pic"
-                                src={`${
-                                  process.env.REACT_APP_IMAGE_URL +
-                                  profile_picture
-                                }`}
+                                alt={`Pharmacy Pic`}
+                                src={`${process.env.REACT_APP_IMAGE_URL}/${profile_picture}`}
                                 onClick={() =>
                                   handleImageClick(
                                     process.env.REACT_APP_IMAGE_URL +
@@ -221,7 +203,7 @@ const DataTable = ({
                       <TableCell align="center">{zip}</TableCell>
 
                       <TableCell>
-                        <Link to={`/pharmacy/edit/${id}`}>
+                        <Link to={`/pharmacy/update/${id}`}>
                           <img className="" src={EditIcon} />
                         </Link>
                         <img
