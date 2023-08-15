@@ -47,7 +47,7 @@ const DataTable = ({
   const { isLoading, error, deleteData } = useDeleteData();
 
   const getLaboratory = useFetch(
-    `${process.env.REACT_APP_GET_LABORATORY_DATA}?per_page=${rowsPerPage}&page=${page}`
+    `${process.env.REACT_APP_GET_LABORATORY_DATA}`
   );
 
   const rows = getLaboratory.data;
@@ -70,11 +70,11 @@ const DataTable = ({
 
   const handleDelete = () => {
     deleteData(
-      `${process.env.REACT_APP_DELETE_HOSPITAL_DATA}/${deleteState}`,
+      `${process.env.REACT_APP_DELETE_LABORATORY_DATA}/${deleteState}`,
       () => {
         setDeleteModal(false);
         getLaboratory.fetchPaginatedData(
-          `${process.env.REACT_APP_GET_LABORATORY_DATA}?per_page=${rowsPerPage}&page=${page}`
+          `${process.env.REACT_APP_GET_LABORATORY_DATA}`
         );
         console.log("API Response:", getLaboratory.data);
         // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
@@ -195,11 +195,8 @@ const DataTable = ({
                               }}
                             >
                               <Avatar
-                                alt="Laboratory Pic"
-                                src={`${
-                                  process.env.REACT_APP_IMAGE_URL +
-                                  profile_picture
-                                }`}
+                                alt={`Laboratory Pic`}
+                                src={`${process.env.REACT_APP_IMAGE_URL}/${profile_picture}`}
                                 onClick={() =>
                                   handleImageClick(
                                     process.env.REACT_APP_IMAGE_URL +
@@ -221,7 +218,7 @@ const DataTable = ({
                       <TableCell align="center">{zip}</TableCell>
 
                       <TableCell>
-                        <Link to={`/laboratory/edit/${id}`}>
+                        <Link to={`/laboratory/update/${id}`}>
                           <img className="" src={EditIcon} />
                         </Link>
                         <img
