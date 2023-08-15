@@ -67,6 +67,8 @@ const ValidateRoute = (currentPath) => {
         "/doctors/detail/3",
         "/treatment-sponsor",
         "/needy-patients",
+        "/patients",
+        "/patients/add",
     ]
 
     const userRole = localStorage.getItem("userRole") ?? "";
@@ -105,13 +107,13 @@ const DefultRoute = () => {
             return <DashboardCom />
             break;
         case "LaboratoryAdmin":
-            return <LaboratoryList />
+            return <DashboardCom />
             break;
         case "PharmacyAdmin":
-            return <Pharmacy />
+            return <DashboardCom />
             break;
         case "Doctor":
-            return <Appointments />
+            return <DashboardCom />
             break;
 
         default:

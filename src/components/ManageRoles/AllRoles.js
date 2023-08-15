@@ -384,18 +384,20 @@ const AllRoles = () => {
               </div>
 
               <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-                <button
+                {/* <button
                   className="btn-add-doc-filter mr-2"
                   onClick={() => setModal2Open(true)}
                 ><Link className="add-doc-link-color" to='/allroles' >
                   <span className="  btn-add-doc-filter-text">All Roles</span>
                   </Link>
-                </button>
-                <button className="btn-add-new-doc" onClick={() => { setModal1Open(true) }}>
+                </button> */}
+              <Link to='/role/add'>
+              <button  className="btn-add-new-doc w-100 px-5">
                   
-                    Add Roles
-                  
-                </button>
+                  Add Roles
+                
+              </button>
+              </Link>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Image
 // svg
@@ -23,8 +23,13 @@ const Header = ({
   MobileMenu1,
   menuLeftText
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="col-12 ">
+
+
+
+
       {isLargeScreen ? (
         <div className="row border-bottom " style={{ height: "86px" }}>
           {/* fullscreen header  */}
@@ -77,7 +82,7 @@ const Header = ({
           <div className="col-9 d-flex align-items-center ">
             <div className="row " style={{ width: "100%" }}>
               <div className="col-12  px-0 d-flex justify-content-end ">
-              {
+                {
                   ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ?
                     <Link to='/manageroles'>
                       <div className=" cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center">

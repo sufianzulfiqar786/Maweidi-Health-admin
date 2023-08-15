@@ -8,6 +8,7 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
   // const token = "127|juaOCZEl1fB0270M5PnwASGgkiPZ18ysci19JXGj";
   const token = localStorage.getItem("token");
+
   console.log("tokenlll", token)
   const BaseURL = process.env.REACT_APP_BASE_URL;
 

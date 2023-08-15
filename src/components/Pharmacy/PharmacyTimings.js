@@ -91,20 +91,25 @@ const PharmacyTimings = ({ addTimePostReq, setaddTimePostReq }) => {
             style={{ marginLeft: "20px", marginTop: "10px" }}
           />
           {toggle && (
-            <div style={{ marginLeft: "38px", marginTop: "10px" }}>
+            <div className="pharmacy-schedule d-flex" style={{ marginLeft: "38px", marginTop: "10px" }}>
+              <div className="border  w-100 " style={{borderRadius:'5px'}}>
               <TimePicker
                 value={openingTime ? moment(openingTime, "HH:mm") : null}
                 onChange={(time) => handleOpeningTimeChange(day, time)}
                 format="HH:mm"
                 placeholder="Opening Time"
-                style={{ marginRight: "10px" }}
+                style={{ border:'none' }}
               />
+              </div>
+              <div className="border w-100 ml-2" style={{borderRadius:'5px'}}>
               <TimePicker
+              style={{ border:'none'}}
                 value={closingTime ? moment(closingTime, "HH:mm") : null}
                 onChange={(time) => handleClosingTimeChange(day, time)}
                 format="HH:mm"
                 placeholder="Closing Time"
               />
+              </div>
             </div>
           )}
         </div>

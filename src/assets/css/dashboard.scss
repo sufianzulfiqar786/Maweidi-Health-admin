@@ -544,7 +544,7 @@ color: #193F52;
 
 .profile-drop-down-body {
   width: 199px;
-  margin-right: 155.5px;
+  margin-right: 10px;
   margin-top: 5px;
   background: #ffffff;
   border: 1px solid #dddddd;
@@ -553,7 +553,7 @@ color: #193F52;
 
 .notification-drop-down-body {
   width: 389px;
-  margin-right: 288.5px;
+  margin-right: 10px;
   margin-top: 5px;
   background: #ffffff;
   border: 1px solid #dddddd;
@@ -844,4 +844,45 @@ color: #193F52;
   .left-drop-down img{
     padding-top: 4%;
   }
+}
+
+
+
+svg{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+svg path{
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke: #fff;
+  fill: none;
+  transition: all .5s ease-in-out;
+}
+
+/* In menu form */
+
+.top_bar,
+.bottom_bar{
+  stroke-dasharray: 240px 910px;
+}
+
+.middle_bar{
+  stroke-dasharray: 240px 240px;
+}
+
+/* In cross form */
+
+.open .top_bar,
+.open .bottom_bar{
+  stroke-dashoffset: -650px;
+}
+
+.open .middle_bar{
+  stroke-dasharray: 0px 220px;
+  stroke-dashoffset: -120px;
 }

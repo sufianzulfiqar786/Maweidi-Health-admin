@@ -7,8 +7,13 @@ import SampleImg from "../../assets/images/dashboard/SampleImg.png";
 import ClockIcon from "../../assets/images/dashboard/ClockIcon.svg";
 import LogoutIcon from "../../assets/images/dashboard/LogoutIcon.svg";
 import { ValidateRoute, ValidUI } from "../../pages/privateRoutes";
+import { useSelector } from "react-redux";
 
 const ProfileDropDown = () => {
+  const user = useSelector(state => state.auth.user);
+  const profile_pic = useSelector(state => state.auth.profile_pic);
+
+  console.log("Userppppp", profile_pic);
 
   // ValidUI() === "superAdmin"
   return (
@@ -22,7 +27,7 @@ const ProfileDropDown = () => {
         aria-expanded="false"
       >
         <img
-          src={SampleImg}
+          src={ !profile_pic ? SampleImg : `https://api.maweidi.com.kw/${profile_pic}`}
           className="menu-button-right-img"
           alt=""
         />
@@ -31,14 +36,15 @@ const ProfileDropDown = () => {
       <div
         class=" profile-drop-down-body  dropdown-menu"
         aria-labelledby="dropdownMenuButton"
+        style={{ }}
       >
         <div className="row py-2 px-3">
           <div className="col-4">
-            <img className="profile-drop-down-img" src={SampleImg} alt="" />
+            <img className="profile-drop-down-img" src={ !profile_pic ? SampleImg : `https://api.maweidi.com.kw/${profile_pic}`} alt="" />
           </div>
 
           <div className="col-8 px-2 d-flex  justify-content-center align-items-start  flex-column">
-            <p className="mb-0  profile-drop-down-text1">Calvin Carlo</p>
+            <p className="mb-0  profile-drop-down-text1">{user}</p>
 
             <p className="mb-0 profile-drop-down-text2">Super Admin</p>
           </div>

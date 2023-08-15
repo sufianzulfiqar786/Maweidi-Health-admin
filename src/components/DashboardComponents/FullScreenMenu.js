@@ -46,7 +46,12 @@ const FullScreenMenu = ({
   console.log("menuDropDownFullScreen", menuDropDownFullScreen);
   return (
     <div className="hover-effect">
-      {ValidUI() === "superAdmin" || ValidUI() === "HospitalAdmin" ? (
+      {ValidUI() === "superAdmin" ||
+        ValidUI() === "HospitalAdmin" ||
+        ValidUI() === "Doctor" ||
+        ValidUI() === "PharmacyAdmin" ||
+        ValidUI() === "LaboratoryAdmin"
+        ? (
         <Link className="maweidi-link ml-md-auto ml-0 " to="/dashboard">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
@@ -68,11 +73,10 @@ const FullScreenMenu = ({
               >
                 <div className=" px-2  dashboard-left-icon">
                   <img
-                    src={`${
-                      menuDropDownFullScreen.name === "dashboard"
-                        ? ClockIcon
-                        : ClockIconBlack
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "dashboard"
+                      ? ClockIcon
+                      : ClockIconBlack
+                      }`}
                     alt=""
                   />
                 </div>
@@ -80,11 +84,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="/dashboard">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 pl-1 dashboard-left-icon-text  ${
-                        menuDropDownFullScreen.name === "dashboard"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 pl-1 dashboard-left-icon-text  ${menuDropDownFullScreen.name === "dashboard"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Dashboard
@@ -103,8 +106,8 @@ const FullScreenMenu = ({
 
       {/* Appointments */}
       {ValidUI() === "Doctor" ||
-      ValidUI() === "HospitalAdmin" ||
-      ValidUI() === "superAdmin" ? (
+        ValidUI() === "HospitalAdmin" ||
+        ValidUI() === "superAdmin" ? (
         <Link className="maweidi-link ml-md-auto ml-0" to="/appointment">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
@@ -128,11 +131,10 @@ const FullScreenMenu = ({
                 <div className="px-2  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "appointment"
-                        ? PulseIconBlue
-                        : PulseIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "appointment"
+                      ? PulseIconBlue
+                      : PulseIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -140,11 +142,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="/appointment">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 pl-1 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "appointment"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 pl-1 dashboard-left-icon-text ${menuDropDownFullScreen.name === "appointment"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Appointments
@@ -163,68 +164,66 @@ const FullScreenMenu = ({
 
       {/* hospital  */}
       {ValidUI() === "superAdmin" ||
-       ValidUI() === "HospitalAdmin" 
-       ? (
-        <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
-          <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-            onClick={() => {
-              setMenuDropDownFullScreen({
-                ...menuDropDownFullScreen,
-                name: "hospital",
-                toggle: !menuDropDownFullScreen.toggle,
-              });
-              setMobileMenu1(!MobileMenu1);
-            }}
-          >
+        ValidUI() === "HospitalAdmin"
+        ? (
+          <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
             <div
-              className=" row"
-              style={{ display: `${menuLeftText}`, width: "100%" }}
+              className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+              onClick={() => {
+                setMenuDropDownFullScreen({
+                  ...menuDropDownFullScreen,
+                  name: "hospital",
+                  toggle: !menuDropDownFullScreen.toggle,
+                });
+                setMobileMenu1(!MobileMenu1);
+              }}
             >
               <div
-                className={`${menuLeftRightDropDown1} d-flex align-items-center ${menuIconCenter}`}
+                className=" row"
+                style={{ display: `${menuLeftText}`, width: "100%" }}
               >
-                <div className=" px-2 dashboard-left-icon">
-                  <img
-                    className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "hospital"
+                <div
+                  className={`${menuLeftRightDropDown1} d-flex align-items-center ${menuIconCenter}`}
+                >
+                  <div className=" px-2 dashboard-left-icon">
+                    <img
+                      className="py-1"
+                      src={`${menuDropDownFullScreen.name === "hospital"
                         ? HospitalIconBlue
                         : HospitalIcon
-                    }`}
-                    alt=""
-                  />
-                </div>
+                        }`}
+                      alt=""
+                    />
+                  </div>
 
-                <Link className="maweidi-link " to="/hospitals">
-                  <span style={{ display: `${menuLeftText}` }}>
-                    <p
-                      className={`mb-0 pl-lg-3 pl-2 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "hospital"
+                  <Link className="maweidi-link " to="/hospitals">
+                    <span style={{ display: `${menuLeftText}` }}>
+                      <p
+                        className={`mb-0 pl-lg-3 pl-2 dashboard-left-icon-text ${menuDropDownFullScreen.name === "hospital"
                           ? "seleted-menu"
                           : ""
-                      } `}
-                      style={{ color: "#535353" }}
-                    >
-                      Hospitals
-                    </p>
-                  </span>
-                </Link>
-              </div>
+                          } `}
+                        style={{ color: "#535353" }}
+                      >
+                        Hospitals
+                      </p>
+                    </span>
+                  </Link>
+                </div>
 
-              <div
-                className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
-              ></div>
+                <div
+                  className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
+                ></div>
+              </div>
             </div>
-          </div>
-        </Link>
-      ) : null}
+          </Link>
+        ) : null}
 
       {/* doctor */}
 
       {ValidUI() === "Doctor" ||
-      ValidUI() === "HospitalAdmin" ||
-      ValidUI() === "superAdmin" ? (
+        ValidUI() === "HospitalAdmin" ||
+        ValidUI() === "superAdmin" ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -251,11 +250,10 @@ const FullScreenMenu = ({
                 <div className=" px-2 dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "doc"
-                        ? DoctorIconBlue
-                        : DoctorIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "doc"
+                      ? DoctorIconBlue
+                      : DoctorIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -263,11 +261,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="/doctors">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3  dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "doc"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3  dashboard-left-icon-text ${menuDropDownFullScreen.name === "doc"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Doctors
@@ -288,11 +285,10 @@ const FullScreenMenu = ({
                     toggle: !menuDropDownFullScreen.toggle,
                   });
                 }}
-                src={`${
-                  menuDropDownFullScreen.name === "doc"
-                    ? DownIconBlue
-                    : DownIcon
-                }`}
+                src={`${menuDropDownFullScreen.name === "doc"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
               />
@@ -306,12 +302,11 @@ const FullScreenMenu = ({
 
                     <Link className="maweidi-link " to="/doctors">
                       <span
-                        className={`pl-lg-2 ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2 ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "alldoc"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -333,12 +328,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/doctors/add">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "adddoc"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -355,32 +349,7 @@ const FullScreenMenu = ({
                       </span>
                     </Link>
                   </div>
-                  <div className="sub-menu1-top-padding col-12 mt-2 pt-1 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
-                    <Link className="maweidi-link " to="/doctors/availability">
-                      <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
-                          "adddoc"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
-                        onClick={() => {
-                          setMenuDropDownFullScreen((prevState) => ({
-                            ...prevState,
-                            subMenuMobile: {
-                              ...prevState.subMenuMobile,
-                              subtoggle: !prevState.subMenuMobile.subtoggle,
-                              subname: "adddoc",
-                            },
-                          }));
-                          setMobileMenu1(!MobileMenu1);
-                        }}
-                      >
-                        Doctor Availability
-                      </span>
-                    </Link>
-                  </div>
+                 
                 </>
               )}
           </div>
@@ -389,7 +358,7 @@ const FullScreenMenu = ({
 
       {/* Patient */}
 
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? (
+      {ValidUI() === "HospitalAdmin" ||ValidUI() === "Doctor" || ValidUI() === "superAdmin" ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -416,11 +385,10 @@ const FullScreenMenu = ({
                 <div className="  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "patient"
-                        ? PatientIconBlue
-                        : PatientIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "patient"
+                      ? PatientIconBlue
+                      : PatientIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -428,11 +396,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="/patients">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "patient"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "patient"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Patients
@@ -453,11 +420,10 @@ const FullScreenMenu = ({
                     toggle: !menuDropDownFullScreen.toggle,
                   });
                 }}
-                src={`${
-                  menuDropDownFullScreen.name === "patient"
-                    ? DownIconBlue
-                    : DownIcon
-                }`}
+                src={`${menuDropDownFullScreen.name === "patient"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
               />
@@ -470,12 +436,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/patients">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "allpatient"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -497,12 +462,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/patients/add">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "addpatient"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -555,11 +519,10 @@ const FullScreenMenu = ({
                   <img
                     className="py-0"
                     style={{ width: "20px" }}
-                    src={`${
-                      menuDropDownFullScreen.name === "pharmacy"
-                        ? PharmacyIcon
-                        : PharmacyIconBlack
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "pharmacy"
+                      ? PharmacyIcon
+                      : PharmacyIconBlack
+                      }`}
                     alt=""
                   />
                 </div>
@@ -567,11 +530,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="pharmacy">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "pharmacy"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "pharmacy"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Pharmacy
@@ -592,11 +554,10 @@ const FullScreenMenu = ({
                     toggle: !menuDropDownFullScreen.toggle,
                   });
                 }}
-                src={`${
-                  menuDropDownFullScreen.name === "pharmacy"
-                    ? DownIconBlue
-                    : DownIcon
-                }`}
+                src={`${menuDropDownFullScreen.name === "pharmacy"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
               />
@@ -611,12 +572,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "pharmacy"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -639,12 +599,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy/add">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "addpharmacy"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -667,12 +626,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy/shop">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "pharmacyshop"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -696,12 +654,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy/shop/detail">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "pharmacyshopdetail"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -727,8 +684,7 @@ const FullScreenMenu = ({
       {/* Laboratory */}
 
       {ValidUI() === "LaboratoryAdmin" ||
-      ValidUI() === "superAdmin" ||
-      ValidUI() === "HospitalAdmin" ? (
+        ValidUI() === "superAdmin" ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -755,11 +711,10 @@ const FullScreenMenu = ({
                 <div className="  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "laboratory"
-                        ? LaboratoryIconBlue
-                        : LaboratoryIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "laboratory"
+                      ? LaboratoryIconBlue
+                      : LaboratoryIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -767,11 +722,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link " to="laboratory">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "laboratory"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "laboratory"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Laboratory
@@ -792,11 +746,10 @@ const FullScreenMenu = ({
                     toggle: !menuDropDownFullScreen.toggle,
                   });
                 }}
-                src={`${
-                  menuDropDownFullScreen.name === "laboratory"
-                    ? DownIconBlue
-                    : DownIcon
-                }`}
+                src={`${menuDropDownFullScreen.name === "laboratory"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
               />
@@ -810,12 +763,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/laboratory">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "laboratorylist"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -838,12 +790,11 @@ const FullScreenMenu = ({
 
                     <Link className="maweidi-link " to="/laboratory/add">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "addlab"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -865,12 +816,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/bloodtest">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "bloodtest"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -892,11 +842,10 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/xray/orderlist">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname == "xray"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "xray"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           setMenuDropDownFullScreen((prevState) => ({
                             ...prevState,
@@ -946,11 +895,10 @@ const FullScreenMenu = ({
                 <div className="  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "blooddonation"
-                        ? BloodIconBlue
-                        : BloodIconBlack
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "blooddonation"
+                      ? BloodIconBlue
+                      : BloodIconBlack
+                      }`}
                     alt=""
                   />
                 </div>
@@ -961,11 +909,10 @@ const FullScreenMenu = ({
                 >
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${
-                        menuDropDownFullScreen.name === "blooddonation"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "blooddonation"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Blood Donation
@@ -979,7 +926,7 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* Home Service Provider */}
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? (
+      { ValidUI() === "superAdmin" ? (
         <Link
           className="maweidi-link ml-md-auto ml-0 w-100 "
           to="/home-service-provider"
@@ -1005,11 +952,10 @@ const FullScreenMenu = ({
                 <div className="  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "homeservice"
-                        ? HomeServiceIconBlue
-                        : HomeServiceIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "homeservice"
+                      ? HomeServiceIconBlue
+                      : HomeServiceIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -1020,11 +966,10 @@ const FullScreenMenu = ({
                 >
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${
-                        menuDropDownFullScreen.name === "homeservice"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${menuDropDownFullScreen.name === "homeservice"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Home Service Provider
@@ -1054,11 +999,10 @@ const FullScreenMenu = ({
                 <img
                   className="py-0"
                   style={{ width: "20px" }}
-                  src={`${
-                    menuDropDownFullScreen.name === "treatmentsponsor"
-                      ? TreatmentSponsorBlueIcon
-                      : TreatmentSponsorIcon
-                  }`}
+                  src={`${menuDropDownFullScreen.name === "treatmentsponsor"
+                    ? TreatmentSponsorBlueIcon
+                    : TreatmentSponsorIcon
+                    }`}
                   alt=""
                 />
               </div>
@@ -1066,11 +1010,10 @@ const FullScreenMenu = ({
               <Link className="maweidi-link " to="/treatment-sponsor">
                 <span style={{ display: `${menuLeftText}` }}>
                   <p
-                    className={`mb-0 pl-lg-3 text-left dashboard-left-icon-text ${
-                      menuDropDownFullScreen.name === "treatmentsponsor"
-                        ? "seleted-menu"
-                        : ""
-                    } `}
+                    className={`mb-0 pl-lg-3 text-left dashboard-left-icon-text ${menuDropDownFullScreen.name === "treatmentsponsor"
+                      ? "seleted-menu"
+                      : ""
+                      } `}
                     style={{ color: "#535353" }}
                     onClick={() => {
                       setMenuDropDownFullScreen({
@@ -1099,11 +1042,10 @@ const FullScreenMenu = ({
                     toggle: !menuDropDownFullScreen.toggle,
                   });
                 }}
-                src={`${
-                  menuDropDownFullScreen.name === "treatmentsponsor"
-                    ? DownIconBlue
-                    : DownIcon
-                }`}
+                src={`${menuDropDownFullScreen.name === "treatmentsponsor"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
               />
@@ -1116,12 +1058,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/treatment-sponsor">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "treatmentsponsor"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           // let sbtoggle = {"subtoggle":false}
 
@@ -1147,12 +1088,11 @@ const FullScreenMenu = ({
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/needy-patients">
                       <span
-                        className={`pl-lg-2  ${
-                          menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "needypatientslist"
-                            ? "seleted-menu"
-                            : ""
-                        } `}
+                          ? "seleted-menu"
+                          : ""
+                          } `}
                         onClick={() => {
                           // let sbtoggle = {"subtoggle":false}
 
@@ -1228,7 +1168,8 @@ const FullScreenMenu = ({
         </div>
       ) : null}
 
-      { ValidUI() === "superAdmin" ? (
+      {/* Banner and Promo */}
+      {ValidUI() === "superAdmin" ? (
         <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
@@ -1251,11 +1192,10 @@ const FullScreenMenu = ({
                 <div className="  dashboard-left-icon">
                   <img
                     className="py-1"
-                    src={`${
-                      menuDropDownFullScreen.name === "bannerpromo"
-                        ? bluePromo
-                        : promoIcon
-                    }`}
+                    src={`${menuDropDownFullScreen.name === "bannerpromo"
+                      ? bluePromo
+                      : promoIcon
+                      }`}
                     alt=""
                   />
                 </div>
@@ -1263,11 +1203,10 @@ const FullScreenMenu = ({
                 <Link className="maweidi-link text-left" to="banner-promo">
                   <span style={{ display: `${menuLeftText}` }}>
                     <p
-                      className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${
-                        menuDropDownFullScreen.name === "bannerpromo"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${menuDropDownFullScreen.name === "bannerpromo"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
                       style={{ color: "#535353" }}
                     >
                       Banner and Promo

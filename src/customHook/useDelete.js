@@ -8,7 +8,7 @@ const useDeleteData = () => {
     const [error, setError] = useState(null);
     // const token = "127|juaOCZEl1fB0270M5PnwASGgkiPZ18ysci19JXGj"
     const token = localStorage.getItem("token");
-  console.log("tokenlll", token)
+    console.log("tokenlll", token)
     const deleteData = async (url, cb) => {
         const config = {
             headers: {
@@ -21,7 +21,7 @@ const useDeleteData = () => {
             if (response.data?.success === true) {
                 cb(response.data)
             }
-            else{
+            else {
                 CustomToast({
                     type: "error",
                     message: `${response?.data?.response}`,
