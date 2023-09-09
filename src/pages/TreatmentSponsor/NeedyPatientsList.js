@@ -178,14 +178,14 @@ const NeedyPatientList = () => {
             </div>
 
             <div class="col-md-6 text-md-right ">
-              <button
+              {/* <button
                 onClick={handleAddRole}
                 style={{ marginRight: "15px" }}
                 type="button"
                 class="add-role"
               >
                 Sponsors List
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="row m-0 p-0 ">

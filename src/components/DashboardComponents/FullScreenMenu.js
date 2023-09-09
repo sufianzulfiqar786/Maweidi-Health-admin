@@ -17,6 +17,10 @@ import PharmacyIcon from "../../assets/images/dashboard/PharmacyIcon.svg";
 import PharmacyIconBlack from "../../assets/images/dashboard/PharmacyIconBlack.svg";
 import LaboratoryIcon from "../../assets/images/dashboard/LaboratoryIcon.svg";
 import LaboratoryIconBlue from "../../assets/images/dashboard/LaboratoryIconBlue.svg";
+import Equipments from "../../assets/images/dashboard/Equipments.png";
+import EquipmentsBlack from "../../assets/images/dashboard/EquipmentsBlack.png";
+import XraysBlack from "../../assets/images/dashboard/XraysBlack.png";
+import Xrays from "../../assets/images/dashboard/Xrays.png";
 import PatientIcon from "../../assets/images/dashboard/PatientIcon.svg";
 import PatientIconBlue from "../../assets/images/dashboard/PatientIconBlue.svg";
 import DownIcon from "../../assets/images/dashboard/DownIcon.svg";
@@ -43,14 +47,21 @@ const FullScreenMenu = ({
   setMobileMenu1,
   MobileMenu1,
 }) => {
-  console.log("menuDropDownFullScreen", menuDropDownFullScreen);
+
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const alloweddoc = Object.keys(role).includes("doctor")
+  const isSuperAdmin = Object.keys(role).length === 0 
+  console.log("allowedlab", allowedlab);
   return (
     <div className="hover-effect">
-      {ValidUI() === "superAdmin" ||
-        ValidUI() === "HospitalAdmin" ||
-        ValidUI() === "Doctor" ||
-        ValidUI() === "PharmacyAdmin" ||
-        ValidUI() === "LaboratoryAdmin"
+      {isSuperAdmin ||
+        allowedhost ||
+        alloweddoc ||
+        allowedphar ||
+         allowedlab
         ? (
         <Link className="maweidi-link ml-md-auto ml-0 " to="/dashboard">
           <div
@@ -105,9 +116,9 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* Appointments */}
-      {ValidUI() === "Doctor" ||
-        ValidUI() === "HospitalAdmin" ||
-        ValidUI() === "superAdmin" ? (
+      {alloweddoc ||
+        allowedhost ||
+        isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0" to="/appointment">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
@@ -163,8 +174,8 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* hospital  */}
-      {ValidUI() === "superAdmin" ||
-        ValidUI() === "HospitalAdmin"
+      {isSuperAdmin ||
+        allowedhost
         ? (
           <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
             <div
@@ -221,9 +232,9 @@ const FullScreenMenu = ({
 
       {/* doctor */}
 
-      {ValidUI() === "Doctor" ||
-        ValidUI() === "HospitalAdmin" ||
-        ValidUI() === "superAdmin" ? (
+      {alloweddoc ||
+       allowedhost||
+        isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -358,7 +369,7 @@ const FullScreenMenu = ({
 
       {/* Patient */}
 
-      {ValidUI() === "HospitalAdmin" ||ValidUI() === "Doctor" || ValidUI() === "superAdmin" ? (
+      {allowedhost ||alloweddoc || isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -490,8 +501,8 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* pharmacy */}
-      {/* || ValidUI() === "HospitalAdmin" */}
-      {ValidUI() === "PharmacyAdmin" || ValidUI() === "superAdmin" ? (
+      {/* || allowedhost */}
+      {allowedphar || isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -681,10 +692,202 @@ const FullScreenMenu = ({
         </div>
       ) : null}
 
+      {/* Medical Tool */}
+      {/* || allowedhost */}
+      {allowedphar || isSuperAdmin ? (
+        <div
+          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+        >
+          <div
+            className=" row"
+            style={{ display: `${menuLeftText}`, width: "100%" }}
+          >
+            <Link
+              className="maweidi-link ml-0 "
+              style={{ width: "83%" }}
+              to="/medical/equipment"
+            >
+              <div
+                className={`${menuLeftRightDropDown1} d-flex align-items-center ${menuIconCenter}`}
+                onClick={() => {
+                  setMenuDropDownFullScreen({
+                    ...menuDropDownFullScreen,
+                    name: "medical",
+                    toggle: !menuDropDownFullScreen.toggle,
+                  });
+                  setMobileMenu1(!MobileMenu1);
+                }}
+              >
+                <div className="  dashboard-left-icon">
+                  <img
+                    className="py-0"
+                    style={{ width: "20px" }}
+                    src={`${menuDropDownFullScreen.name === "medical"
+                      ? Equipments
+                      : EquipmentsBlack
+                      }`}
+                    alt=""
+                  />
+                </div>
+
+                <Link className="maweidi-link " to="/medical/equipment">
+                  <span style={{ display: `${menuLeftText}` }}>
+                    <p
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "medical"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
+                      style={{ color: "#535353" }}
+                    >
+                      Medical Equipment
+                    </p>
+                  </span>
+                </Link>
+              </div>
+            </Link>
+            <div
+              className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
+            >
+              <img
+                className="size-small-screen"
+                onClick={() => {
+                  setMenuDropDownFullScreen({
+                    ...menuDropDownFullScreen,
+                    name: "medical",
+                    toggle: !menuDropDownFullScreen.toggle,
+                  });
+                }}
+                src={`${menuDropDownFullScreen.name === "medical"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
+                alt=""
+                style={{ display: `${menuLeftText}` }}
+              />
+            </div>
+
+            {menuDropDownFullScreen.toggle &&
+              menuDropDownFullScreen.name === "medical" && (
+                <>
+                  {/* 1st Pharmacy (1) sub option  */}
+
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/medical/equipment">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "medical"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "medical",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Equipment List
+                      </span>
+                    </Link>
+                  </div>
+                  {/* 2nd Pharmacy (1) sub option  */}
+
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/medical/equipment/add">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "addequipment"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "addequipment",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Add Equipment
+                      </span>
+                    </Link>
+                  </div>
+                  {/* 3rd Pharmacy (1) sub option  */}
+
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/medical/equipment/shop">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "equipmentshop"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "equipmentshop",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Shop
+                      </span>
+                    </Link>
+                  </div>
+
+                  {/* 3rd Pharmacy (1) sub option  */}
+
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/medical/equipment/shop/detail">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "equipmentshopdetail"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "equipmentshopdetail",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        All Orders
+                      </span>
+                    </Link>
+                  </div>
+                </>
+              )}
+          </div>
+        </div>
+      ) : null}
+
       {/* Laboratory */}
 
-      {ValidUI() === "LaboratoryAdmin" ||
-        ValidUI() === "superAdmin" ? (
+      {allowedlab ||
+        isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -840,7 +1043,7 @@ const FullScreenMenu = ({
 
                   <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
-                    <Link className="maweidi-link " to="/xray/orderlist">
+                    <Link className="maweidi-link " to="/bloodtest/orderlist">
                       <span
                         className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "xray"
                           ? "seleted-menu"
@@ -868,8 +1071,195 @@ const FullScreenMenu = ({
         </div>
       ) : null}
 
+      {/* X-Ray */}
+
+      {allowedlab ||
+        isSuperAdmin ? (
+        <div
+          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+        >
+          <div
+            className=" row"
+            style={{ display: `${menuLeftText}`, width: "100%" }}
+          >
+            <Link
+              className="maweidi-link ml-0 "
+              style={{ width: "83%" }}
+              to="xray/list"
+            >
+              <div
+                className={`${menuLeftRightDropDown1} d-flex align-items-center ${menuIconCenter}`}
+                onClick={() => {
+                  setMenuDropDownFullScreen({
+                    ...menuDropDownFullScreen,
+                    name: "xraytab",
+                    toggle: !menuDropDownFullScreen.toggle,
+                  });
+                  setMobileMenu1(!MobileMenu1);
+                }}
+              >
+                <div className="  dashboard-left-icon">
+                  <img
+                    className="py-1"
+                    src={`${menuDropDownFullScreen.name === "xraytab"
+                      ? Xrays
+                      : XraysBlack
+                      }`}
+                    alt=""
+                  />
+                </div>
+
+                <Link className="maweidi-link " to="xray/list">
+                  <span style={{ display: `${menuLeftText}` }}>
+                    <p
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text ${menuDropDownFullScreen.name === "xraytab"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
+                      style={{ color: "#535353" }}
+                    >
+                      X-ray
+                    </p>
+                  </span>
+                </Link>
+              </div>
+            </Link>
+            <div
+              className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
+            >
+              <img
+                className="size-small-screen"
+                onClick={() => {
+                  setMenuDropDownFullScreen({
+                    ...menuDropDownFullScreen,
+                    name: "xraytab",
+                    toggle: !menuDropDownFullScreen.toggle,
+                  });
+                }}
+                src={`${menuDropDownFullScreen.name === "xraytab"
+                  ? DownIconBlue
+                  : DownIcon
+                  }`}
+                alt=""
+                style={{ display: `${menuLeftText}` }}
+              />
+            </div>
+
+            {menuDropDownFullScreen.toggle &&
+              menuDropDownFullScreen.name === "xraytab" && (
+                <>
+                  {/* 1st Laboratory (1) sub option  */}
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/xray/list">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "xraytablist"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "xraytablist",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        X-ray List
+                      </span>
+                    </Link>
+                  </div>
+                  {/* 1st Laboratory (1) sub option  */}
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+
+                    <Link className="maweidi-link " to="/xray/add">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "xraytabadd"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "xraytabadd",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Add X-ray
+                      </span>
+                    </Link>
+                  </div>
+                  {/* 2nd Laboratory (1) sub option  */}
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/xray">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                          "xraytabtest"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "xraytabtest",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Tests
+                      </span>
+                    </Link>
+                  </div>
+
+                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    <span class="dot"></span>
+                    <Link className="maweidi-link " to="/xray/orderlist">
+                      <span
+                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "xraytabrequest"
+                          ? "seleted-menu"
+                          : ""
+                          } `}
+                        onClick={() => {
+                          setMenuDropDownFullScreen((prevState) => ({
+                            ...prevState,
+                            subMenuMobile: {
+                              ...prevState.subMenuMobile,
+                              subtoggle: !prevState.subMenuMobile.subtoggle,
+                              subname: "xraytabrequest",
+                            },
+                          }));
+                          setMobileMenu1(!MobileMenu1);
+                        }}
+                      >
+                        Test Requests
+                      </span>
+                    </Link>
+                  </div>
+                </>
+              )}
+          </div>
+        </div>
+      ) : null}
+
       {/* Blood donation */}
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ? (
+      {allowedhost || isSuperAdmin ? (
         <Link
           className="maweidi-link ml-md-auto ml-0 w-100"
           to="blood-donation"
@@ -926,7 +1316,7 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* Home Service Provider */}
-      { ValidUI() === "superAdmin" ? (
+      { isSuperAdmin ? (
         <Link
           className="maweidi-link ml-md-auto ml-0 w-100 "
           to="/home-service-provider"
@@ -984,7 +1374,7 @@ const FullScreenMenu = ({
 
       {/* Treatment Sponsor */}
 
-      {ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" || ValidUI() === "Doctor" ? (
+      {allowedhost || isSuperAdmin || alloweddoc ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -1169,7 +1559,7 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* Banner and Promo */}
-      {ValidUI() === "superAdmin" ? (
+      {isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
           <div
             className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}

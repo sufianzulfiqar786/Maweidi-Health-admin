@@ -24,6 +24,13 @@ const Header = ({
   menuLeftText
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const isSuperAdmin = Object.keys(role).length === 0 
+
   return (
     <div className="col-12 ">
 
@@ -56,7 +63,7 @@ const Header = ({
 
               <div className="col-6  px-0 d-flex justify-content-end ">
                 {
-                  ValidUI() === "HospitalAdmin" || ValidUI() === "superAdmin" ?
+                  allowedhost || isSuperAdmin ?
                     <Link to='/manageroles'>
                       <div className=" cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center">
                         <img src={SettingIcon} alt="" />

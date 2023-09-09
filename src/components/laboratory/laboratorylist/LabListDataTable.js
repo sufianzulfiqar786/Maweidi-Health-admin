@@ -34,6 +34,7 @@ import ImagePreview from "../../../atoms/ImagePreview";
 import DeletConfirmation from "../../../atoms/deletConfirmation";
 import { CustomToast } from "../../../atoms/toastMessage";
 import useFetch from "../../../customHook/useFetch";
+import ListSkeleton from "../../../molecules/ListSkeleton/ListSkeleton";
 
 const DataTable = ({
   searchQuery,
@@ -47,7 +48,7 @@ const DataTable = ({
   const { isLoading, error, deleteData } = useDeleteData();
 
   const getLaboratory = useFetch(
-    `${process.env.REACT_APP_GET_LABORATORY_DATA}`
+    `${process.env.REACT_APP_GET_LABORATORY_DATA}?per_page=${rowsPerPage}&page=${page}&is_laboratory=${1}`
   );
 
   const rows = getLaboratory.data;
@@ -74,7 +75,7 @@ const DataTable = ({
       () => {
         setDeleteModal(false);
         getLaboratory.fetchPaginatedData(
-          `${process.env.REACT_APP_GET_LABORATORY_DATA}`
+          `${process.env.REACT_APP_GET_LABORATORY_DATA}?is_laboratory=${1}`
         );
         console.log("API Response:", getLaboratory.data);
         // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
@@ -199,8 +200,8 @@ const DataTable = ({
                                 src={`${process.env.REACT_APP_IMAGE_URL}/${profile_picture}`}
                                 onClick={() =>
                                   handleImageClick(
-                                    process.env.REACT_APP_IMAGE_URL +
-                                      profile_picture
+                                    process.env.REACT_APP_IMAGE_URL + "/" +
+                                    profile_picture
                                   )
                                 }
                               />
@@ -213,7 +214,7 @@ const DataTable = ({
                       <TableCell align="center">{address}</TableCell>
                       <TableCell align="center">{phone}</TableCell>
                       <TableCell align="center">{country}</TableCell>
-                      <TableCell align="center">{state}</TableCell>
+                      <TableCell align="center">{state == 'undefined' ? '-' : state}</TableCell>
                       <TableCell align="center">{city}</TableCell>
                       <TableCell align="center">{zip}</TableCell>
 
@@ -235,13 +236,8 @@ const DataTable = ({
                 )
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5}
-                    className="number"
-                    align="center"
-                    style={{ height: "15rem" }}
-                  >
-                    <ButtonLoader />
+                  <TableCell colSpan={10}>
+                    <ListSkeleton totalRow={4} totalCol={10} image={true} />
                   </TableCell>
                 </TableRow>
               )}
@@ -252,8 +248,8 @@ const DataTable = ({
 
       <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
         <div className="pagination-detail">
-          Showing {(page - 1) * rowsPerPage + 1} - {rows?.data?.to} of{" "}
-          {rows?.data?.total}
+          Showing {(page - 1) * rowsPerPage + 1} -{" "}
+          {rows?.data?.to} of {rows?.data?.total}
         </div>
         <CustomPagination
           page={page}

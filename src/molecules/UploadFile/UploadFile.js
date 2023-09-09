@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import AddDocUploadImgeIcon from "../../assets/images/doctor/AddDocUploadImgeIcon.svg";
 import DocRoleCrossIcon from "../../assets/images/doctor/DocRoleCrossIcon.svg";
 
-const UploadFile = ({ setFormDataState, formDataState }) => {
+const UploadFile = ({ setFormDataState, formDataState, name }) => {
   const [infoData, setInfoData] = useState("");
   const inputCertiRef = useRef();
 
@@ -15,7 +15,11 @@ const UploadFile = ({ setFormDataState, formDataState }) => {
   const handleCertificatesUpload = (event) => {
     const file = event.target.files[0].name;
     setInfoData(file);
-    setFormDataState({ ...formDataState, certificate: event.target.files[0] });
+    if(name=='medical_history'){
+      setFormDataState({ ...formDataState, medical_history: event.target.files[0] });
+    }else{
+      setFormDataState({ ...formDataState, certificate: event.target.files[0] });
+    }
   };
 
   const handleRemoveImage = () => {

@@ -34,6 +34,7 @@ import ImagePreview from "../../atoms/ImagePreview";
 import DeletConfirmation from "../../atoms/deletConfirmation";
 import { CustomToast } from "../../atoms/toastMessage";
 import useFetch from "../../customHook/useFetch";
+import ListSkeleton from "../../molecules/ListSkeleton/ListSkeleton";
 
 const DataTable = ({ searchQuery, title = 'Edit a Pharmacy',  setRows, loading }) => {
 
@@ -44,7 +45,7 @@ console.log("page", page)
 
     const getHospital = useFetch(
         `${process.env.REACT_APP_GET_HOSPITAL_DATA}?per_page=${rowsPerPage}&page=${page}`
-      );
+      )
 
       const rows = getHospital.data
       console.log("roesss", rows?.data)
@@ -188,11 +189,11 @@ console.log("page", page)
                                     </TableCell>
                                 </TableRow>
                             )) :
-                                <TableRow>
-                                    <TableCell colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5} className="number" align="center" style={{ height: "15rem" }}>
-                                        <ButtonLoader />
-                                    </TableCell>
-                                </TableRow>
+                            <TableRow>
+                            <TableCell colSpan={9}>
+                              <ListSkeleton totalRow={4} totalCol={9} image={true} />
+                            </TableCell>
+                          </TableRow>
                             }
 
                         </TableBody>

@@ -14,6 +14,7 @@ import CustomSelect from "../../components/common/CustomSelect";
 import Searchbar from "../../components/common/Searchbar";
 import AllRolesDataTables from "./AllRolesDataTables";
 import AddRoleModal from "../../molecules/AddRoleModal/AddRoleModal";
+import useFetch from "../../customHook/useFetch";
 
 const AllRoles = () => {
 
@@ -319,6 +320,9 @@ const AllRoles = () => {
             prescription: "Aspirin 500mg",
         },
     ]);
+
+   
+
     const [filterOption, setFilterOption] = useState("today"); // default to "today"
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -363,47 +367,39 @@ const AllRoles = () => {
     return (
         <>
             <div className="row  px-2 pt-4">
-            <div className="col-12  ">
-            <p className="mb-0 dashboard-com-top-text">Manage Roles</p>
-          </div>
+                <div className="col-12  ">
+                    <p className="mb-0 dashboard-com-top-text">Manage Roles</p>
+                </div>
+                <div className="col-12  ">
+                    <div className="row d-flex align-items-end">
+                        <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+                            <p className="mb-0 doctor-header-top-text">
+                                <Link className="doc-link " to="/">
+                                    DASHBOARD
+                                </Link>
+                                <img
+                                    className="mx-lg-3 ml-2 pr-1 pb-1"
+                                    src={RightArrow}
+                                    alt=""
+                                />
+                                <span style={{ color: "#4FA6D1" }}>MANAGE ROLES</span>
+                            </p>
+                        </div>
 
-          <div className="col-12  ">
-            <div className="row d-flex align-items-end">
-              <div className="col-lg-6 col-12 mt-lg-0 mt-2">
-                <p className="mb-0 doctor-header-top-text">
-                  <Link className="doc-link " to="/">
-                    DASHBOARD
-                  </Link>
-                  <img
-                    className="mx-lg-3 ml-2 pr-1 pb-1"
-                    src={RightArrow}
-                    alt=""
-                  />
-                  <span style={{ color: "#4FA6D1" }}>MANAGE ROLES</span>
-                </p>
-              </div>
+                        <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+                            <Link to='/role/add'>
+                                <button className="btn-add-new-doc w-100 px-5">
 
-              <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-                {/* <button
-                  className="btn-add-doc-filter mr-2"
-                  onClick={() => setModal2Open(true)}
-                ><Link className="add-doc-link-color" to='/allroles' >
-                  <span className="  btn-add-doc-filter-text">All Roles</span>
-                  </Link>
-                </button> */}
-              <Link to='/role/add'>
-              <button  className="btn-add-new-doc w-100 px-5">
-                  
-                  Add Roles
-                
-              </button>
-              </Link>
-              </div>
-            </div>
-          </div>
+                                    Add Roles
+
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="col-12  ">
-
+                
                     <div className="row mb-5 pb-5">
 
                         <div className="col-12  pb-2 d-flex justify-content-start">
@@ -420,7 +416,7 @@ const AllRoles = () => {
 
                     </div>
 
-                    <AddRoleModal modal1Open={modal1Open} setModal1Open={(data)=>{setModal1Open(data)}} typeName='Add' />
+                    <AddRoleModal modal1Open={modal1Open} setModal1Open={(data) => { setModal1Open(data) }} typeName='Add' />
 
                 </div>
             </div>

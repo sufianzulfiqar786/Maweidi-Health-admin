@@ -37,6 +37,13 @@ const Hospital = () => {
   };
 
   // console.log('data', data)
+
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const alloweddoc = Object.keys(role).includes("doctor")
+  const isSuperAdmin = Object.keys(role).length === 0 
   return (
     <>
       <div className="row  px-2 pt-4">
@@ -53,7 +60,7 @@ const Hospital = () => {
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
               {" "}
               {
-                  ValidUI() === "superAdmin" ?
+                  isSuperAdmin ?
                   <button className="btn-add-new-doc">
                     <Link className="add-doc-link-color" to="/hospitals/add">
                       {" "}

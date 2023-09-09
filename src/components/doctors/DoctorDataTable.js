@@ -19,7 +19,11 @@ const DataTable = ({
   page,
   totalDoctors,
   rows,
+  toDoctors,
 }) => {
+
+  console.log("totalDoctors", totalDoctors)
+
   const totalPages = Math.ceil(totalDoctors / rowsPerPage);
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalDoctors);
@@ -27,7 +31,7 @@ const DataTable = ({
   console.log("visibleRows", visibleRows);
 
   return (
-    <div className="row ml-0 mx-2" style={{ overflowX: "hidden" }}>
+    <div className="row ml-0 mx-2 mt-4" style={{ overflowX: "hidden" }}>
       <TableContainer
         component={Paper}
         sx={{ backgroundColor: "#FFFFFF" }}
@@ -100,7 +104,7 @@ const DataTable = ({
                           />
                         </Box>
                       }
-                      title={name}
+                      title={name.split(' ').slice(0, 2).join(' ')}
                     />
                   </TableCell>
                   <TableCell align="left">{email}</TableCell>
@@ -132,7 +136,7 @@ const DataTable = ({
         </Table>
       </TableContainer>
 
-      <div className="pagination-container px-md-3 ml-md-1 mt-md-2">
+      {/* <div className="pagination-container px-md-3 ml-md-1 mt-md-2">
         <div className="pagination-detail">
           Showing {startIndex + 1} of {visibleRows?.length}
         </div>
@@ -143,6 +147,17 @@ const DataTable = ({
             onChangePage={handleChangePage}
           />
         </div>
+      </div> */}
+      <div className="pagination-container px-md-3 ml-md-1 mt-md-2 d-flex justify-content-between w-100">
+        <div className="pagination-detail">
+          Showing {(page - 1) * rowsPerPage + 1} -{" "}
+          {toDoctors} of {totalDoctors}
+        </div>
+        <CustomPagination
+          page={page}
+          totalPages={totalPages}
+          onChangePage={handleChangePage}
+        />
       </div>
     </div>
   );

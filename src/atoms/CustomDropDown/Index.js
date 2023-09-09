@@ -55,7 +55,8 @@ const CustomDropDown = ({
         className="custom-dropDown"
         name={name}
         mode={mode}
-        value={value || undefined}
+        // value={value || undefined}
+        value={value || ''}
         showSearch
         optionFilterProp="children"
         filterOption={(input, option) =>

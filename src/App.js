@@ -7,6 +7,7 @@ import Privacy from "./pages/Privacy/Privacy";
 import ScrollToTop from "./atoms/ScrollToTop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 function App() {
   let token = localStorage.getItem("token");
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <ToastContainer />
+      <SkeletonTheme baseColor="#D8D8D8" highlightColor="#c9c9c9">
       <BrowserRouter>
       <ScrollToTop/>
         {token ? (
@@ -30,6 +32,7 @@ function App() {
           </Routes>
         )}
       </BrowserRouter>
+      </SkeletonTheme>
     </>
   );
 }

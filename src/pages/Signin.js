@@ -8,6 +8,7 @@ import usePost from "../customHook/usePost";
 import { CustomToast } from "../atoms/toastMessage";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthentication } from '../redux/feature/AuthSlice';
+import ButtonLoader from "../atoms/buttonLoader";
 
 const Signin = () => {
   let navigate = useNavigate();
@@ -77,6 +78,8 @@ const Signin = () => {
 
 
       console.log("email", empty)
+// if(data?.success === true){
+
 
       postData((`${process.env.REACT_APP_SIGN_IN}`), empty, (response) => {
         if (response?.data) {
@@ -85,8 +88,17 @@ const Signin = () => {
             message: `${response?.data?.user?.name} is Sign in`,
           })
         }
-        console.log("datadddd", response?.data?.user?.profile_pic)
+        if(response?.success === false){
+          CustomToast({
+            type: "error",
+            message: `${response?.response}`,
+          })
+        }
+        console.log("datadddd", data?.success)
         console.log("tokenwww", response?.data?.token)
+
+        if(data?.success === true){
+
         localStorage.setItem("token", response?.data?.token);
 
         // Update the authentication state in the Redux store
@@ -95,7 +107,7 @@ const Signin = () => {
           token: response?.data?.token,
           profile_pic: response?.data?.user?.profile_pic, // Set this variable based on your logic
         }));
-
+        localStorage.setItem("userRoles", JSON.stringify(response?.data?.roles))
         if (response?.data?.roles?.doctor) {
           localStorage.setItem("userRole", 'Doctor');
           localStorage.setItem("doctors", response?.data?.roles?.doctor);
@@ -109,11 +121,12 @@ const Signin = () => {
           localStorage.setItem("userRole", 'HospitalAdmin');
         }
 
-
         window.location.href = "/";
 
-      })
+      }
 
+      })
+    
 
 
 
@@ -269,7 +282,12 @@ const Signin = () => {
                     </select> */}
 
                     <div className="col-12 mt-4 resgister-button">
-                      <button onClick={handleSubmit}>Sign in</button>
+                      <button disabled={isLoading} onClick={handleSubmit}>
+                        {
+                          isLoading ? <div className="pb-3"><ButtonLoader /></div> :"Sign in"
+                        }
+                        </button>
+                      
                     </div>
 
                     <div className="col-12 mt-4 mb-4 signup-lower-text">

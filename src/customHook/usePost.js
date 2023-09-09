@@ -24,7 +24,8 @@ const usePost = () => {
       console.log(response, "API response?.data?.success");
       if (response?.status === 200) {
         cb(response?.data);
-      } else {
+      } 
+      else {
         CustomToast({
           type: "error",
           message: "Successfully Updated",
@@ -34,8 +35,8 @@ const usePost = () => {
     } catch (error) {
       setError(error);
       CustomToast({
-        type: "success",
-        message: "Successfully Saved",
+        type: "error",
+        message: `${error}`,
       });
     } finally {
       setIsLoading(false);

@@ -38,6 +38,9 @@ import { useMemo } from "react";
 import ButtonLoader from "../../atoms/buttonLoader";
 import { CustomToast } from "../../atoms/toastMessage";
 import MuiltiplesImages from "../../atoms/MuiltiplesImages/MuiltiplesImages";
+import AddRole from "../../pages/Role/AddRole";
+import { useNavigate } from "react-router-dom";
+import { Select } from "antd";
 
 const AddHospital = ({ Id }) => {
   const customData = useDeleteData();
@@ -45,14 +48,18 @@ const AddHospital = ({ Id }) => {
   const [errorData, setErrorData] = useState(0);
   const [errorMessage, setErrorMessage] = useState(0);
   const [nameData, setNameData] = useState("");
-
+  
   const [image, setImage] = useState(null);
+  const navigate = useNavigate();
+  const [roleCategoryId, setRoleCategoryId] = useState("");
+  const [addRole, setAddRole] = useState({ country: "Kuwait" })
+  const [roleParentValidation, setRoleParentValidation] = useState(false);
 
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState("");
   const [addHospitalData, setAddHospitalData] = useState({ country: "Kuwait" });
 
- 
+
   const specializationData = useSelector(
     (state) => state.specialization.specializationData
   );
@@ -77,7 +84,7 @@ const AddHospital = ({ Id }) => {
   const handleLocationIconClick = () => {
     !showMap ? setShowMap(true) : setShowMap(false);
   };
-
+  const AddRoleHook = usePost()
   const handleDoctorImageClick = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -108,7 +115,7 @@ const AddHospital = ({ Id }) => {
     setItems([...items, newItemObject]);
     setNewItem("");
   };
-
+  console.log('firstitems', items?.length)
   const handleRemoveItem = (index) => {
     const newItems = [...items];
     newItems.splice(index, 1);
@@ -167,9 +174,10 @@ const AddHospital = ({ Id }) => {
   const validation = () => {
     if (!addHospitalData.profile_picture) {
       setErrorMessage(-1);
-    } else if (!addHospitalData.zipcode) {
-      setErrorMessage(8);
     }
+    // else if (!addHospitalData.zipcode) {
+    //   setErrorMessage(8);
+    // }
     // else if (!locationProp) {
     //     setErrorMessage(9)
     // }
@@ -178,7 +186,9 @@ const AddHospital = ({ Id }) => {
     }
   };
 
-  const handleHospitalSubmit = () => {
+  const handleHospitalSubmit = (event) => {
+    console.log("submittedeee")
+    // event.preventDefault();
     validation();
     console.log("name", addHospitalData);
 
@@ -210,14 +220,79 @@ const AddHospital = ({ Id }) => {
         formData.append(key, updatedPostData1[key]);
       }
     }
-
+    console.log("formDataasd", formData)
     if (errorMessage === "No Error") {
+      // alert('asdf')
       postData(
         Id
           ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}`
           : `${process.env.REACT_APP_ADD_HOSPITAL_DATA}`,
         formData,
-        () => {
+        (res) => {
+          console.log("ressss", res?.data?.id)
+          setRoleCategoryId(res?.data?.id)
+          // setAddRole({...addRole, 'join_id':res?.data?.id})
+
+          if (items?.length) {
+
+            if (
+              addRole?.name &&
+              addRole?.email &&
+              addRole?.password &&
+              addRole?.role_type &&
+              addRole?.role_type_id
+            ) {
+              console.log("res?.data?.id", res?.data?.id)
+              setAddRole({ ...addRole, 'join_id': res?.data?.id })
+              // alert('sdf', res?.data?.id)
+
+              const updateRoleData = {
+                ...addRole,
+                join_id: res?.data?.id,
+              }
+
+              const formData = new FormData();
+              for (const key in updateRoleData) {
+                if (Array.isArray(updateRoleData[key])) {
+                  updateRoleData[key].forEach((value) => {
+                    formData.append(`${key}[]`, value);
+                  });
+                } else {
+                  formData.append(key, updateRoleData[key]);
+                }
+              }
+
+              AddRoleHook?.postData((`${process.env.REACT_APP_ADD_ROLE}`), formData, (response) => {
+
+                console.log("tokenwww", response)
+
+                if (response?.success === true) {
+                  CustomToast({
+                    type: "success",
+                    message: `Role added successfully`,
+                  })
+                }
+                // else {
+                //     CustomToast({
+                //         type: "error",
+                //         message: `${response?.message?.role_type ? response?.message?.role_type[0] :response?.message}`,
+                //     })
+                // }
+              })
+            } else {
+              setRoleParentValidation(true)
+              CustomToast({
+                type: "error",
+                message: `Name, Email, Password, Role Type is Required for adding the Role`,
+              })
+            }
+
+          }
+
+          if (!items?.length) {
+            navigate("/hospitals");
+          }
+
           CustomToast({
             type: "success",
             message: `${Id
@@ -239,7 +314,7 @@ const AddHospital = ({ Id }) => {
         <div className="col-12  ">
           <p className="mb-0 dashboard-com-top-text">Hospitals List</p>
         </div>
-
+    
         <div className="col-12  ">
           <div className="row d-flex align-items-end">
             <div className="col-lg-6 col-12 mt-lg-1 mt-2 pt-4">
@@ -903,67 +978,48 @@ const AddHospital = ({ Id }) => {
                   </div>
                 </div>
 
-               <MuiltiplesImages/>
+                <MuiltiplesImages />
 
-                <div className="row my-5 pt-2 pb-3 ">
-                  <div className="col-lg-6">
-                    <button
-                      className="apply-filter add-doc-changes"
-                      disabled={isLoading}
-                    >
-                      {!isLoading ? (
-                        addHospitalData.id ? (
-                          "Update Hospital"
-                        ) : (
-                          "Add Hospital"
-                        )
-                      ) : (
-                        <ButtonLoader />
-                      )}
-                    </button>
-                  </div>
+                <div className="row  py-lg-3">
+                  {items.map((item, index) => {
+                    return (
+                      <>
+                        <div className={`col-lg-8 mt-lg-0 mt-4 pb-lg-3 `}>
+                          <div className="row mx-0 mt-3 add-doc-left-col">
+                            <div className="col-12 px-4 py-3 my-1">
+                              <div className=" d-flex justify-content-between align-items-center ">
+                                <p className="mb-0  add-doc-role-text">Add a Role </p>
+                                <img
+                                  onClick={() => {
+                                    handleRemoveItem(index);
+                                  }}
+                                  src={DocRoleCrossIcon}
+                                  alt=""
+                                />
+                              </div>
+                            </div>
 
-                  <div className="col-lg-6"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+                            <div
+                              className="border-top "
+                              id="scrollableDiv"
+                              style={{
+                                width: "100%",
+                                // height: 580,
+                                overflow: "hidden",
+                                padding: "0px 16px",
+                                // border: '1px solid rgba(0, 0, 0, 0)',
+                              }}
+                            >
 
-          <div className="col-lg-4 mt-lg-0 mt-4 "></div>
-        </div>
-      </form>
+                              <AddRole upperData={false} roleParent={[
+                                { value: 1, label: "Hospital Admin" }
+                              ]} setAddRole={setAddRole} addRole={addRole}
+                                roleParentValidation={roleParentValidation}
+                                roleCategoryId={roleCategoryId}
+                                navigateLink='hospitals'
+                              />
 
-      <div className="row  py-lg-3">
-        {items.map((item, index) => {
-          return (
-            <>
-              <div className={`col-lg-8 mt-lg-0 mt-4 pb-lg-3 `}>
-                <div className="row mx-0  add-doc-left-col">
-                  <div className="col-12 px-4 py-3 my-1">
-                    <div className=" d-flex justify-content-between align-items-center ">
-                      <p className="mb-0  add-doc-role-text">Add a Role </p>
-                      <img
-                        onClick={() => {
-                          handleRemoveItem(index);
-                        }}
-                        src={DocRoleCrossIcon}
-                        alt=""
-                      />
-                    </div>
-                  </div>
-
-                  <div
-                    className="border-top pt-3"
-                    id="scrollableDiv"
-                    style={{
-                      width: "100%",
-                      // height: 580,
-                      overflow: "auto",
-                      padding: "0 16px",
-                      // border: '1px solid rgba(0, 0, 0, 0)',
-                    }}
-                  >
-                    <div className="col-12 px-2">
+                              {/* <div className="col-12 px-2">
                       <div className="row pt-2">
                         <div className="col-lg-6 pr-lg-1 doc-setting-input">
                           <p className="mb-2"> Role Type </p>
@@ -1037,33 +1093,69 @@ const AddHospital = ({ Id }) => {
 
                         <div className="col-lg-6"></div>
                       </div>
-                    </div>
+                    </div> */}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={`col-4  `}></div>
+                      </>
+                    );
+                  })}
+                  {
+                    console.log("itemssdd", items)
+                  }
+                  {items?.length < 1 ? <div className="col-12 py-4 d-flex align-items-center">
+                    <img
+                      className="cursor-pointer"
+                      onClick={handleAddItem}
+                      src={AddRoleIcon}
+                      alt=""
+                    />{" "}
+                    <span
+                      onClick={handleAddItem}
+                      className="cursor-pointer add-doc-role pl-3 "
+                    >
+                      Add a Role
+                    </span>
+                  </div> : null}
+                </div>
+
+                <div className="row my-5 pt-2 pb-3 ">
+                  <div className="col-lg-6">
+                    <button
+                      className="apply-filter add-doc-changes"
+                      disabled={isLoading}
+                    >
+                      {!isLoading ? (
+                        addHospitalData.id ? (
+                          "Update Hospital"
+                        ) : (
+                          "Add Hospital"
+                        )
+                      ) : (
+                        <ButtonLoader />
+                      )}
+                    </button>
                   </div>
+
+                  <div className="col-lg-6"></div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className={`col-4  `}></div>
-            </>
-          );
-        })}
-
-        <div className="col-12 py-4 d-flex align-items-center">
-          <img
-            className="cursor-pointer"
-            onClick={handleAddItem}
-            src={AddRoleIcon}
-            alt=""
-          />{" "}
-          <span
-            onClick={handleAddItem}
-            className="cursor-pointer add-doc-role pl-3 "
-          >
-            Add a Role
-          </span>
+          <div className="col-lg-4 mt-lg-0 mt-4 "></div>
         </div>
-      </div>
+      </form>
+
+
     </div>
   );
 };
 
 export default AddHospital;
+
+
+
+

@@ -57,17 +57,20 @@ const ManageRoles = () => {
             </div>
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-              <button className="btn-add-doc-filter mr-2">
+              <button className="btn-add-doc-filter mr-2 ">
                 <Link className="add-doc-link-color" to="/allroles">
                   <span className="  btn-add-doc-filter-text">All Roles</span>
                 </Link>
               </button>
+              <Link className="" to="/role/add">
               <button
-                className="btn-add-new-doc"
-                onClick={() => setModal1Open(true)}
+                className="btn-add-new-doc w-100 px-5"
+                // onClick={() => setModal1Open(true)}
               >
                 Add Roles
               </button>
+              </Link>
+
             </div>
           </div>
         </div>

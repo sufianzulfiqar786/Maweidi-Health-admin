@@ -23,6 +23,7 @@ import ImagePreview from "../../atoms/ImagePreview";
 import DeletConfirmation from "../../atoms/deletConfirmation";
 import { CustomToast } from "../../atoms/toastMessage";
 import useFetch from "../../customHook/useFetch";
+import ListSkeleton from "../../molecules/ListSkeleton/ListSkeleton";
 
 const DataTable = ({
   searchQuery,
@@ -36,7 +37,7 @@ const DataTable = ({
   const { isLoading, error, deleteData } = useDeleteData();
 
   const getPharmacy = useFetch(
-    `${process.env.REACT_APP_GET_PHARMACY_DATA}?per_page=${rowsPerPage}&page=${page}`
+    `${process.env.REACT_APP_GET_PHARMACY_DATA}?per_page=${rowsPerPage}&page=${page}&status=${1}`
   );
 
   const rows = getPharmacy.data;
@@ -220,15 +221,10 @@ const DataTable = ({
                 )
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={isLargeScreen ? 9 : isMediumScreen ? 8 : 5}
-                    className="number"
-                    align="center"
-                    style={{ height: "15rem" }}
-                  >
-                    <ButtonLoader />
-                  </TableCell>
-                </TableRow>
+                <TableCell colSpan={10}>
+                  <ListSkeleton totalRow={4} totalCol={10} image={true} />
+                </TableCell>
+              </TableRow>
               )}
             </TableBody>
           </Table>

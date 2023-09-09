@@ -21,11 +21,12 @@ const AllDoctor = () => {
   const [selectedOptions, setSelectedOptions] = useState(["john"]);
   const [dirty, setDirty] = useState(false);
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
  
   const { data, isLoading, error ,fetchPaginatedData} = useFetch(
     `${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${page}`,
   );
+  console.log("dataqqq", data?.data?.total); 
   const handleChangePage = (newPage) => {
     setPage(newPage);
     // fetchPaginatedData(`${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${newPage}`)
@@ -35,6 +36,7 @@ const AllDoctor = () => {
     setDirty(true);
   };
  
+  console.log('data doctor', data)
 
   const marks = {
     // 0: '0°C',
@@ -464,6 +466,8 @@ const AllDoctor = () => {
             page={page}
             rowsPerPage={rowsPerPage}
             handleChangePage={handleChangePage}
+            totalDoctors={data?.data?.total}
+            toDoctors={data?.data?.to}
           />
         </div>
       </div>

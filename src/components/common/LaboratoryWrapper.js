@@ -9,14 +9,20 @@ import CustomPagination from "./CustomPagination";
 import "../../assets/css/common/common.scss";
 import AddTestModal from "../laboratory/bloodtest/AddTestModal";
 import { Modal } from "antd";
+import useFetch from "../../customHook/useFetch";
+import { CustomToast } from "../../atoms/toastMessage";
+import useDeleteData from "../../customHook/useDelete";
+import { useEffect } from "react";
 
-const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
-  const [page, setPage] = useState(0);
+const LaboratoryWrapper = ({ title, requestSectionTitle, icon,modalNav,setModalNav }) => {
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const [showTickModal, setShowTickModal] = useState(false);
   const [showCrossModal, setShowCrossModal] = useState(false);
   const [showAddTestModal, setshowAddTestModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [uniqueId, setUniqueId] = useState(false);
+  // const [modalNav, setModalNav] = useState(false);
 
   const handleAddTestModal = () => {
     console.log("showAddTestModal", showAddTestModal)
@@ -87,17 +93,35 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
       date: "23 Dec 2022",
     },
   ];
-  
+
 
   const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
-  const totalRows = rows.length;
+
+  const getBloodTest = useFetch(
+    `${process.env.REACT_APP_GET_BLOOD_TEST}?per_page=${rowsPerPage}&page=${page}&is_laboratory=${1}`
+  );
+
+  const rows = getBloodTest.data
+  console.log("roesss", rows?.data)
+
+  const totalRows = rows?.data?.total;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  const visibleRows = rows.slice(startIndex, endIndex);
+  const visibleRows = rows?.data?.data
+
+  console.log('visibleRows', visibleRows)
+
+  // const totalRows = rows.length;
+  // const totalPages = Math.ceil(totalRows / rowsPerPage);
+  // const startIndex = page * rowsPerPage;
+  // const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+  // const visibleRows = rows.slice(startIndex, endIndex);
+
+
 
   //  AcceptAppointModal handler
   const handleTickClick = () => {
@@ -110,6 +134,27 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
     setShowCrossModal(true);
   };
 
+  const deleteProductData = useDeleteData();
+  const deleteData = deleteProductData.deleteData
+
+  const handleDelete = (Id) => {
+
+    deleteData(`${process.env.REACT_APP_DELETE_BLOOD_TEST}/${Id}`, () => {
+      // setDeleteModal(false)
+      getBloodTest?.fetchPaginatedData(`${process.env.REACT_APP_GET_BLOOD_TEST}?per_page=${rowsPerPage}&page=${page}&is_laboratory=${1}`)
+      // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
+      CustomToast({
+        type: "success",
+        message: "Test Delete Successfuly!",
+      });
+      setDeleteModal(false)
+      // setRows(filter)
+    });
+  };
+
+  useEffect(()=>{
+    getBloodTest?.fetchPaginatedData(`${process.env.REACT_APP_GET_BLOOD_TEST}?per_page=${rowsPerPage}&page=${page}&is_laboratory=${1}`)
+  },[modalNav])
 
 
   return (
@@ -120,6 +165,8 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
         open={showAddTestModal}
         onClose={() => setshowAddTestModal(false)}
         title='Edit '
+        Id={uniqueId}
+        setModalNav={setModalNav}
       />
       <AcceptModal
         heading="Accept Request"
@@ -136,33 +183,37 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
 
       <div class="wrapper">
         <div class="row  m-0 first-row">
-          <div class="col-lg-8 ">
-            <div class="left-div">
-              <div className="details-wrapper">
+         {visibleRows?.length> 0? <div class="col-lg-8  ">
+
+              <div className="details-wrapper ">
                 <div className="heading">{title}</div>
 
                 <div className="details-card-wrapper">
                   {visibleRows?.map((test) => {
+                    console.log("testsdfsdf", test?.blood_test_category?.name)
                     return (
                       <div className="detail-card">
                         <div className="card-header-detail">
                           <img src={icon} />
                           <div className="detail">
-                            <div className="name">{test.testname}</div>
-                            {test?.testdepartment ? (
+                            <div className="name">{test.title}</div>
+                          
                               <div className="department">
-                                {test?.testdepartment}
+                                {test?.blood_test_category?.name? test?.blood_test_category?.name : 'Not Category Found'}
                               </div>
-                            ) : (
-                              ""
-                            )}
+                          
                           </div>
                         </div>
                         <div className="card-body">
-                          <div className="rate">{test.rate}</div>
+                          <div className="rate">KWD {test.price}</div>
                           <div className="edit-delete">
-                            <img onClick={handleAddTestModal} src={editIcon} />
-                            <img onClick={() => setDeleteModal(true)} src={deleteIcon} />
+                            <img onClick={()=>{
+                              handleAddTestModal()
+                              setUniqueId(test?.id)
+                            }} src={editIcon} />
+                            <img onClick={() => {setDeleteModal(true)
+                           setUniqueId(test?.id)
+                            }} src={deleteIcon} />
                           </div>
                         </div>
                       </div>
@@ -170,11 +221,10 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
                   })}
                 </div>
               </div>
-              <div className="pagination-container">
+              <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
                 <div className="pagination-detail">
-                  Showing {page * rowsPerPage + 1} -{" "}
-                  {Math.min((page + 1) * rowsPerPage, rows.length)} of{" "}
-                  {rows.length}
+                  Showing {(page - 1) * rowsPerPage + 1} -{" "}
+                  {rows?.data?.to} of {rows?.data?.total}
                 </div>
                 <CustomPagination
                   page={page}
@@ -182,11 +232,15 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
                   onChangePage={handleChangePage}
                 />
               </div>
-            </div>
+       
+          </div> : 
+          <div className="d-flex justify-content-center w-100">
+            Data Not Found
           </div>
+          }
 
-          <div class="col-lg-4 ">
-            <div class="right-div">
+          <div class="col-lg-0 ">
+            {/* <div class="right-div">
               <div className="container-wrapper">
                 <div className="header">
                   <div className="title">{requestSectionTitle}</div>
@@ -198,7 +252,7 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
                   />
                 </div>
                 <div className="list-wrapper">
-                  {testAppointments.map(({name, department ,date}) => {
+                  {testAppointments.map(({ name, department, date }) => {
                     return (
                       <>
                         <div className="list">
@@ -217,31 +271,34 @@ const LaboratoryWrapper = ({ title, requestSectionTitle, rows, icon }) => {
                     );
                   })}
                 </div>
-                {/* <button className="">All Doctors</button> */}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
       <Modal
-                    className="doctor-filter-modal"
-                    centered
-                    open={deleteModal}
-                    // onOk={() => setModal2Open(false)}
-                    onCancel={() => setDeleteModal(false)}
-                    width={514}
-                    footer={null}
-                    closable={false}
+        className="doctor-filter-modal"
+        centered
+        open={deleteModal}
+        // onOk={() => setModal2Open(false)}
+        onCancel={() => setDeleteModal(false)}
+        width={514}
+        footer={null}
+        closable={false}
 
-                >
+      >
 
-                    <div className="row pb-1">
-                        <div className="col-12 d-flex flex-column align-items-center justify-content-center pharmacy-delete">
-                            <p className='mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3'>Are you sure you want to delete?</p>
-                            <button className='mt-lg-4 mt-1 mb-lg-5 mb-2'>Delete</button>
-                        </div>
-                    </div>
-                </Modal>
+        <div className="row pb-1">
+          <div className="col-12 d-flex flex-column align-items-center justify-content-center pharmacy-delete">
+            <p className='mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3'>Are you sure you want to delete?</p>
+            <button className='mt-lg-4 mt-1 mb-lg-5 mb-2'
+            onClick={()=>{
+              handleDelete(uniqueId)
+            }}
+            >Delete</button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

@@ -163,7 +163,7 @@ const BloodTest = () => {
   ];
 
   const [showAddTestModal, setshowAddTestModal] = useState(false);
-
+  const [modalNav, setModalNav] = useState(false);
   const handleAddTestModal = () => {
     setshowAddTestModal(true);
   };
@@ -173,6 +173,7 @@ const BloodTest = () => {
       <AddTestModal
         open={showAddTestModal}
         onClose={() => setshowAddTestModal(false)}
+        setModalNav={setModalNav}
       />
 
       <div className="row mb-lg-5 mb-4 pb-5 px-3  pt-4 bloodtest-tab">
@@ -213,6 +214,8 @@ const BloodTest = () => {
           requestSectionTitle="Test Appointments"
           rows={rows}
           icon={labTestIcon}
+          setModalNav={setModalNav}
+          modalNav={modalNav}
         />
       </div>
     </>

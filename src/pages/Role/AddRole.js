@@ -1,35 +1,89 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 // img svg
 import RightArrow from "../../assets/images/doctor/RightArrow.svg";
-import { Select } from 'antd';
-import PhoneInput from 'react-phone-input-2';
 import './AddRole.scss'
 import useDeleteData from '../../customHook/useDelete';
 import { CustomToast } from '../../atoms/toastMessage';
-import useFetch from '../../customHook/useFetch';
 import Phone from '../../atoms/phone';
 import { Controller, useForm } from 'react-hook-form';
 import SelectCountry from '../../atoms/Country';
 import SelectState from '../../atoms/State';
 import CustomDropDown from '../../atoms/CustomDropDown/Index';
+import UploadProfile from '../../atoms/uploadProfile/UploadProfile';
+import usePost from '../../customHook/usePost';
+import { useEffect } from 'react';
 
-const AddRole = ({ role_Id }) => {
-    // console.log("role_Id", role_Id)
+const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, roleParentValidation = true, roleCategoryId, navigateLink }) => {
 
-    const [addRole, setAddRole] = useState({ country: "Kuwait" })
+    // const [addRole, setAddRole] = useState({ country: "Kuwait" })
+    console.log(addRole, "addRoleeeee")
     const [roleType, setRoleType] = useState([
-        { value: 0, label: "Hospital Admin" },
-        { value: 1, label: "Doctor" },
-        { value: 2, label: "Laboratory Admin" },
+        { value: 1, label: "Hospital Admin" },
+        { value: 2, label: "Doctor Admin" },
         { value: 3, label: "Pharmacy Admin" },
+        { value: 4, label: "Laboratory Admin" },
     ])
 
+    const [roleParentChild, setRoleParentChild] = useState(roleParent)
+    const [role_IdParentChild, setRole_IdParentChild] = useState(role_Id)
+    const [parentJoinId, setParentJoinId] = useState(roleCategoryId)
+
+    useEffect(() => {
+        console.log("roleParent", roleParent)
+        if (roleParent && (roleParent[0]?.label == "Hospital Admin" ||
+            roleParent[0]?.label == "Doctor Admin" ||
+            roleParent[0]?.label == "Pharmacy Admin" ||
+            roleParent[0]?.label == "Laboratory Admin")
+        ) {
+            dropDownChange(roleParent[0]?.value, "role_type_id")
+            // dropDownChange(roleParent[0]?.label, "role_type")
+            setRoleType(roleParent)
+            setValue("role_type_id", roleParent[0]?.value)
+            setValue("join_id", 0)
+        }
+
+        // dropDownChange(roleCategoryId, "join_id")
+
+    }, [roleParentChild])
+
+    console.log("roleCategoryId", roleCategoryId)
+
+    useEffect(() => {
+        // setAddRole({...addRole, 'join_id':roleCategoryId})
+        // if(roleCategoryId){
+
+        //     dropDownChange(roleCategoryId, "join_id")
+        //     setAddRole({...addRole, "join_id": roleCategoryId})
+        // }
+
+        if (roleParent && (roleParent[0]?.label == "Hospital Admin" ||
+            roleParent[0]?.label == "Doctor Admin" ||
+            roleParent[0]?.label == "Pharmacy Admin" ||
+            roleParent[0]?.label == "Laboratory Admin")
+        ) {
+            setAddRole(prv => ({ ...prv, 'join_id': roleCategoryId }))
+            dropDownChange(roleParent[0]?.value, "role_type_id")
+            // dropDownChange(roleCategoryId, "join_id")
+            setRoleType(roleParent)
+            setValue("role_type_id", roleParent[0]?.value)
+            setValue("join_id", 0)
+        }
+
+
+
+
+        // alert('12')
+    }, [parentJoinId, roleParentValidation])
+    console.log("parentJoinId", parentJoinId)
+    console.log("roleParentValidation", roleParentValidation)
     const [dropDownData, setDropDownData] = useState([])
-
+    const [selectedImage, setSelectedImage] = useState(null);
     const { isLoading, error, deleteData } = useDeleteData();
-
+    const AddRoleHook = usePost()
+    const [passwordType, setPasswordType] = useState("password");
+    const navigate = useNavigate();
     const {
         reset,
         setValue,
@@ -38,101 +92,238 @@ const AddRole = ({ role_Id }) => {
         formState: { errors },
     } = useForm();
 
+    const customData = useDeleteData();
+
     const handleChangeSelect = (value, name) => {
         setAddRole({ ...addRole, [name]: value });
     };
 
     const dropDownChange = (value, name) => {
-        console.log("first", value, name)
-        // setAddRole({ ...addRole,  })
 
+        // if(roleCategoryId){
+        //     setRoleType({...addRole, 'join_id': roleCategoryId})
+        // }
+
+        console.log("firstww", value, name)
         const selectedOption = roleType.find(option => option.value === value);
-        if (selectedOption) {
-            setAddRole({ ...addRole, [name]: value, 'role_type': selectedOption?.label })
+        console.log("asdasdselectedOption", selectedOption)
+        if (selectedOption?.label === "Hospital Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'hospitaladmin' }))
         }
-        if (value === 0 && name === 'role_type_id'
-            || value === 1 && name === 'role_type_id'
+        else if (selectedOption?.label === "Doctor Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'doctor' }))
+        }
+        else if (selectedOption?.label === "Pharmacy Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'pharmacist' }))
+        }
+        else if (selectedOption?.label === "Laboratory Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'technologist' }))
+        }
+        else {
+            setAddRole(prv => ({ ...prv, [name]: value }))
+        }
+        setAddRole(prv => ({ ...prv, [name]: value }))
+        if (value === 1 && name === 'role_type_id'
             || value === 2 && name === 'role_type_id'
-            || value === 3 && name === 'role_type_id') {
-            deleteData(`${value === 0 ? `get_hospitals`
-                : value === 1 ? `get_doctors`
-                    : value === 3 ? `list_pharmacies`
-                        : value === 2 ? `list_laboratories`
+            || value === 3 && name === 'role_type_id'
+            || value === 4 && name === 'role_type_id') {
+            deleteData(`${value === 1 ? `get_hospitals`
+                : value === 2 ? `get_doctors`
+                    : value === 3 ? `list_pharmacies?status=1`
+                        : value === 4 ? `list_laboratories?is_laboratory=1`
                             : null}`, (response) => {
                                 console.log("dattt", response?.data?.data)
-                                // setDropDownData(response?.data?.data)
-                                const transformedData = response?.data?.data?.map((item) => ({
-                                    value: value === 1 ? item?.user?.id : item?.id,
-                                    label: value === 1 ? item?.user?.name : item?.name,
-                                }));
 
-                                setDropDownData(transformedData);
+// this below condition need to change when api becomes full error free 
+
+                                if ( value === 1) {
+                                    const transformedData = response?.data?.data?.map((item) => ({
+                                        value: item?.id,
+                                        label: item?.name,
+                                    }));
+                                    console.log("transformedDataasd", transformedData)
+
+                                    setDropDownData(transformedData);
+                                } else if(value === 2 ){
+                                    const transformedData = response?.data?.data?.map((item) => ({
+                                        value: value === 2 || value === 1 ? item?.user?.id : item?.id,
+                                        label: value === 2 || value === 1 ? item?.user?.name : item?.name,
+                                    }));
+                                    console.log("transformedDataasd", transformedData)
+
+                                    setDropDownData(transformedData);
+                                } else {
+                                    const transformedData = response?.data?.map((item) => ({
+                                        value: value === 2 || value === 1 ? item?.data?.user?.id : item?.id,
+                                        label: value === 2 || value === 1 ? item?.data?.user?.name : item?.name,
+                                    }));
+                                    console.log("transformedDataasd", transformedData)
+
+                                    setDropDownData(transformedData);
+                                }
+
                             })
         }
-
     }
+
+    const togglePassword = () => {
+        if (passwordType === "password") {
+            setPasswordType("text")
+            return;
+        }
+        setPasswordType("password")
+    }
+
     console.log("addRole", addRole)
 
-    const handleHospitalSubmit = () => {
-        // validation();
-        console.log("name");
+    useEffect(() => {
+        if (role_Id) {
+            // console.log("role_Id", role_Id)
+            customData.deleteData(
+                `${process.env.REACT_APP_GET_ROLE_BY_ID}/${role_Id}`,
+                (val) => {
+                    console.log("valuedd", val?.data?.join_type?.id);
+                    dropDownChange(val?.data?.role_type_id, "role_type_id")
+                    setAddRole({
+                        // ...val?.data,
+                        // specialties: val?.data?.specialities?.map((l) => l.id),
+                        join_id: val?.data?.join_type?.id,
+                        role_type_id: val?.data?.role_type_id,
+                        country: "Kuwait",
+                        state: val?.data?.state,
+                    });
+                    //   
+                    //   dropDownChange(val?.data?.join_type?.id, 'join_id')
+                    setSelectedImage(val?.data?.profile_pic)
+                    Object.entries(val?.data).forEach(([fieldName, fieldValue]) => {
+                        setValue(fieldName, fieldValue);
+                        // setAddRole({ ...addRole, [fieldName]: fieldValue});
+                    });
+                    setValue('join_id', val?.data?.join_type?.id)
+                    //   setValue(
+                    //     "specialties",
+                    //     val?.data?.specialities?.map((l) => l.id)
+                    //   );
+                }
+            );
+        }
+    }, [role_Id]);
+
+    console.log("add_roleee", addRole)
+
+    const handleHospitalSubmit = (event) => {
+
+
+
+
+        const formData = new FormData();
+        for (const key in addRole) {
+            if (key === "specialties" && Array.isArray(addRole[key])) {
+                addRole[key].forEach((value) => {
+                    formData.append(`${key}[]`, value);
+                });
+            } else {
+                formData.append(key, addRole[key]);
+            }
+        }
+
+        AddRoleHook?.postData((role_Id ?
+            `${process.env.REACT_APP_UPDATE_ROLE}/${role_Id}` :
+            `${process.env.REACT_APP_ADD_ROLE}`), formData, (response) => {
+
+                console.log("tokenwww", response)
+
+                if (response?.success === true) {
+                    CustomToast({
+                        type: "success",
+                        message: `Data added successfully`,
+                    })
+                    reset()
+                    setAddRole({ country: "Kuwait", role_type_id: '' })
+                    setValue('')
+                    setDropDownData('')
+                    setSelectedImage('')
+                    if (upperData) {
+                        navigate('/allroles');
+                    }
+                    if (navigateLink === 'doctor') {
+                        navigate('/doctors');
+                    }
+                    if (navigateLink === 'pharmacy') {
+                        navigate('/pharmacy');
+                    }
+                    if (navigateLink === 'hospitals') {
+                        navigate('/hospitals');
+                    }
+                    if (navigateLink === 'laboratory') {
+                        navigate('/laboratory');
+                    }
+                    if (navigateLink === 'xray') {
+                        navigate('/xray/list');
+                    }
+                } else {
+                    CustomToast({
+                        type: "error",
+                        message: `${response?.message?.role_type ? response?.message?.role_type[0] : response?.message}`,
+                    })
+                }
+            })
+
 
     }
 
     return (
         <div className="row  px-2 pt-4 ">
-            <div className="col-12  ">
-                <p className="mb-0 dashboard-com-top-text">Manage Roles</p>
-            </div>
+            {upperData ? <>
+                <div className="col-12  ">
+                    <p className="mb-0 dashboard-com-top-text">Manage Roles</p>
+                </div>
 
-            <div className="col-12  ">
-                <div className="row d-flex align-items-end">
-                    <div className="col-lg-6 col-12 mt-lg-0 mt-2">
-                        <p className="mb-0 doctor-header-top-text">
-                            <Link className="doc-link " to="/">
-                                DASHBOARD
+                <div className="col-12  ">
+                    <div className="row d-flex align-items-end">
+                        <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+                            <p className="mb-0 doctor-header-top-text">
+                                <Link className="doc-link " to="/">
+                                    DASHBOARD
+                                </Link>
+                                <img
+                                    className="mx-lg-3 ml-2 pr-1 pb-1"
+                                    src={RightArrow}
+                                    alt=""
+                                />
+                                <span style={{ color: "#4FA6D1" }}>MANAGE ROLES</span>
+                            </p>
+                        </div>
+
+                        <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+                            <Link className="add-doc-link-color" to='/allroles' >
+                                <button
+                                    className="btn-add-doc-filter mr-2"
+                                >
+                                    <span className="  btn-add-doc-filter-text">All Roles</span>
+                                </button>
                             </Link>
-                            <img
-                                className="mx-lg-3 ml-2 pr-1 pb-1"
-                                src={RightArrow}
-                                alt=""
-                            />
-                            <span style={{ color: "#4FA6D1" }}>MANAGE ROLES</span>
-                        </p>
-                    </div>
 
-                    <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-                        <Link className="add-doc-link-color" to='/allroles' >
-                            <button
-                                className="btn-add-doc-filter mr-2"
-                            // onClick={() => setModal2Open(true)}
-                            >
-                                <span className="  btn-add-doc-filter-text">All Roles</span>
-                            </button>
-                        </Link>
-
+                        </div>
                     </div>
                 </div>
-            </div>
-            <form onSubmit={handleSubmit(handleHospitalSubmit)} className='w-100'>
+            </> : ''}
+
+            <form className='w-100'>
                 <div className="col-12 pt-3 px-0 mb-5 pb-5">
-
-
+                    <div className="row mt-4 px-3">
+                        <div className="col-lg-6 pr-lg-1 doc-setting-input">
+                            <UploadProfile selectedImage={selectedImage} setSelectedImage={(image) => {
+                                setSelectedImage(image)
+                                setAddRole({ ...addRole, 'profile_pic': image })
+                            }} role_Id={role_Id} />
+                        </div>
+                    </div>
                     <div className="row mt-4 px-3">
                         <div className="col-lg-6 pr-lg-1 doc-setting-input">
                             <p style={{ marginBottom: '10px', fontSize: '16px' }}>Role Type</p>
-                            <Select
-                                style={{ width: "100%" }}
-                                //   value={formValues.role}
-                                onChange={(value) => {
-                                    dropDownChange(value, 'role_type_id')
-                                    // setAddRole({...addRole, 'join_id': null})
-                                }}
-                                options={roleType}
-                            />
 
-
-                            {/* <Controller
+                            <Controller
                                 name="role_type_id"
                                 control={control}
                                 rules={{
@@ -140,20 +331,18 @@ const AddRole = ({ role_Id }) => {
                                 }}
                                 render={({ field }) => (
                                     <>
-                                        <Select
-                                            handleChangeSelect={(value) => {
+                                        <CustomDropDown
+                                            handleChangeSelect={(value, name) => {
                                                 field.onChange(value);
-                                                dropDownChange(value, 'role_type_id')
+                                                dropDownChange(value, name);
                                             }}
-                                            style={{width:'100%'}}
-                                            options={roleType || []}
+                                            option={roleType || []}
                                             name="role_type_id"
                                             field={field}
-                                            value={field.value}
+                                            value={field.value || null}
                                             onBlur={field.onBlur}
+                                            disabled={!upperData}
                                         />
-
-                                        
 
                                         {errors.role_type_id && (
                                             <span className="error-message">
@@ -162,71 +351,188 @@ const AddRole = ({ role_Id }) => {
                                         )}
                                     </>
                                 )}
-                            /> */}
-
-
+                            />
 
                         </div>
 
                         <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                            <p style={{ marginBottom: '10px', fontSize: '16px' }}>{addRole.role_type_id === "Hospital Admin"
-                                ? "Hospitals"
-                                : addRole.role_type_id === "Doctor"
-                                    ? "Doctors"
-                                    : addRole.role_type_id === "Laboratory Admin"
-                                        ? "Laboratories"
-                                        : addRole.role_type_id === "Pharmacy Admin"
-                                            ? "Pharmacies"
-                                            : "Hospital"}</p>
-                            <Select
-                                style={{ width: "100%" }}
-                                //   value={addRole.join_id}
-                                onChange={(value) => { dropDownChange(value, 'join_id') }}
-                                options={dropDownData}
-                                disabled={dropDownData?.length < 1}
+                            <p style={{ marginBottom: '10px', fontSize: '16px' }}>{
+                                addRole?.role_type === "hospitaladmin" || addRole?.role_type_id === 1
+                                    ? "Hospitals"
+                                    : addRole?.role_type === "doctor" || addRole?.role_type_id === 2
+                                        ? "Doctors"
+                                        : addRole?.role_type === "technologist" || addRole?.role_type_id === 4
+                                            ? "Laboratories"
+                                            : addRole?.role_type_id === "pharmacist" || addRole?.role_type_id === 3
+                                                ? "Pharmacies"
+                                                : "Select Category"}</p>
+
+                            <Controller
+                                name="join_id"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                }}
+                                render={({ field }) => (
+                                    <>
+                                        <CustomDropDown
+                                            handleChangeSelect={(value, name) => {
+                                                field.onChange(value);
+                                                dropDownChange(value, name);
+                                                console.log("vvvvvv", value, name)
+                                            }}
+                                            option={dropDownData || []}
+                                            name="join_id"
+                                            field={field}
+                                            value={field.value || ''}
+                                            onBlur={field.onBlur}
+                                            disabled={!upperData ? !upperData : dropDownData?.length < 1}
+                                        />
+
+                                        {dropDownData?.length > 0 && errors.join_id && (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        )}
+                                    </>
+                                )}
                             />
-                            {isLoading ? <span style={{ fontSize: "12px", color: 'grey' }}>Loading...</span> : null}
+
+                            {!upperData === false ? isLoading ? <span style={{ fontSize: "12px", color: 'grey' }}>Loading...</span> : null : null}
                         </div>
                     </div>
 
                     <div className="row px-3 mt-4">
                         <div className="col-lg-12 doc-setting-input">
                             <p className="doc-add-filter-text" style={{ marginBottom: '10px', fontSize: '16px' }}>Name</p>
-                            <input
-                                type="text"
+
+                            <Controller
                                 name="name"
-                                value={addRole?.name}
-                                onChange={(e) => setAddRole({ ...addRole, 'name': e.target.value })}
-                            //   value={formValues.name}
-                            //   onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                                control={control}
+                                rules={{
+                                    required: true,
+                                }}
+                                render={({ field }) => (
+                                    <>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            {...field}
+                                            value={field.value || ''}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setAddRole({ ...addRole, 'name': e.target.value })
+                                            }}
+                                            autocomplete="off"
+                                        />
+
+                                        {errors.name && (
+                                            <span className="error-message">
+                                                This field is required
+                                            </span>
+                                        )}
+                                    </>
+                                )}
                             />
+
                         </div>
                     </div>
                     <div className="row px-3 mt-4">
-                        <div className="col-lg-4 doc-setting-input  pr-3 pr-lg-1">
+                        <div className="col-lg-4 doc-setting-input  pr-3 pr-lg-1 add-role-default-email" style={{ border: 'none' }}>
                             <p className="doc-add-filter-text " style={{ marginBottom: '10px', fontSize: '16px' }}>Email</p>
-                            <input
-                                type="email"
+
+                            <Controller
                                 name="email"
-                                value={addRole?.email}
-                                onChange={(e) => setAddRole({ ...addRole, 'email': e.target.value })}
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    pattern:
+                                        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                                }}
+                                render={({ field }) => (
+                                    <input
+                                        className=""
+                                        type="text"
+                                        name="email"
+                                        {...field}
+                                        value={field.value || ''}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value);
+                                            setAddRole({ ...addRole, 'email': e.target.value })
+                                        }}
+                                    />
+                                )}
                             />
+                            {errors.email &&
+                                errors.email.type === "required" && (
+                                    <span className="error-message">
+                                        This field is required
+                                    </span>
+                                )}
+                            {errors.email &&
+                                errors.email.type === "pattern" && (
+                                    <span className="error-message">Invalid email address</span>
+                                )}
+
+
                         </div>
-                        <div className="col-lg-4 px-3 px-lg-2 pt-4 pt-lg-0">
-                        <p className="doc-add-filter-text " style={{ marginBottom: '10px', fontSize: '16px' }}>Password</p>
-                            <input
-                                type="password"
-                                name="password"
-                                value={addRole?.password}
-                                onChange={(e) => setAddRole({ ...addRole, 'password': e.target.value })}
-                            />
+                        <div className="col-lg-4 px-3 px-lg-2 pt-4 pt-lg-0" style={{ border: 'none' }}>
+                            <p className="doc-add-filter-text " style={{ marginBottom: '10px', fontSize: '16px' }}>Password</p>
+                            <div className="d-flex border px-2 add-role-default-password" style={{ height: '36px', borderRadius: '5px', backgroundColor: 'white' }}>
+
+                                <Controller
+                                    name="password"
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                        pattern:
+                                            /^(?=.*[A-Z])(?=.*\d).+/i,
+                                    }}
+                                    render={({ field }) => (
+                                        <div className='w-100'>
+                                            <div className="d-flex justify-content-between loginPasswordPositionBottom input-group-btn w-100 " style={{ height: '36px' }}>
+                                                <input
+                                                    style={{ border: 'none', backgroundColor: 'transparent', paddingBottom: '5px' }}
+                                                    type={passwordType}
+                                                    name="password"
+                                                    {...field}
+                                                    value={field.value || ''}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setAddRole({ ...addRole, 'password': e.target.value })
+                                                    }}
+                                                />
+
+                                                <h1 className="eyeBtn btn " onMouseUp={togglePassword} onMouseDown={togglePassword} onTouchStart={togglePassword} ontouchend={togglePassword} >
+                                                    <p style={{ width: "10px", height: "5px", color: "Black", border: "none" }}>{passwordType === "password" ? <i class="fa fa-eye-slash" aria-hidden="true"></i> : <i class="fa fa-eye" aria-hidden="true"></i>}</p>
+                                                </h1>
+                                            </div>
+
+                                            {errors.password &&
+                                                errors.password.type === "required" && (
+                                                    <span className="error-message" style={{ marginLeft: '-8px' }}>
+                                                        This field is required
+                                                    </span>
+                                                )}
+                                            {errors.password &&
+                                                errors.password.type === "pattern" && (
+                                                    <span className="error-message" style={{ marginLeft: '-8px' }}>Strong password is required</span>
+                                                )}
+                                        </div>
+                                    )}
+                                />
+
+
+
+                            </div>
                         </div>
-                        <div className="col-lg-4 pl-3 pl-lg-1 pt-4 pt-lg-0">
+                        <div className="col-lg-4 pl-3 pl-lg-1 pt-4 pt-lg-0" style={{ border: 'none' }}>
+
                             <Controller
                                 name="contact"
                                 control={control}
                                 rules={{
-                                    required: true,
+                                    required: false,
                                 }}
                                 render={({ field }) => (
                                     <>
@@ -266,6 +572,7 @@ const AddRole = ({ role_Id }) => {
                                 render={({ field }) => (
                                     <>
                                         <SelectCountry
+                                            notRequired={false}
                                             handleChangeSelect={(value, name) => {
                                                 field.onChange(value);
                                                 //   handleChange(name, value);
@@ -298,58 +605,12 @@ const AddRole = ({ role_Id }) => {
                             />
                         </div>
                     </div>
-
-
-
-
-
-
-                    {/* <div className="row px-3 mt-4">
-                    <div className="col-lg-12 doc-setting-input">
-                        <p className="mb-2">Country</p>
-                        <Select
-                            style={{ width: "100%" }}
-                            //   value={formValues.country}
-                            //   onChange={handleCountryChange}
-                            options={[
-                                { value: "Kuwait", label: "Kuwait" },
-                                { value: "Canada", label: "Canada" },
-                                { value: "United kingdom", label: "United Kingdom" },
-                                { value: "Pakistan", label: "Pakistan" },
-                            ]}
-                        />
-                    </div>
-                </div>
-
-                <div className="row mt-4 px-3">
-                    <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                        <p className="mb-2">Contact</p>
-                        <PhoneInput
-                            country="US"
-                            //   value={formValues.contact}
-                            defaultCountry="KW"
-                        //   onChange={(value) => handleInputChange("contact", value)}
-                        />
-                    </div>
-
-                    <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                        <p className="mb-2">State</p>
-                        <Select
-                            name="state"
-                            //   value={formValues.state}
-                            //   onChange={handleStateChange}
-                            style={{ width: "100%" }}
-                            options={[
-                                { value: "Cardiology", label: "Cardiology" },
-                                { value: "Neurology", label: "Neurology" },
-                            ]}
-                        />
-                    </div>
-                </div> */}
-
-                    <div className="row mt-4 pl-2 ml-2">
-                        <button className='Add-role-btn px-5 py-2'> {role_Id ? 'Edit' : 'Add'}  Role</button>
-                    </div>
+                    {
+                        console.log("roleParentValidation", roleParentValidation)
+                    }
+                    {roleParentValidation ? <div className="row mt-4 pl-2 ml-2">
+                        <button className='Add-role-btn px-5 py-2' onClick={handleSubmit(handleHospitalSubmit)}> {role_Id ? 'Edit' : 'Add'}  Role</button>
+                    </div> : null}
                 </div>
             </form>
         </div>

@@ -26,9 +26,17 @@ import { useNavigate } from "react-router-dom";
 import { CustomToast } from "../../atoms/toastMessage";
 import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
 
+// img svg
+// import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
+import DocRoleCrossIcon from "../../assets/images/doctor/DocRoleCrossIcon.svg";
+
 import ConsutancyFee from "../../components/doctors/ConsutancyFee";
-const DoctorForm = ({ id, rawData }) => {
+import AddRole from "../../pages/Role/AddRole";
+const DoctorForm = ({ id, rawData, handleAddItem, items, handleRemoveItem }) => {
   const [errorData, setErrorData] = useState(0);
+  const [addRole, setAddRole] = useState({ country: "Kuwait" })
+  const [roleParentValidation, setRoleParentValidation] = useState(false);
+  const [roleCategoryId, setRoleCategoryId] = useState("");
   const [formDataState, setFormDataState] = useState({});
   const [hospitalOption, setHospitalOption] = useState([]);
   const [image, setImage] = useState(null);
@@ -43,6 +51,7 @@ const DoctorForm = ({ id, rawData }) => {
   );
 
   const { data, isLoading, error, postData } = usePost();
+  const AddRoleHook = usePost()
 
   const language = useMemo(() => {
     return lang?.data?.data?.map((l) => ({ label: l.name, value: l.id }));
@@ -133,12 +142,94 @@ const DoctorForm = ({ id, rawData }) => {
           ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
           : `${process.env.REACT_APP_ADD_DOCTORS}`,
         formData,
-        () => {
-          CustomToast({
-            type: "success",
-            message: "Doctor Saved Successfuly!",
-          });
-          navigate("/doctors");
+        (res) => {
+
+          console.log("ressss", res?.data?.user_id)
+          setRoleCategoryId(res?.data?.id)
+          // setAddRole({...addRole, 'join_id':res?.data?.id})
+
+          if (items?.length) {
+
+            if (
+              addRole?.name &&
+              addRole?.email &&
+              addRole?.password &&
+              addRole?.role_type &&
+              addRole?.role_type_id
+            ) {
+              console.log("res?.data?.id", res?.data?.id)
+              setAddRole({ ...addRole, 'join_id': res?.data?.id })
+              // alert('sdf', res?.data?.id)
+
+              const updateRoleData = {
+                ...addRole,
+                join_id: res?.data?.id,
+              }
+
+              const formData = new FormData();
+              for (const key in updateRoleData) {
+                if (Array.isArray(updateRoleData[key])) {
+                  updateRoleData[key].forEach((value) => {
+                    formData.append(`${key}[]`, value);
+                  });
+                } else {
+                  formData.append(key, updateRoleData[key]);
+                }
+              }
+
+              AddRoleHook?.postData((`${process.env.REACT_APP_ADD_ROLE}`), formData, (response) => {
+
+                console.log("tokenwww", response)
+                navigate("/doctors");
+                // alert('sdf')
+                if (response?.success === true) {
+                  navigate("/doctors");
+                  CustomToast({
+                    type: "success",
+                    message: `Role added successfully`,
+                  })
+                  
+                }
+                
+                // else {
+                //     CustomToast({
+                //         type: "error",
+                //         message: `${response?.message?.role_type ? response?.message?.role_type[0] :response?.message}`,
+                //     })
+                // }
+              })
+            } else {
+              setRoleParentValidation(true)
+              CustomToast({
+                type: "error",
+                message: `Name, Email, Password, Role Type is Required for adding the Role`,
+              })
+            }
+
+          }
+
+console.log("resdoc", res)
+if(res?.success === true){
+  CustomToast({
+    type: "success",
+    message: "Doctor saved successfuly!",
+  })
+  setRoleParentValidation(true)
+}else{
+  CustomToast({
+    type: "error",
+    message: "Doctor not saved!",
+  })
+}
+          
+          if (!items?.length) {
+            navigate("/doctors");
+          }
+          // if(AddRoleHook?.isLoading){
+          //   alert('sdf')
+          //   navigate("/doctors");
+          // }
+          // console.log("AddRoleHook?.isLoading", AddRoleHook?.isLoading)
         }
       );
     }
@@ -215,7 +306,7 @@ const DoctorForm = ({ id, rawData }) => {
   }, [id, rawData]);
 
   return (
-    <>
+    <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="row px-2">
           <div className="col-md-12 pt-2 d-flex align-items-center doc-cam">
@@ -387,7 +478,7 @@ const DoctorForm = ({ id, rawData }) => {
                   name="customer_email"
                   control={control}
                   rules={{
-                    required: true,
+                    required: false,
                     pattern:
                       /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
                   }}
@@ -422,7 +513,7 @@ const DoctorForm = ({ id, rawData }) => {
                   name="customer_phone"
                   control={control}
                   rules={{
-                    required: true,
+                    required: false,
                   }}
                   render={({ field }) => (
                     <>
@@ -454,7 +545,7 @@ const DoctorForm = ({ id, rawData }) => {
                   name="gender"
                   control={control}
                   rules={{
-                    required: true,
+                    required: false,
                   }}
                   render={({ field }) => (
                     <>
@@ -774,11 +865,164 @@ const DoctorForm = ({ id, rawData }) => {
               </div>
             </div>
 
+
+
+
+
+            <div className="row mb-5 py-lg-3">
+              {items?.map((item, index) => {
+                return (
+                  <>
+                    <div className={`col-lg-12 mt-lg-0 mt-4 pb-lg-3 `}>
+                      <div className="row mx-0  add-doc-left-col">
+                        <div className="col-12 px-4  py-3 my-1 ">
+                          <div className=" d-flex justify-content-between align-items-center ">
+                            <p className="mb-0  add-doc-role-text">Add a Role </p>
+                            <img
+                              onClick={() => {
+                                handleRemoveItem(index);
+                              }}
+                              src={DocRoleCrossIcon}
+                              alt=""
+                            />
+                          </div>
+                        </div>
+
+                        <div
+                          className="border-top pt-3"
+                          id="scrollableDiv"
+                          style={{
+                            width: "100%",
+                            overflow: "hidden",
+                            padding: "0 16px",
+                          }}
+                        >
+                          <AddRole upperData={false} roleParent={[
+                            { value: 2, label: "Doctor Admin" }
+                          ]}
+                          setAddRole={setAddRole} addRole={addRole}
+                                roleParentValidation={roleParentValidation}
+                                roleCategoryId={roleCategoryId}
+                                navigateLink='doctor'
+                          />
+                          {
+                            console.log("roleCategoryIdparent", roleCategoryId)
+                          }
+                          {/* <div className="col-12 px-2">
+                          <div className="row">
+                            <div className="col-3 add-doc-role-type">
+                              Role Type:
+                            </div>
+                            <div className="col-9 add-doc-role-type-detail">
+                              Doctor
+                            </div>
+                          </div>
+
+                          <div className="row pt-1">
+                            <div className="col-3 add-doc-role-type">
+                              Email:
+                            </div>
+                            <div className="col-9 add-doc-role-type-detail">
+                              janecoper789@gmail.com
+                            </div>
+                          </div>
+
+                          <div className="row pt-1">
+                            <div className="col-3 add-doc-role-type">
+                              Phone:
+                            </div>
+                            <div className="col-9 add-doc-role-type-detail">
+                              03451234567
+                            </div>
+                          </div>
+
+                          <div className="row pt-1">
+                            <div className="col-3 add-doc-role-type">
+                              Role Linked to:
+                            </div>
+                            <div className="col-9 add-doc-role-type-detail">
+                              Civil Hospital
+                            </div>
+                          </div>
+
+                          <div className="row mt-4 pt-2">
+                            <div className="col-lg-12   doc-setting-input doc-setting-input-black">
+                              <p className="mb-2 add-doc-role-type-detail">
+                                Country{" "}
+                              </p>
+                              <CustomDropDown
+                                selectLabel="Kuwait"
+                                option={optionSpecialization}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="row mt-4">
+                            <div className="col-lg-6 pr-lg-1 doc-setting-input role-input-placeholder">
+                              <p className="mb-2 add-doc-role-type-detail">
+                                {" "}
+                                Contact{" "}
+                              </p>
+                              <input
+                                type="text"
+                                placeholder="+91-955-555-4751"
+                              />
+                            </div>
+
+                            <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input doc-setting-input-black">
+                              <p className="mb-2 add-doc-role-type-detail">
+                                {" "}
+                                State{" "}
+                              </p>
+                              <CustomDropDown
+                                selectLabel="Al Jahra"
+                                option={optionSpecialization}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="row my-5 pt-2 pb-3 ">
+                            <div className="col-lg-6">
+                              <button className="apply-filter add-doc-changes">
+                                Save Changes
+                              </button>
+                            </div>
+
+                            <div className="col-lg-6"></div>
+                          </div>
+                        </div> */}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={`col-4  `}></div>
+                  </>
+                );
+              })}
+
+              {items?.length < 1 ? <div className="col-12 mb-0 py-0 pl-4  d-flex align-items-center "
+                style={{ marginLeft: '8px' }}
+              >
+                <div onClick={handleAddItem}>
+                  <img className="cursor-pointer" src={AddRoleIcon} alt="" />{" "}
+                  <span className="cursor-pointer add-doc-role pl-3 ">
+                    Add a Role
+                  </span>
+                </div>
+              </div> : null}
+            </div>
+
+
+
+
+
+
             <div className="row my-5 pt-2 pb-3 ">
               <div className="col-lg-6">
                 <button
                   className="apply-filter add-doc-changes"
                   onClick={handleSubmit}
+                  disabled={isLoading}
                 >
                   {isLoading ? (
                     <ButtonLoader />
@@ -791,7 +1035,7 @@ const DoctorForm = ({ id, rawData }) => {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

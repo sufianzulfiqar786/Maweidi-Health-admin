@@ -9,14 +9,20 @@ import RightArrow from "../../assets/images/doctor/RightArrow.svg";
 import { useState } from "react";
 import PharmacyOrderList from "../../components/Pharmacy/PharmacyOrderList";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
+import usePost from "../../customHook/usePost";
+import { useEffect } from "react";
 
 const PharmacyShopDetail = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
+
 
   // Search Functionality
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
+ 
 
   const [rows, setRows] = useState([
     {

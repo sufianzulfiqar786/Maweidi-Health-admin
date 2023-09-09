@@ -18,7 +18,7 @@ const Phone = ({
 
   return (
     <>
-      <p className="mb-2">{label}</p>
+      <p className="mb-2">{label}<span className="text-danger">*</span></p>
       <PhoneInput
         disabled={disabled}
         disableDropdown // Add this prop to disable the country code dropdown

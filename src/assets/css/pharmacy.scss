@@ -484,12 +484,41 @@
   font-size: 14px;
   line-height: 21px;
   color: #535353;
+  transition: 0.5s all;
+  // padding: 0 !important;
 }
-.border {
-  border-radius: 5px;
-  overflow: hidden;
-  height: 37px;
+
+.pharmacy-timings:hover {
+  background: linear-gradient(323.79deg, #125a77 35.68%, #397d99 92.17%);
+color:white;
 }
+.pharmacy-time-cell{
+  transition: 0.5s all;
+}
+.pharmacy-time-cell :hover{
+  background: linear-gradient(323.79deg, #25aade 35.68%, #2088b4fd 92.17%);
+  color:white !important;
+  
+}
+
+.pharmacy-schedule{
+  border-radius: 5px 5px 0 0;
+  transition: 0.5 all;
+}
+
+.pharmacy-schedule-shadow{
+  transition: 1 all;
+}
+
+.pharmacy-schedule-shadow:hover{
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+// .border {
+//   border-radius: 5px;
+//   overflow: hidden;
+//   height: 37px;
+// }
 .input-field-timings {
   margin-top: 7px;
 }

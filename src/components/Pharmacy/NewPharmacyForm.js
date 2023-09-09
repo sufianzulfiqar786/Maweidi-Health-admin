@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import SelectCountry from "../../atoms/Country";
 import SelectState from "../../atoms/State";
 import CameraIcon from "../../assets/images/doctor/CameraIcon.svg";
+import closeIcon from "../../assets/images/common/close.svg";
 import Phone from "../../atoms/phone";
 import { Controller, useForm } from "react-hook-form";
 import ButtonLoader from "../../atoms/buttonLoader";
@@ -19,10 +20,14 @@ import TimeTablePencil from "../../assets/images/doctor/TimeTablePencil.svg";
 import useDeleteData from "../../customHook/useDelete";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import { useNavigate } from "react-router-dom";
+import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
 
 import { Modal } from "antd";
 import PharmacyTimings from "./PharmacyTimings";
 import { Link } from "react-router-dom";
+import NewPharnacyRole from "./NewPharnacyRole";
+import MuiltiplesImages from "../../atoms/MuiltiplesImages/MuiltiplesImages";
+import AddRole from "../../pages/Role/AddRole";
 const TimePicker = ({ label, name, value, onChange }) => {
   return (
     <div className="d-inline-flex time-picker time-picker-Pharmacy py-1 px-2">
@@ -54,6 +59,7 @@ const NewPharmacyForm = ({
   entityType = "pharmacy",
   customToastMessage = "Pharmacy Added Successfully",
   updateToastMessage = "Pharmacy Details Updated Successfully!",
+  click, setClick
 }) => {
   const [errorData, setErrorData] = useState(0);
   const [errorMessage, setErrorMessage] = useState(0);
@@ -67,11 +73,15 @@ const NewPharmacyForm = ({
   const [documentFile, setDocumentFile] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [addedTimings, setAddedTimings] = useState([]);
+  const [addRole, setAddRole] = useState({ country: "Kuwait" })
+  const [roleParentValidation, setRoleParentValidation] = useState(false);
+  const [roleCategoryId, setRoleCategoryId] = useState("");
   const [addTimePostReq, setaddTimePostReq] = useState({
     doctor_id: 131,
     schedules: [{ day: 0, time_slots: [{ start_time: "", end_time: "" }] }],
   });
   const navigate = useNavigate();
+  const AddRoleHook = usePost()
   const handleDoctorImageClick = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -106,7 +116,10 @@ const NewPharmacyForm = ({
 
   const handleChangeSelect = (value, name) => {
     setAddPharmacyData({ ...addPharmacyData, [name]: value });
+    setFormDataState((pre)=>({...pre, [name]:value}))
   };
+
+  console.log("AddPharmacyData", formDataState?.state)
 
   const formatTimeTo24Hour = (time) => {
     if (!time) return "";
@@ -144,10 +157,10 @@ const NewPharmacyForm = ({
     };
 
     postData(timeSetApi, requestBody, () => {
-      CustomToast({
-        type: "success",
-        message: "Schedule saved successfully",
-      });
+      // CustomToast({
+      //   type: "success",
+      //   message: "Schedule saved successfully",
+      // });
 
       setAddedTimings(addTimePostReq.schedules);
     });
@@ -174,16 +187,25 @@ const NewPharmacyForm = ({
         }));
         setAddPharmacyData(response?.data);
         console.log("responseeee", response, data);
-      });
+      })
+
+      deleteData(`${timeGetApi}/${id}`, (response) => {
+        setaddTimePostReq(response?.data)
+        console.log("responsesdfeee", response?.data?.schedules);
+      })
+
     }
   }, [id]);
+
+  console.log("addTimePostReqsdf", addTimePostReq)
 
   const validation = () => {
     if (!addPharmacyData.profile_picture) {
       setErrorMessage(-1);
-    } else if (!addPharmacyData.zip) {
-      setErrorMessage(8);
-    }
+    } 
+    // else if (!addPharmacyData.zip) {
+    //   setErrorMessage(8);
+    // }
     // else if (!locationProp) {
     //     setErrorMessage(9)
     // }
@@ -192,9 +214,11 @@ const NewPharmacyForm = ({
     }
   };
   console.log(formDataState?.country);
+  console.log("clickccc", click)
   const handleFormSubmit = async (formData) => {
     validation();
     if (errorMessage === "No Error") {
+      console.log('sdf', errorMessage)
       console.log("Form Data:", formData);
       const FarmData = new FormData();
 
@@ -207,6 +231,7 @@ const NewPharmacyForm = ({
         linkedin: addPharmacyData.linkedin,
         description: addPharmacyData.description,
         document: formDataState?.certificate,
+        status: 1,
       };
 
       Object.keys(completeFormData).forEach((key) =>
@@ -216,25 +241,93 @@ const NewPharmacyForm = ({
       Object.keys(completeFormData).forEach((key) =>
         FarmData.append(key, completeFormData[key])
       );
-
-      try {
+      
+     
         postData(
           id ? `${updateApiEndPoint}/${id}` : `${apiEndpoint}`,
           FarmData,
           (response) => {
             savePharmacySchedule(response?.data);
+
+            console.log("ressss", response?.data?.user_id)
+            setRoleCategoryId(response?.data?.id)
+            
+
+            if (click === false) {
+              if (
+                addRole?.name &&
+                addRole?.email &&
+                addRole?.password &&
+                addRole?.role_type &&
+                addRole?.role_type_id
+              ) {
+                console.log("res?.data?.id", response?.data?.id)
+                setAddRole({ ...addRole, 'join_id': response?.data?.id })
+                // alert('sdf', res?.data?.id)
+  
+                const updateRoleData = {
+                  ...addRole,
+                  join_id: response?.data?.id,
+                }
+  
+                const formData = new FormData();
+                for (const key in updateRoleData) {
+                  if (Array.isArray(updateRoleData[key])) {
+                    updateRoleData[key].forEach((value) => {
+                      formData.append(`${key}[]`, value);
+                    });
+                  } else {
+                    formData.append(key, updateRoleData[key]);
+                  }
+                }
+
+                AddRoleHook?.postData((`${process.env.REACT_APP_ADD_ROLE}`), formData, (response) => {
+
+                  console.log("tokenwww", response)
+                  // navigate("/pharmacy");
+                  // alert('sdf')
+                  if (response?.success === true) {
+                    navigate("/pharmacy");
+                    CustomToast({
+                      type: "success",
+                      message: `Role added successfully`,
+                    })
+                    
+                  }
+                  
+                  // else {
+                  //     CustomToast({
+                  //         type: "error",
+                  //         message: `${response?.message?.role_type ? response?.message?.role_type[0] :response?.message}`,
+                  //     })
+                  // }
+                })
+              } else {
+                setRoleParentValidation(true)
+                CustomToast({
+                  type: "error",
+                  message: `Name, Email, Password, Role Type is Required for adding the Role`,
+                })
+              }
+  
+            }
+
+
+
+
             CustomToast({
               type: "success",
               message: `${id ? updateToastMessage : customToastMessage}`,
-            });
+            })
             !id && setAddPharmacyData({});
             !id && reset();
             !id && setImage("");
-
-            navigate("/Pharmacy");
+            if (!click === false) {
+            navigate("/pharmacy");
+            }
           }
         );
-      } catch (error) {}
+    
     }
   };
 
@@ -421,13 +514,13 @@ const NewPharmacyForm = ({
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
               <p className="mb-2">
-                Customer Support Email<span className="error-message">*</span>{" "}
+                Customer Support Email<span className="error-message"></span>{" "}
               </p>
               <Controller
                 name="customer_email"
                 control={control}
                 rules={{
-                  required: true,
+                  required: false,
                   pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
                 }}
                 render={({ field }) => (
@@ -465,7 +558,7 @@ const NewPharmacyForm = ({
                 name="customer_phone"
                 control={control}
                 rules={{
-                  required: true,
+                  required: false,
                 }}
                 render={({ field }) => (
                   <>
@@ -662,7 +755,7 @@ const NewPharmacyForm = ({
                   type="text"
                   placeholder="Username"
                   name="facebook"
-                  value={addPharmacyData.facebook || ""}
+                  value={addPharmacyData.facebook === 'undefined' ? '' : addPharmacyData.facebook || ""}
                   onChange={handleChangePharmacy}
                 />
               </div>
@@ -677,7 +770,7 @@ const NewPharmacyForm = ({
                   type="text"
                   placeholder="Username"
                   name="instagram"
-                  value={addPharmacyData.instagram || ""}
+                  value={addPharmacyData.instagram === 'undefined' ? '' : addPharmacyData.instagram|| ""}
                   onChange={handleChangePharmacy}
                 />
               </div>
@@ -742,7 +835,7 @@ const NewPharmacyForm = ({
                   type="text"
                   placeholder="Username"
                   name="linkedin"
-                  value={addPharmacyData.linkedin || ""}
+                  value={addPharmacyData.linkedin === 'undefined' ? '' : addPharmacyData.linkedin || ""}
                   onChange={handleChangePharmacy}
                 />
               </div>
@@ -763,49 +856,51 @@ const NewPharmacyForm = ({
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
               <p className="mb-2">Pharmacy Timings</p>
-              <div className="d-flex w-100 justify-content-between flex-column border">
-                <div className="d-flex w-100 justify-content-between px-2">
-                  <span className="mb-2 pharmacy-timings input-field-timings">
-                    Set Schedule
-                  </span>
-                  <img
-                    onClick={handleModalToggle}
-                    src={TimeTablePencil}
-                    alt="TimeTablePencil"
-                    className="input-field-icon input-field-timings"
-                  />
+              <div className="pharmacy-schedule-shadow">
+                <div className=" pharmacy-schedule d-flex w-100 justify-content-between flex-column border-left border-right border-top border-bottom">
+                  <div className="d-flex w-100 justify-content-between px-2">
+                    <span className="mb-2  input-field-timings" style={{ fontSize: "14px", color: "#535353" }}>
+                      Set Schedule
+                    </span>
+                    <img
+                      onClick={handleModalToggle}
+                      src={TimeTablePencil}
+                      alt="TimeTablePencil"
+                      className="input-field-icon input-field-timings cursor-pointer"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <table className="table table-borderless">
-                <thead>
-                  <tr>
-                    <th className="text-left pharmacy-timings pl-4">Day</th>
-                    <th className="text-center pharmacy-timings">
-                      Opening Time
-                    </th>
-                    <th className="text-right pharmacy-timings pr-4">
-                      Closing Time
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {addTimePostReq?.schedules.map((time) => {
-                    const hasTimeSlots = time?.time_slots;
-                    return (
-                      <tr key={time.day}>
-                        <td>{getDayName(time?.day)}</td>
-                        <td className="text-center">
-                          {hasTimeSlots ? time?.time_slots[0]?.start_time : ""}
-                        </td>
-                        <td className="text-center pl-5">
-                          {hasTimeSlots ? time?.time_slots[0]?.end_time : ""}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                <table className="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th className="text-left pharmacy-timings pl-3 border-left border-right" >Day</th>
+                      <th className="text-center pharmacy-timings border-left border-right" >
+                        Opening Time
+                      </th>
+                      <th className="text-center pharmacy-timings  border-left border-right" >
+                        Closing Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {addTimePostReq?.schedules.map((time) => {
+                      const hasTimeSlots = time?.time_slots;
+                      return (
+                        <tr key={time.day} className="border pharmacy-time-cell">
+                          <td className="" style={{ fontSize: '14px', color: '#535353' }}>{getDayName(time?.day) ? getDayName(time?.day) : "Days"}</td>
+                          <td className="text-center " style={{ fontSize: '14px', color: '#535353' }}>
+                            {time?.time_slots[0]?.start_time ? time?.time_slots[0]?.start_time : "Off"}
+                          </td>
+                          <td className="text-center  pl-3" style={{ fontSize: '14px', color: '#535353' }}>
+                            {time?.time_slots[0]?.end_time ? time?.time_slots[0]?.end_time : "Off"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -823,12 +918,72 @@ const NewPharmacyForm = ({
             ></textarea>
           </div>
         </div>
+        <div className="pl-3">
+          <MuiltiplesImages />
+        </div>
+        <div className="row pb-5 mb-lg-5 m-0 second-row pl-2 mt-3">
+          {click ? (
+            <div
+              className="col-12 mb-5 py-4 d-flex align-items-center"
+              onClick={() => {
+                setClick(!click);
+              }}
+            >
+              <img
+                className="cursor-pointer"
+                // onClick={handleAddItem}
+
+                src={AddRoleIcon}
+                alt=""
+              />{" "}
+              <span
+                // onClick={handleAddItem}
+                className="cursor-pointer add-doc-role pl-3 "
+              >
+                Add a Role
+              </span>
+            </div>
+          ) : (
+            <div className="col-lg-8 mt-3">
+
+              {/* <NewPharnacyRole
+                  click={click}
+                  setClick={(data) => {
+                    setClick(data);
+                  }}
+                /> */}
+
+              <div className="add-appointment-card-wrapper">
+                <div className="title-header">
+                  <div className="title">Add a Role</div>
+                  <img
+                    src={closeIcon}
+                    onClick={() => {
+                      setClick(!click);
+                    }}
+                  />
+                </div>
+                <hr />
+
+                <AddRole upperData={false} roleParent={[
+                  { value: 3, label: "Pharmacy Admin" }
+                ]}
+                  setAddRole={setAddRole} addRole={addRole}
+                  roleParentValidation={roleParentValidation}
+                  roleCategoryId={roleCategoryId}
+                  navigateLink='pharmacy'
+                />
+
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="row my-5 pt-2 pb-3 ">
           <div className="col-lg-6">
             <button
               type="submit"
-              className="apply-filter add-doc-changes"
+              className="apply-filter add-doc-changes ml-2"
               disabled={isLoading}
             >
               {!isLoading ? (

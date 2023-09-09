@@ -1,4 +1,4 @@
-import AddRoleIcon from "../../assets/images/doctor/AddRoleIcon.svg";
+
 import { useState } from "react";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import NewPharmacyForm from "../../components/Pharmacy/NewPharmacyForm";
@@ -59,44 +59,14 @@ const AddPharmacy = ({ Id }) => {
                   handleChangeCountry={handleChangeCountry}
                   handleChangeState={handleChangeState}
                   id={Id}
+                  click={click}
+                  setClick={setClick}
                 />
               </div>
             </div>
           </div>
 
-          <div className="row pb-5 mb-lg-5 m-0 second-row">
-            {click ? (
-              <div
-                className="col-12 mb-5 py-4 d-flex align-items-center"
-                onClick={() => {
-                  setClick(!click);
-                }}
-              >
-                <img
-                  className="cursor-pointer"
-                  // onClick={handleAddItem}
-
-                  src={AddRoleIcon}
-                  alt=""
-                />{" "}
-                <span
-                  // onClick={handleAddItem}
-                  className="cursor-pointer add-doc-role pl-3 "
-                >
-                  Add a Role
-                </span>
-              </div>
-            ) : (
-              <div className="col-lg-8 mt-3">
-                <NewPharnacyRole
-                  click={click}
-                  setClick={(data) => {
-                    setClick(data);
-                  }}
-                />
-              </div>
-            )}
-          </div>
+       
         </div>
       </div>
     </>

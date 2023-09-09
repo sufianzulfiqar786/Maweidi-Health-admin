@@ -129,12 +129,12 @@ const MuiltiplesImages = () => {
                             </div>
                             <div className='d-flex flex-column align-items-center w-100'>
                                 <div className="d-flex justify-content-center w-100" >
-                                    <span className='border cursor-pointer hospital-slider-image-inner' onClick={handleButtonClick}>
+                                    <div className='d-flex align-items-center border cursor-pointer hospital-slider-image-inner ' onClick={handleButtonClick}>
                                         Select Images
-                                    </span>
-                                    <span className='border cursor-pointer hospital-slider-image ml-2' onClick={removeAllImages}>
+                                    </div>
+                                    <div className='d-flex align-items-center border cursor-pointer hospital-slider-image ml-2 ' onClick={removeAllImages}>
                                         Remove Images
-                                    </span>
+                                    </div>
                                 </div>
                                 <div className='d-flex flex-column'>
                                     {
