@@ -95,7 +95,7 @@ const Signin = () => {
           })
         }
         console.log("datadddd", data?.success)
-        console.log("tokenwww", response?.data?.token)
+        console.log("tokenwww", response?.data)
 
         if(data?.success === true){
 

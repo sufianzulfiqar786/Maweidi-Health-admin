@@ -78,11 +78,11 @@ const BloodDonationTable = ({ searchQuery, setRows }) => {
 
   const BloodStatus = (BloodId, statusId) => {
 
-    if (statusId === 1) {
+    if (statusId === 1 || statusId === null) {
       console.log("BloodStatusId", BloodId)
 
       const Payload = {
-        status: 0
+        status: '0'
       };
 
       postData(`${process.env.REACT_APP_UPDATE_BLOOD_DONATION_STATUS}/${BloodId}`,
@@ -175,21 +175,18 @@ const BloodDonationTable = ({ searchQuery, setRows }) => {
                     setStatusChange(pre => ({...pre, 'id': row.id, 'status':row.status}))
                     setDeleteModal(true)
                   }}
-                    style={{
-
-                    }}
                   >
                     <button className=" py-1"
-                      disabled={isLoading}
+                      disabled={isLoading || row.status === 0}
                       style={{
                         borderRadius: '5px',
-                        backgroundColor: row.status == 1 ? "#ccfce3" : "#f7eed0",
-                        border: row.status == 1 ? '1px solid #50CD89' : '1px solid #FFC107',
-                        color: row.status == 1 ? "#50CD89" : "#ffa807",
-                        cursor: row.status == 1 || isLoading ? "pointer" : 'no-drop',
+                        backgroundColor: row.status == 1 || row.status === null ? "#ccfce3" : "#f7eed0",
+                        border: row.status == 1 || row.status === null ? '1px solid #50CD89' : '1px solid #FFC107',
+                        color: row.status == 1 || row.status === null ? "#50CD89" : "#ffa807",
+                        cursor: row.status == 1 || isLoading || row.status === null ? "pointer" : 'no-drop',
                         width: '100px'
                       }}>
-                      {row.status === 1 ? 'Available' : 'Unavailable'}
+                      {row.status === 1 || row.status === null ? 'Available' : 'Unavailable'}
                     </button>
                   </div>
                 </TableCell>

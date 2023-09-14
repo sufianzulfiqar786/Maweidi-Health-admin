@@ -94,9 +94,34 @@ const AddBannerPromo = () => {
                         <CustomDropDown
                             option={
                                 [
-                                    { label: "Laboratory Home" },
-                                    { label: "Pharmacy Listing​​" },
-                                    { label: "Main Home​" },
+                                    {
+                                        label: "Main Home",
+                                        value: 1
+                                    },
+                                    {
+                                        label: "Doctor List​​",
+                                        value: 2
+                                    },
+                                    {
+                                        label: "Hospital List​",
+                                        value: 3
+                                    },
+                                    {
+                                        label: "Pharmacy List​",
+                                        value: 4
+                                    },
+                                    {
+                                        label: "Medical Equipment List​",
+                                        value: 5
+                                    },
+                                    {
+                                        label: "Laboratory List​",
+                                        value: 6
+                                    },
+                                    {
+                                        label: "X-ray List​",
+                                        value: 7
+                                    },
                                 ]}
                         />
                         {/* <Select

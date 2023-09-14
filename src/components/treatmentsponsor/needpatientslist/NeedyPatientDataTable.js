@@ -36,6 +36,7 @@ const NeedyPatientDataTable = ({
   const [editModal, setEditModal] = useState(false);
   const [deleteState, setDeleteState] = useState(0);
   const [statusChange, setStatusChange] = useState({});
+  const customData = useDeleteData();
 
   const getPatient = useFetch(
     `${process.env.REACT_APP_LIST_NEEDY_PATIENT}?per_page=${rowsPerPage}&page=${page}`
@@ -94,29 +95,48 @@ const NeedyPatientDataTable = ({
 
   const BloodStatus = (BloodId, statusId) => {
 
-    if (statusId === 1) {
+    if (statusId === 0) {
       console.log("BloodStatusId", BloodId)
 
-      const Payload = {
-        status: 0
-      };
+      customData.deleteData(
+        `${process.env.REACT_APP_NEEDY_PATIENT_UPDATE_STATUS}/${BloodId}`,
+        (val) => {
+          console.log("value", val?.data);
 
-      postData(`${process.env.REACT_APP_NEEDY_PATIENT_UPDATE_STATUS}/${BloodId}`,
-        Payload,
-        (res) => {
           getPatient.fetchPaginatedData(`${process.env.REACT_APP_GET_PATIENT}?per_page=${rowsPerPage}&page=${page}`)
-          // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
-          if (res.success === true) {
-            setDeleteModal(false)
-            CustomToast({
-              type: "success",
-              message: "Status updated successfuly!",
-            });
-          }
+              // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
+              if (val.success === true) {
+                setDeleteModal(false)
+                CustomToast({
+                  type: "success",
+                  message: "Status updated successfuly!",
+                });
+                setEditModal(false)
+              }
 
-          // setRows(filter)
         }
-      );
+      )
+
+      // const Payload = {
+      //   status: 0
+      // };
+
+      // postData(`${process.env.REACT_APP_NEEDY_PATIENT_UPDATE_STATUS}/${BloodId}`,
+      //   Payload,
+      //   (res) => {
+      //     getPatient.fetchPaginatedData(`${process.env.REACT_APP_GET_PATIENT}?per_page=${rowsPerPage}&page=${page}`)
+      //     // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
+      //     if (res.success === true) {
+      //       setDeleteModal(false)
+      //       CustomToast({
+      //         type: "success",
+      //         message: "Status updated successfuly!",
+      //       });
+      //     }
+
+      //     // setRows(filter)
+      //   }
+      // )
 
     }
 
@@ -231,8 +251,8 @@ const NeedyPatientDataTable = ({
                 </TableCell>
               </TableRow>
             )): <TableRow>
-            <TableCell colSpan={10}>
-              <ListSkeleton totalRow={4} totalCol={10} image={false} />
+            <TableCell colSpan={11}>
+              <ListSkeleton totalRow={4} totalCol={11} image={false} />
             </TableCell>
           </TableRow>}
           </TableBody>

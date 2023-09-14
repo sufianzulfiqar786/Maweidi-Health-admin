@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 // img svg
@@ -23,18 +23,29 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
         { value: 1, label: "Hospital Admin" },
         { value: 2, label: "Doctor Admin" },
         { value: 3, label: "Pharmacy Admin" },
+        { value: 7, label: "Medical Equipment Admin" },
         { value: 4, label: "Laboratory Admin" },
+        { value: 8, label: "X-ray Admin" },
     ])
 
     const [roleParentChild, setRoleParentChild] = useState(roleParent)
     const [role_IdParentChild, setRole_IdParentChild] = useState(role_Id)
     const [parentJoinId, setParentJoinId] = useState(roleCategoryId)
 
+    useEffect(()=>{
+// setValue('email', '')
+// setValue('password', '')
+// setAddRole((pre)=>({...pre, 'email': '', 'password': ''}))
+// reset()
+    },[])
+
     useEffect(() => {
         console.log("roleParent", roleParent)
         if (roleParent && (roleParent[0]?.label == "Hospital Admin" ||
             roleParent[0]?.label == "Doctor Admin" ||
             roleParent[0]?.label == "Pharmacy Admin" ||
+            roleParent[0]?.label == "Medical Equipment Admin" ||
+            roleParent[0]?.label == "X-ray Admin" ||
             roleParent[0]?.label == "Laboratory Admin")
         ) {
             dropDownChange(roleParent[0]?.value, "role_type_id")
@@ -61,6 +72,8 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
         if (roleParent && (roleParent[0]?.label == "Hospital Admin" ||
             roleParent[0]?.label == "Doctor Admin" ||
             roleParent[0]?.label == "Pharmacy Admin" ||
+            roleParent[0]?.label == "Medical Equipment Admin" ||
+            roleParent[0]?.label == "X-ray Admin" ||
             roleParent[0]?.label == "Laboratory Admin")
         ) {
             setAddRole(prv => ({ ...prv, 'join_id': roleCategoryId }))
@@ -119,6 +132,12 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
         else if (selectedOption?.label === "Laboratory Admin") {
             setAddRole(prv => ({ ...prv, 'role_type': 'technologist' }))
         }
+        else if (selectedOption?.label === "Medical Equipment Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'storeadmin' }))
+        }
+        else if (selectedOption?.label === "X-ray Admin") {
+            setAddRole(prv => ({ ...prv, 'role_type': 'radiologic' }))
+        }
         else {
             setAddRole(prv => ({ ...prv, [name]: value }))
         }
@@ -126,43 +145,47 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
         if (value === 1 && name === 'role_type_id'
             || value === 2 && name === 'role_type_id'
             || value === 3 && name === 'role_type_id'
-            || value === 4 && name === 'role_type_id') {
+            || value === 4 && name === 'role_type_id'
+            || value === 7 && name === 'role_type_id'
+            || value === 8 && name === 'role_type_id') {
             deleteData(`${value === 1 ? `get_hospitals`
                 : value === 2 ? `get_doctors`
                     : value === 3 ? `list_pharmacies?status=1`
                         : value === 4 ? `list_laboratories?is_laboratory=1`
-                            : null}`, (response) => {
-                                console.log("dattt", response?.data?.data)
+                            : value === 7 ? `list_pharmacies?status=0`
+                                : value === 8 ? `list_laboratories?is_laboratory=0`
+                                    : null}`, (response) => {
+                                        console.log("dattt", response?.data?.data)
 
-// this below condition need to change when api becomes full error free 
+                                        // this below condition need to change when api becomes full error free 
 
-                                if ( value === 1) {
-                                    const transformedData = response?.data?.data?.map((item) => ({
-                                        value: item?.id,
-                                        label: item?.name,
-                                    }));
-                                    console.log("transformedDataasd", transformedData)
+                                        if (value === 1) {
+                                            const transformedData = response?.data?.data?.map((item) => ({
+                                                value: item?.id,
+                                                label: item?.name,
+                                            }));
+                                            console.log("transformedDataasd", transformedData)
 
-                                    setDropDownData(transformedData);
-                                } else if(value === 2 ){
-                                    const transformedData = response?.data?.data?.map((item) => ({
-                                        value: value === 2 || value === 1 ? item?.user?.id : item?.id,
-                                        label: value === 2 || value === 1 ? item?.user?.name : item?.name,
-                                    }));
-                                    console.log("transformedDataasd", transformedData)
+                                            setDropDownData(transformedData);
+                                        } else if (value === 2) {
+                                            const transformedData = response?.data?.data?.map((item) => ({
+                                                value: value === 2 || value === 1 ? item?.user?.id : item?.id,
+                                                label: value === 2 || value === 1 ? item?.user?.name : item?.name,
+                                            }));
+                                            console.log("transformedDataasd", transformedData)
 
-                                    setDropDownData(transformedData);
-                                } else {
-                                    const transformedData = response?.data?.map((item) => ({
-                                        value: value === 2 || value === 1 ? item?.data?.user?.id : item?.id,
-                                        label: value === 2 || value === 1 ? item?.data?.user?.name : item?.name,
-                                    }));
-                                    console.log("transformedDataasd", transformedData)
+                                            setDropDownData(transformedData);
+                                        } else {
+                                            const transformedData = response?.data?.map((item) => ({
+                                                value: value === 2 || value === 1 ? item?.data?.user?.id : item?.id,
+                                                label: value === 2 || value === 1 ? item?.data?.user?.name : item?.name,
+                                            }));
+                                            console.log("transformedDataasd", transformedData)
 
-                                    setDropDownData(transformedData);
-                                }
+                                            setDropDownData(transformedData);
+                                        }
 
-                            })
+                                    })
         }
     }
 
@@ -210,6 +233,8 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
     }, [role_Id]);
 
     console.log("add_roleee", addRole)
+
+    
 
     const handleHospitalSubmit = (event) => {
 
@@ -271,6 +296,8 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
 
 
     }
+
+
 
     return (
         <div className="row  px-2 pt-4 ">
@@ -365,7 +392,11 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                             ? "Laboratories"
                                             : addRole?.role_type_id === "pharmacist" || addRole?.role_type_id === 3
                                                 ? "Pharmacies"
-                                                : "Select Category"}</p>
+                                                : addRole?.role_type_id === "storeadmin" || addRole?.role_type_id === 7
+                                                    ? "Medical Equipment"
+                                                    : addRole?.role_type_id === "radiologic" || addRole?.role_type_id === 8
+                                                        ? "X-ray"
+                                                        : "Select Category"}</p>
 
                             <Controller
                                 name="join_id"
@@ -460,6 +491,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                             field.onChange(e.target.value);
                                             setAddRole({ ...addRole, 'email': e.target.value })
                                         }}
+                                        autoComplete="off" 
                                     />
                                 )}
                             />
@@ -483,6 +515,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                 <Controller
                                     name="password"
                                     control={control}
+                                    
                                     rules={{
                                         required: true,
                                         pattern:

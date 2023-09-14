@@ -297,3 +297,13 @@ input:-webkit-autofill:active{
 button:focus{
   outline: none;
 }
+
+.export-me{
+  width: 100px;
+  height: 36px;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 3px;
+  color: rgba(0, 0, 0, 0.74);
+  font-family: $Montserrat-Regular;
+}

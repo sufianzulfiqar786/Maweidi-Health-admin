@@ -694,7 +694,7 @@ const XrayOrderList = ({ searchQuery }) => {
                   <TableCell align="center">
                     <button
                       onClick={() => {
-                        navigate(`/bloodtest/detail/${id}`);
+                        navigate(`/xray/detail/${id}`);
                       }}
                       className="btn-add-new-doc pharmacy-view-detail"
                     >

@@ -132,7 +132,7 @@ const AddNeedyPatientForm = ({Id}) => {
         setValue(fieldName, fieldValue);
       });
         }
-      );
+      )
     }
   }, [Id]);
 
@@ -146,11 +146,11 @@ const AddNeedyPatientForm = ({Id}) => {
             <div className="image-preview">
               {previewImage ? (
                 <img
-                src={previewImage?.profile_pic ? `${process.env.REACT_APP_IMAGE_URL}/${previewImage?.profile_pic}` : previewImage}
+                src={!previewImage?.profile_pic =='' ? `${process.env.REACT_APP_IMAGE_URL}/${previewImage?.profile_pic}` : previewImage?.profile_pic =='' ?  camera : previewImage }
                   alt="Preview"
-                  width="80"
-                  height="80"
-                  style={{ objectFit: "cover", borderRadius: "50%" }}
+                  width= {previewImage?.profile_pic =='' ? `50`: `80`}
+                  height={previewImage?.profile_pic =='' ? `50`: `80`}
+                  style={{ objectFit: previewImage?.profile_pic =='' ?  '' : "cover", borderRadius: "50%" }}
                   onClick={handleUploadClick}
                 />
               ) : (
@@ -251,7 +251,7 @@ const AddNeedyPatientForm = ({Id}) => {
                 name="approx_treatment_cost"
                 control={control}
                 rules={{
-                  required: false,
+                  required: true,
                 }}
                 render={({ field }) => (
                   <>
@@ -503,7 +503,7 @@ const AddNeedyPatientForm = ({Id}) => {
                 name="description"
                 control={control}
                 rules={{
-                  required: false,
+                  required: true,
                 }}
                 render={({ field }) => (
                   <>
@@ -536,13 +536,13 @@ const AddNeedyPatientForm = ({Id}) => {
 
         <div className="privacy-selection">
           <div className="private-container"  >
-            <div className="d-flex align-items-center privacy-children">
+            {/* <div className="d-flex align-items-center privacy-children">
               <div className="mr-3">Hide Identity</div>
               <Switch onChange={(e) => {
                 console.log('firsteee', e)
                 setNeedyPatient((pre) => ({ ...pre, 'hide_identity': e }))
               }} />
-            </div>
+            </div> */}
 
           </div>
         </div>
