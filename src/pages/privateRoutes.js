@@ -8,15 +8,17 @@ import { useLocation } from "react-router-dom";
 //  const role =JSON.parse(localStorage.getItem("userRoles"))
 const userRolesJson = localStorage.getItem("userRoles");
 const role = userRolesJson ? JSON.parse(userRolesJson) : {};
-    const allowedhost = Object?.keys(role).includes("hospitaladmin")
-    const allowedlab = Object?.keys(role).includes("technologist")
-    const allowedphar = Object?.keys(role).includes("pharmacist")
-    const alloweddoc = Object?.keys(role).includes("doctor")
+const allowedhost = Object?.keys(role).includes("hospitaladmin")
+const allowedlab = Object?.keys(role).includes("technologist")
+const allowedphar = Object?.keys(role).includes("pharmacist")
+const alloweddoc = Object?.keys(role).includes("doctor")
+const allowedstore = Object?.keys(role).includes("storeadmin")
+const allowedradio = Object?.keys(role).includes("radiologic")
 
 const ValidateRoute = (currentPath) => {
-   console.log("allowedlab", allowedlab)
+    console.log("allowedlab", allowedlab)
 
-  
+
 
     let HospitalAdmin = [
         // "/laboratory",
@@ -96,6 +98,20 @@ const ValidateRoute = (currentPath) => {
         "/patients",
         "/patients/add",
     ]
+    let MedicalEquipmentAdmin = [
+        "/medical/equipment",
+        "/medical/equipment/add",
+        "/medical/equipment/shop",
+        "/medical/equipment/shop/detail",
+    ]
+
+    let XrayAdmin = [
+        "/xray/list",
+        "/xray/add",
+        "/xray",
+        "/xray/orderlist",
+        "/xray/orderlist/xraycartdetail",
+    ]
 
     const userRole = localStorage.getItem("userRole") ?? "";
 
@@ -103,19 +119,23 @@ const ValidateRoute = (currentPath) => {
     let allowedRoutes = [];
 
     if (allowedhost) {
-        allowedRoutes = [...allowedRoutes,...HospitalAdmin];
+        allowedRoutes = [...allowedRoutes, ...HospitalAdmin];
     } else if (allowedlab) {
-        allowedRoutes = [...allowedRoutes,...LaboratoryAdmin];
+        allowedRoutes = [...allowedRoutes, ...LaboratoryAdmin];
     } else if (allowedphar) {
-        allowedRoutes = [...allowedRoutes,...PharmacyAdmin];
+        allowedRoutes = [...allowedRoutes, ...PharmacyAdmin];
     } else if (alloweddoc) {
-        allowedRoutes = [...allowedRoutes,...Doctor];
+        allowedRoutes = [...allowedRoutes, ...Doctor];
+    } else if (allowedstore) {
+        allowedRoutes = [...allowedRoutes, ...MedicalEquipmentAdmin];
+    } else if (allowedradio) {
+        allowedRoutes = [...allowedRoutes, ...XrayAdmin];
     } else {
         allowedRoutes = [];
     }
 
     const validate = userRole === "superAdmin" ? true : allowedRoutes.includes(currentPath);
-console.log("allowedRoutes", allowedRoutes)
+    console.log("allowedRoutes", allowedRoutes)
     return validate ? currentPath : "";
 };
 
@@ -127,7 +147,7 @@ const DefultRoute = () => {
     console.log("ValidUI()", ValidUI())
     let route = ValidUI()
     switch (route) {
-        case  "HospitalAdmin":
+        case "HospitalAdmin":
             return <DashboardCom />
             break;
         case "superAdmin":
@@ -140,6 +160,12 @@ const DefultRoute = () => {
             return <DashboardCom />
             break;
         case "Doctor":
+            return <DashboardCom />
+            break;
+        case "MedicalEquipmentAdmin":
+            return <DashboardCom />
+            break;
+        case "XrayAdmin":
             return <DashboardCom />
             break;
 

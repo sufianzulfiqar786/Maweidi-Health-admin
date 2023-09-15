@@ -52,6 +52,8 @@ const FullScreenMenu = ({
   const allowedhost = Object.keys(role).includes("hospitaladmin")
   const allowedlab = Object.keys(role).includes("technologist")
   const allowedphar = Object.keys(role).includes("pharmacist")
+  const allowedStore = Object.keys(role).includes("storeadmin")
+  const allowedradio = Object.keys(role).includes("radiologic")
   const alloweddoc = Object.keys(role).includes("doctor")
   const isSuperAdmin = Object.keys(role).length === 0 
   console.log("allowedlab", allowedlab);
@@ -61,7 +63,9 @@ const FullScreenMenu = ({
         allowedhost ||
         alloweddoc ||
         allowedphar ||
-         allowedlab
+         allowedlab ||
+         allowedStore ||
+         allowedradio
         ? (
         <Link className="maweidi-link ml-md-auto ml-0 " to="/dashboard">
           <div
@@ -694,7 +698,7 @@ const FullScreenMenu = ({
 
       {/* Medical Tool */}
       {/* || allowedhost */}
-      {allowedphar || isSuperAdmin ? (
+      {allowedStore || isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
@@ -1073,7 +1077,7 @@ const FullScreenMenu = ({
 
       {/* X-Ray */}
 
-      {allowedlab ||
+      {allowedradio ||
         isSuperAdmin ? (
         <div
           className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}

@@ -957,7 +957,7 @@ const NewMedicalEquipmentForm = ({
                 <hr />
 
                 <AddRole upperData={false} roleParent={[
-                  { value: 3, label: "Pharmacy Admin" }
+                  { value: 7, label: "Medical Equipment Admin" }
                 ]}
                   setAddRole={setAddRole} addRole={addRole}
                   roleParentValidation={roleParentValidation}

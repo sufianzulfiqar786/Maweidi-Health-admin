@@ -119,6 +119,10 @@ const Signin = () => {
           localStorage.setItem("userRole", 'PharmacyAdmin');
         } else if (response?.data?.roles?.hospitaladmin) {
           localStorage.setItem("userRole", 'HospitalAdmin');
+        } else if (response?.data?.roles?.storeadmin) {
+          localStorage.setItem("userRole", 'MedicalEquipmentAdmin');
+        } else if (response?.data?.roles?.radiologic) {
+          localStorage.setItem("userRole", 'XrayAdmin');
         }
 
         window.location.href = "/";

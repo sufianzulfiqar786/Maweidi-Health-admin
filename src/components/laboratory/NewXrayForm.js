@@ -967,7 +967,7 @@ setValue()
                 <hr />
 
                 <AddRole upperData={false} roleParent={[
-                  { value: 4, label: "Laboratory Admin" }
+                  { value: 8, label: "X-ray Admin" }
                 ]}
                   setAddRole={setAddRole} addRole={addRole}
                   roleParentValidation={roleParentValidation}

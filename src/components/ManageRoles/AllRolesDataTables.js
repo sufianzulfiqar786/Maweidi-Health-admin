@@ -769,6 +769,8 @@ console.log("getroles", getroles)
                                     role ==='hospitaladmin' ? 'Hospital Admin':
                                     role ==='pharmacist' ? 'Pharmacy Admin':
                                     role ==='technologist' ? 'Laboratory Admin':
+                                    role ==='radiologic' ? 'X-ray Admin':
+                                    role ==='storeadmin' ? 'Medical Equipment Admin':
                                     'null'
                                     }</TableCell>
                                     <TableCell align="left">{email?.charAt(0).toUpperCase() + email?.slice(1)}</TableCell>

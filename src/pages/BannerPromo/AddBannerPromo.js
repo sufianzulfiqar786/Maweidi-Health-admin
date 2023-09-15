@@ -18,6 +18,8 @@ const AddBannerPromo = () => {
         <div className="row  px-2 pt-4 mb-5 pb-5">
             <div className="col-12  ">
                 <p className="mb-0 dashboard-com-top-text">Banner and Promo</p>
+Banner tab and promo tab are different in sidebar, crud also different, 
+extra add promo location in promo tab, not in banner.
             </div>
             <div className="col-12 mt-lg-0 mt-2 pt-4">
                 <p className="mb-0 doctor-header-top-text pt-1">
@@ -32,8 +34,13 @@ const AddBannerPromo = () => {
             <div className="col-12 ">
 
                 <div className="row px-3 mt-4">
-                    <div className="col-lg-12 doc-setting-input">
+                    <div className="col-lg-6 doc-setting-input">
                         <p className=" doc-add-filter-text">Title</p>
+
+                        <input type="text" />
+                    </div>
+                    <div className="col-lg-6 doc-setting-input">
+                        <p className=" doc-add-filter-text">Dsicount %</p>
 
                         <input type="text" />
                     </div>

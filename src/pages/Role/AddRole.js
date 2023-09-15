@@ -32,12 +32,12 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
     const [role_IdParentChild, setRole_IdParentChild] = useState(role_Id)
     const [parentJoinId, setParentJoinId] = useState(roleCategoryId)
 
-    useEffect(()=>{
-// setValue('email', '')
-// setValue('password', '')
-// setAddRole((pre)=>({...pre, 'email': '', 'password': ''}))
-// reset()
-    },[])
+    useEffect(() => {
+        // setValue('email', '')
+        // setValue('password', '')
+        // setAddRole((pre)=>({...pre, 'email': '', 'password': ''}))
+        // reset()
+    }, [])
 
     useEffect(() => {
         console.log("roleParent", roleParent)
@@ -155,36 +155,14 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                             : value === 7 ? `list_pharmacies?status=0`
                                 : value === 8 ? `list_laboratories?is_laboratory=0`
                                     : null}`, (response) => {
-                                        console.log("dattt", response?.data?.data)
+                                        console.log("dattt", response?.data)
+                                        const transformedData = response?.data?.map((item) => ({
+                                            value: value == 2 ? item?.user?.id : item?.id,
+                                            label: value == 2 ? item?.user?.name : item?.name,
+                                        }));
 
-                                        // this below condition need to change when api becomes full error free 
-
-                                        if (value === 1) {
-                                            const transformedData = response?.data?.data?.map((item) => ({
-                                                value: item?.id,
-                                                label: item?.name,
-                                            }));
-                                            console.log("transformedDataasd", transformedData)
-
-                                            setDropDownData(transformedData);
-                                        } else if (value === 2) {
-                                            const transformedData = response?.data?.data?.map((item) => ({
-                                                value: value === 2 || value === 1 ? item?.user?.id : item?.id,
-                                                label: value === 2 || value === 1 ? item?.user?.name : item?.name,
-                                            }));
-                                            console.log("transformedDataasd", transformedData)
-
-                                            setDropDownData(transformedData);
-                                        } else {
-                                            const transformedData = response?.data?.map((item) => ({
-                                                value: value === 2 || value === 1 ? item?.data?.user?.id : item?.id,
-                                                label: value === 2 || value === 1 ? item?.data?.user?.name : item?.name,
-                                            }));
-                                            console.log("transformedDataasd", transformedData)
-
-                                            setDropDownData(transformedData);
-                                        }
-
+                                        console.log("transformedDataasd", transformedData)
+                                        setDropDownData(transformedData);
                                     })
         }
     }
@@ -234,7 +212,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
 
     console.log("add_roleee", addRole)
 
-    
+
 
     const handleHospitalSubmit = (event) => {
 
@@ -417,7 +395,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                             field={field}
                                             value={field.value || ''}
                                             onBlur={field.onBlur}
-                                            disabled={!upperData ? !upperData : dropDownData?.length < 1}
+                                            disabled={!upperData ? upperData : dropDownData?.length < 1}
                                         />
 
                                         {dropDownData?.length > 0 && errors.join_id && (
@@ -491,7 +469,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                             field.onChange(e.target.value);
                                             setAddRole({ ...addRole, 'email': e.target.value })
                                         }}
-                                        autoComplete="off" 
+                                        autoComplete="off"
                                     />
                                 )}
                             />
@@ -515,7 +493,7 @@ const AddRole = ({ role_Id, upperData = true, roleParent, setAddRole, addRole, r
                                 <Controller
                                     name="password"
                                     control={control}
-                                    
+
                                     rules={{
                                         required: true,
                                         pattern:
