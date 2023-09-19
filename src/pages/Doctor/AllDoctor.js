@@ -95,7 +95,7 @@ const AllDoctor = () => {
                   {" "}
                   Add New Doctor{" "}
                 </Link>{" "}
-              </button>{" "}
+              </button>
             </div>
 
             <Modal

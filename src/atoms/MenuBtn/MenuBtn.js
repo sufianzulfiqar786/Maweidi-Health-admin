@@ -8,7 +8,7 @@ const MenuBtn = ({
 }) => {
   return (
     <div
-      className=" cursor-pointer cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center"
+      className="border box-shadow-hover1 cursor-pointer cursor-pointer menu-button p-4 mr-2 d-flex align-items-center justify-content-center"
       onClick={() => {
         handleMenu();
 

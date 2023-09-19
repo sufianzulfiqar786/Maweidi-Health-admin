@@ -12,6 +12,7 @@ const PieChart = () => {
       type: 'Service Provider',
       value: 10,
     },
+    
   ];
   const config = {
     appendPadding: 10,

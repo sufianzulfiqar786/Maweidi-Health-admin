@@ -149,6 +149,12 @@ const AddHospital = ({ Id }) => {
     setAddHospitalData({ ...addHospitalData, [name]: value });
   };
 
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const isSuperAdmin = Object.keys(role).length === 0 
+
   useEffect(() => {
     if (Id) {
       customData.deleteData(
@@ -222,7 +228,6 @@ const AddHospital = ({ Id }) => {
     }
     console.log("formDataasd", formData)
     if (errorMessage === "No Error") {
-      // alert('asdf')
       postData(
         Id
           ? `${process.env.REACT_APP_UPDATE_HOSPITAL_DATA}/${Id}`
@@ -980,7 +985,7 @@ const AddHospital = ({ Id }) => {
 
                 <MuiltiplesImages />
 
-                <div className="row  py-lg-3">
+              { allowedhost || isSuperAdmin ?  <div className="row  py-lg-3">
                   {items.map((item, index) => {
                     return (
                       <>
@@ -1019,81 +1024,6 @@ const AddHospital = ({ Id }) => {
                                 navigateLink='hospitals'
                               />
 
-                              {/* <div className="col-12 px-2">
-                      <div className="row pt-2">
-                        <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                          <p className="mb-2"> Role Type </p>
-                          <CustomDropDown
-                            disabled={true}
-                            selectLabel="Hospital Admin"
-                            option={optionRoleType}
-                          />
-                        </div>
-
-                        <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                          <p className="mb-2"> Hospital </p>
-                          <input type="text" disabled value={nameData} />
-                        </div>
-                      </div>
-
-                      <div className="row pt-4">
-                        <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
-                          <p className="mb-2"> Name </p>
-                          <input type="text" />
-                        </div>
-                      </div>
-
-                      <div className="row pt-4">
-                        <div className="col-12 mt-lg-0 mt-4  doc-setting-input">
-                          <p className="mb-2"> Email </p>
-                          <input type="text" />
-                        </div>
-                      </div>
-
-                      <div className="row  mt-4">
-                        <div className="col-lg-12   doc-setting-input">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            Country{" "}
-                          </p>
-                          <CustomDropDown
-                            selectLabel="Select"
-                            option={optionCountry}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row mt-4">
-                        <div className="col-lg-6 pr-lg-1 doc-setting-input role-input-placeholder">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            Contact{" "}
-                          </p>
-                          <input type="text" placeholder="+91-955-555-4751" />
-                        </div>
-
-                        <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                          <p className="mb-2 add-doc-role-type-detail">
-                            {" "}
-                            State{" "}
-                          </p>
-                          <CustomDropDown
-                            selectLabel="Select"
-                            option={optionState}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row my-5 pt-2 pb-3 ">
-                        <div className="col-lg-6">
-                          <button className="apply-filter add-doc-changes">
-                            Save Changes
-                          </button>
-                        </div>
-
-                        <div className="col-lg-6"></div>
-                      </div>
-                    </div> */}
                             </div>
                           </div>
                         </div>
@@ -1119,7 +1049,7 @@ const AddHospital = ({ Id }) => {
                       Add a Role
                     </span>
                   </div> : null}
-                </div>
+                </div> : null}
 
                 <div className="row my-5 pt-2 pb-3 ">
                   <div className="col-lg-6">

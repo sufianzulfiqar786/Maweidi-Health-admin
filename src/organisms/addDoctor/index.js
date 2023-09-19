@@ -70,10 +70,10 @@ const DoctorForm = ({ id, rawData, handleAddItem, items, handleRemoveItem }) => 
   } = useForm();
 
   useEffect(() => {
-    if (realHospitalData?.data?.data?.data?.length > 0) {
+    if (realHospitalData?.data?.data?.length > 0) {
       const opt =
-        realHospitalData?.data?.data?.data &&
-        realHospitalData?.data?.data?.data?.map((val) => ({
+        realHospitalData?.data?.data &&
+        realHospitalData?.data?.data?.map((val) => ({
           label: val?.name,
           value: val?.id,
         }));
@@ -257,6 +257,12 @@ if(res?.success === true){
     };
     input.click();
   };
+
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const isSuperAdmin = Object.keys(role).length === 0 
 
   useEffect(() => {
     if (id && rawData) {
@@ -869,7 +875,7 @@ if(res?.success === true){
 
 
 
-            <div className="row mb-5 py-lg-3">
+          { isSuperAdmin ?  <div className="row mb-5 py-lg-3">
               {items?.map((item, index) => {
                 return (
                   <>
@@ -1010,7 +1016,7 @@ if(res?.success === true){
                   </span>
                 </div>
               </div> : null}
-            </div>
+            </div> : null}
 
 
 

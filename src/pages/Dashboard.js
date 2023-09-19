@@ -359,6 +359,11 @@ const Dashboard = () => {
                     : ValidateRoute(location.pathname) === "/banner-promo/add" ? (
                       <AddBannerPromo />
                     ) 
+                    : location.pathname.startsWith("/banner-promo/edit/") ? (
+                      <AddBannerPromo 
+                      Id={ValidateRoute(location.pathname).split("/")[3]}
+                      />
+                    ) 
                     : ValidateRoute(location.pathname) === "/manageroles" ? (
                       <ManageRoles />
                     ) : ValidateRoute(location.pathname) === "/rolepermission" ? (

@@ -53,6 +53,11 @@ import CustomSelect from "../common/CustomSelect";
 import Time from "../../atoms/Time/Time";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import useFetch from "../../customHook/useFetch";
+import ListSkeleton from "../../molecules/ListSkeleton/ListSkeleton";
+import useDeleteData from "../../customHook/useDelete";
+import { CustomToast } from "../../atoms/toastMessage";
+import ButtonLoader from "../../atoms/buttonLoader";
 
 const rows = [
   {
@@ -237,14 +242,14 @@ const rows = [
 ];
 
 const DataTable = ({ searchQuery }) => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [modal1Open, setModal1Open] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
   const [errorData, setErrorData] = useState(0);
-
+  const [uniqueId, setUniqueId] = useState(false);
   const [image, setImage] = useState(null);
 
   const handleChangePage = (newPage) => {
@@ -277,23 +282,38 @@ const DataTable = ({ searchQuery }) => {
     input.click();
   };
 
-  const totalRows = rows.length;
+  const getBannerList = useFetch(
+    `${process.env.REACT_APP_LIST_BANNER}?per_page=${rowsPerPage}&page=${page}`
+  )
+
+  const rows = getBannerList.data
+  console.log("roesss", rows?.data)
+
+  const totalRows = rows?.data?.total;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const startIndex = page * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
-  const visibleRows = rows
-    .filter((item) => {
-      var lcInfo = searchQuery.toLocaleLowerCase();
-      return lcInfo === ""
-        ? item
-        : item.name.toLocaleLowerCase().includes(lcInfo) ||
-            item.address.toLocaleLowerCase().includes(lcInfo) ||
-            item.mobile.toLocaleLowerCase().includes(lcInfo) ||
-            item.country.toLocaleLowerCase().includes(lcInfo) ||
-            item.zipcode.toLocaleLowerCase().includes(lcInfo) ||
-            item.state.toLocaleLowerCase().includes(lcInfo);
-    })
-    ?.slice(startIndex, endIndex);
+  const visibleRows = rows?.data?.data
+
+  console.log("visibleRows", visibleRows)
+
+  const deleteProductData = useDeleteData();
+  const deleteData = deleteProductData.deleteData
+
+  const handleDelete = (Id) => {
+
+    deleteData(`${process.env.REACT_APP_DELETE_BANNER}/${Id}`, () => {
+      // setDeleteModal(false)
+      getBannerList?.fetchPaginatedData(`${process.env.REACT_APP_LIST_BANNER}?per_page=${rowsPerPage}&page=${page}`)
+      // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
+      CustomToast({
+        type: "success",
+        message: "Banner Delete Successfuly!",
+      });
+      setDeleteModal(false)
+      // setRows(filter)
+    });
+  };
 
   return (
     <>
@@ -318,7 +338,7 @@ const DataTable = ({ searchQuery }) => {
                   #
                 </TableCell>
                 <TableCell align="left">Title</TableCell>
-                <TableCell align="left">
+                {/* <TableCell align="left">
                   <span className="banner-selection">
                     <Select
                       defaultValue="Category Type"
@@ -326,7 +346,7 @@ const DataTable = ({ searchQuery }) => {
                         width: "100%",
                       }}
                       bordered={true}
-                      onChange={() => {}}
+                      onChange={() => { }}
                       options={[
                         {
                           label: "Banner",
@@ -337,9 +357,9 @@ const DataTable = ({ searchQuery }) => {
                       ]}
                     />
                   </span>
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="left">Status</TableCell>
-                <TableCell align="left">
+                {/* <TableCell align="left">
                   <span className="banner-selection">
                     <Select
                       defaultValue="Banner Placement"
@@ -347,7 +367,7 @@ const DataTable = ({ searchQuery }) => {
                         width: "100%",
                       }}
                       bordered={true}
-                      onChange={() => {}}
+                      onChange={() => { }}
                       options={[
                         {
                           label: "Laboratory Home",
@@ -361,10 +381,12 @@ const DataTable = ({ searchQuery }) => {
                       ]}
                     />
                   </span>
-                </TableCell>
-                <TableCell align="left">Promo Type</TableCell>
+                </TableCell> */}
+                {/* <TableCell align="left">Promo Type</TableCell> */}
                 <TableCell align="left">Start Time</TableCell>
                 <TableCell align="left">End Time</TableCell>
+                <TableCell align="left">Start Date</TableCell>
+                <TableCell align="left">End Date</TableCell>
                 <TableCell align="left">Link</TableCell>
                 <TableCell align="left">Description</TableCell>
                 <TableCell align="left">Image</TableCell>
@@ -381,39 +403,49 @@ const DataTable = ({ searchQuery }) => {
                 },
               }}
             >
-              {visibleRows.map(
+              { !getBannerList?.isLoading ? visibleRows?.map(
                 ({
                   id,
                   Promo,
                   Category,
-                  Status,
+                  status,
                   Banner,
-                  Promo1,
-                  start,
-                  end,
-                  Description,
-                }) => (
+                  image,
+                  description,
+                  link,
+                  start_time,
+                  end_time,
+                  title,
+                  start_date,
+                  end_date,
+                  banner_placements,
+                }, index) => (
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="left" className="number">
-                      {id}
+                    {((page -1) * rowsPerPage + index) + 1}
                     </TableCell>
 
                     <TableCell align="left">
-                      {Promo} {id}
+                     {title}
                     </TableCell>
-                    <TableCell align="left">{Category}</TableCell>
-                    <TableCell align="left">{Status}</TableCell>
-                    <TableCell align="left">{Banner}</TableCell>
-                    <TableCell align="left">{Promo1}</TableCell>
-                    <TableCell align="left">
-                      <div>{start?.slice(0, 12)} </div>
-                      <div>{start?.slice(12, 22)} </div>
+                    {/* <TableCell align="left">{Category}</TableCell> */}
+                    <TableCell align="left">{status == 1 ? 'Enabled' : 'Disabled'}</TableCell>
+                    {/* <TableCell align="left">{banner_placements?.map((item)=><p className="mb-0">unknown</p>
+                    )}</TableCell> */}
+                    {/* <TableCell align="left">{Promo1}</TableCell> */}
+                    <TableCell align="center">
+                      <div>{start_time?.slice(0, 5)} </div>
                     </TableCell>
-                    <TableCell align="left">
-                      <div>{end?.slice(0, 12)} </div>
-                      <div>{end?.slice(12, 22)} </div>
+                    <TableCell align="center">
+                      <div>{end_time?.slice(0, 5)} </div>
+                    </TableCell>
+                    <TableCell align="center">
+                      <div>{start_date}</div>
+                    </TableCell>
+                    <TableCell align="center">
+                      <div>{end_date} </div>
                     </TableCell>
                     <TableCell align="left">
                       <span
@@ -423,31 +455,43 @@ const DataTable = ({ searchQuery }) => {
                           textDecoration: "underline",
                         }}
                       >
-                        {"http://localhost:3000/banner-promo".slice(0, 30)}
+                        {link}
                       </span>
                     </TableCell>
                     <TableCell align="left">
-                      Makeup & Selfcare Products - 70 % Discount{" "}
+                      {description}
                     </TableCell>
 
                     <TableCell>
-                      <img className="" src={GalleryIcon} />
+                     <Link to={`${process.env.REACT_APP_IMAGE_URL}/${image}`}>
+                     <img className="" src={GalleryIcon} />
+                     </Link> 
                     </TableCell>
                     <TableCell>
+                    <Link to={`/banner-promo/edit/${id}`}>
                       <img
                         className=""
                         src={EditIcon}
                         onClick={() => setModal1Open(true)}
-                      />{" "}
+                      />
+                      </Link>
                       <img
                         className=""
-                        onClick={() => setDeleteModal(true)}
+                        onClick={() =>{ setDeleteModal(true)
+                          setUniqueId(id)
+                        }}
+                        
                         src={DeleteIcon}
                       />
                     </TableCell>
                   </TableRow>
                 )
-              )}
+              )  :
+              <TableRow>
+              <TableCell colSpan={11}>
+                <ListSkeleton totalRow={4} totalCol={11} image={false} />
+              </TableCell>
+            </TableRow>}
             </TableBody>
           </Table>
         </TableContainer>
@@ -514,7 +558,7 @@ const DataTable = ({ searchQuery }) => {
                 style={{
                   width: "100%",
                 }}
-                onChange={() => {}}
+                onChange={() => { }}
                 options={[
                   {
                     label: "Enable",
@@ -644,7 +688,11 @@ const DataTable = ({ searchQuery }) => {
               <p className="mb-0 pt-lg-5 pt-3 pb-4 mt-lg-3">
                 Are you sure you want to delete?
               </p>
-              <button className="mt-lg-4 mt-1 mb-lg-5 mb-2">Delete</button>
+              <button disabled={deleteProductData?.isLoading} className="mt-lg-4 mt-1 mb-lg-5 mb-2"
+                onClick={()=>{
+                  handleDelete(uniqueId)
+                }}
+              >{ deleteProductData?.isLoading ? <div className="pb-3"><ButtonLoader /> </div> : 'Delete'}</button>
             </div>
           </div>
         </Modal>
@@ -652,8 +700,8 @@ const DataTable = ({ searchQuery }) => {
 
       <div className="pagination-container px-md-3 ml-md-1 mt-md-2 ">
         <div className="pagination-detail">
-          Showing {page * rowsPerPage + 1} -{" "}
-          {Math.min((page + 1) * rowsPerPage, rows.length)} of {rows.length}
+          Showing {(page - 1) * rowsPerPage + 1} -{" "}
+          {rows?.data?.to} of {rows?.data?.total}
         </div>
         <CustomPagination
           page={page}

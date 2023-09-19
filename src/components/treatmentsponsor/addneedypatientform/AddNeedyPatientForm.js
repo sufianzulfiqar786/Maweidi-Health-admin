@@ -24,8 +24,6 @@ const AddNeedyPatientForm = ({Id}) => {
   const customData = useDeleteData();
   const navigate = useNavigate();
 
-
-
   const {
     reset,
     setValue,
@@ -43,13 +41,15 @@ const AddNeedyPatientForm = ({Id}) => {
   useEffect(() => {
     if (hospitalData?.success) {
       setHospitals(
-        hospitalData?.data?.data?.map(({ id, name }) => ({
+        hospitalData?.data?.map(({ id, name }) => ({
           value: id,
           label: name,
         }))
       );
     }
   }, [hospitalData]);
+
+  console.log("hospitals", hospitals)
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];

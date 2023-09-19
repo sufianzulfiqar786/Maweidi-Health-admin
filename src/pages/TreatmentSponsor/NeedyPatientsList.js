@@ -8,6 +8,7 @@ import NeedPatientEditModal from "../../components/treatmentsponsor/needpatients
 import "../../assets/css/laboratory/laboratorylist/laboratorylist.scss";
 import CancelModal from "../../components/common/CancelModal";
 import AcceptModal from "../../components/common/AcceptModal";
+import { Link } from "react-router-dom";
 const NeedyPatientList = () => {
   const [rows, setRows] = useState([
     {
@@ -188,8 +189,19 @@ const NeedyPatientList = () => {
               </button> */}
             </div>
           </div>
-          <div className="row m-0 p-0 ">
+          <div className="row m-0 p-0 w-100">
+          <div className="col-6 px-0 w-100 d-flex justify-content-start align-items-end">
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
+            </div>
+            <div className="col-6 px-0 w-100 d-flex justify-content-end align-items-end">
+            <button className="btn-add-new-doc">
+                {" "}
+                <Link className="add-doc-link-color" to="/treatment-sponsor">
+                  {" "}
+                  Add Needy Patient{" "}
+                </Link>{" "}
+              </button>
+            </div>
           </div>
         </div>
 

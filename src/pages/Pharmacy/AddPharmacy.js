@@ -30,6 +30,8 @@ const AddPharmacy = ({ Id }) => {
     }
   }, [Id]);
 
+  
+
   return (
     <>
       <div className="row px-3  pt-4 addpatient-tab">

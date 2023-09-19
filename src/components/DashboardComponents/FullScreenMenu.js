@@ -69,7 +69,7 @@ const FullScreenMenu = ({
         ? (
         <Link className="maweidi-link ml-md-auto ml-0 " to="/dashboard">
           <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
@@ -125,7 +125,7 @@ const FullScreenMenu = ({
         isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0" to="/appointment">
           <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
@@ -183,7 +183,7 @@ const FullScreenMenu = ({
         ? (
           <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
             <div
-              className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+              className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
               onClick={() => {
                 setMenuDropDownFullScreen({
                   ...menuDropDownFullScreen,
@@ -240,7 +240,7 @@ const FullScreenMenu = ({
        allowedhost||
         isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
         >
           <div
             className=" row "
@@ -291,7 +291,7 @@ const FullScreenMenu = ({
             <div
               className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
             >
-              <img
+              {/* <img
                 className="size-small-screen"
                 onClick={() => {
                   setMenuDropDownFullScreen({
@@ -306,10 +306,12 @@ const FullScreenMenu = ({
                   }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
-              />
+              /> */}
             </div>
 
-            {menuDropDownFullScreen.toggle &&
+
+{/* Doctor tab hide  */}
+            {/* {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "doc" && (
                 <>
                   <div className="sub-menu1-top-padding sub-menu1-1st  col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
@@ -366,7 +368,7 @@ const FullScreenMenu = ({
                   </div>
                  
                 </>
-              )}
+              )} */}
           </div>
         </div>
       ) : null}
@@ -375,7 +377,7 @@ const FullScreenMenu = ({
 
       {allowedhost ||alloweddoc || isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
         >
           <div
             className=" row"
@@ -426,7 +428,7 @@ const FullScreenMenu = ({
             <div
               className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
             >
-              <img
+              {/* <img
                 className="size-small-screen"
                 onClick={() => {
                   setMenuDropDownFullScreen({
@@ -441,10 +443,12 @@ const FullScreenMenu = ({
                   }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
-              />
+              /> */}
             </div>
 
-            {menuDropDownFullScreen.toggle &&
+
+{/* Patient tab hide  */}
+            {/* {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "patient" && (
                 <>
                   <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
@@ -499,7 +503,7 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
                 </>
-              )}
+              )} */}
           </div>
         </div>
       ) : null}
@@ -508,12 +512,13 @@ const FullScreenMenu = ({
       {/* || allowedhost */}
       {allowedphar || isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-        >
+          className={`mt-lg-2 mt-0 py-1  d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          style={{width:'105%'}} >
           <div
             className=" row"
             style={{ display: `${menuLeftText}`, width: "100%" }}
           >
+             <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -577,13 +582,14 @@ const FullScreenMenu = ({
                 style={{ display: `${menuLeftText}` }}
               />
             </div>
+            </div>
 
             {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "pharmacy" && (
                 <>
                   {/* 1st Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy">
                       <span
@@ -607,10 +613,10 @@ const FullScreenMenu = ({
                         Pharmacy List
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 2nd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/pharmacy/add">
                       <span
@@ -634,14 +640,14 @@ const FullScreenMenu = ({
                         Add Pharmacy
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/pharmacy/shop">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "pharmacyshop"
                           ? "seleted-menu"
                           : ""
@@ -665,11 +671,11 @@ const FullScreenMenu = ({
 
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding col-12 dashboard-main-hover mt-lg-2 ml-5  left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/pharmacy/shop/detail">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "pharmacyshopdetail"
                           ? "seleted-menu"
                           : ""
@@ -700,12 +706,14 @@ const FullScreenMenu = ({
       {/* || allowedhost */}
       {allowedStore || isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-        >
+          className={`mt-lg-2 mt-0 py-1  d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          style={{width:'105%'}}
+       >
           <div
-            className=" row"
+            className=" row mr-0 w-100"
             style={{ display: `${menuLeftText}`, width: "100%" }}
-          >
+          >  
+          <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -769,13 +777,13 @@ const FullScreenMenu = ({
                 style={{ display: `${menuLeftText}` }}
               />
             </div>
-
+            </div>
             {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "medical" && (
                 <>
                   {/* 1st Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/medical/equipment">
                       <span
@@ -799,10 +807,10 @@ const FullScreenMenu = ({
                         Equipment List
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 2nd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/medical/equipment/add">
                       <span
@@ -826,14 +834,14 @@ const FullScreenMenu = ({
                         Add Equipment
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/medical/equipment/shop">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "equipmentshop"
                           ? "seleted-menu"
                           : ""
@@ -857,11 +865,11 @@ const FullScreenMenu = ({
 
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/medical/equipment/shop/detail">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "equipmentshopdetail"
                           ? "seleted-menu"
                           : ""
@@ -893,12 +901,13 @@ const FullScreenMenu = ({
       {allowedlab ||
         isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-        >
+          className={`mt-lg-2 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          style={{width:'105%'}}  >
           <div
             className=" row"
             style={{ display: `${menuLeftText}`, width: "100%" }}
           >
+             <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -961,12 +970,13 @@ const FullScreenMenu = ({
                 style={{ display: `${menuLeftText}` }}
               />
             </div>
+            </div>
 
             {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "laboratory" && (
                 <>
                   {/* 1st Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/laboratory">
                       <span
@@ -990,9 +1000,9 @@ const FullScreenMenu = ({
                         Laboratory List
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 1st Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
 
                     <Link className="maweidi-link " to="/laboratory/add">
@@ -1017,13 +1027,13 @@ const FullScreenMenu = ({
                         Add Laboratory
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 2nd Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/bloodtest">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "bloodtest"
                           ? "seleted-menu"
                           : ""
@@ -1045,11 +1055,11 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/bloodtest/orderlist">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "xray"
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname == "xray"
                           ? "seleted-menu"
                           : ""
                           } `}
@@ -1080,12 +1090,13 @@ const FullScreenMenu = ({
       {allowedradio ||
         isSuperAdmin ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-        >
+          className={`mt-lg-2 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          style={{width:'105%'}}  >
           <div
             className=" row"
             style={{ display: `${menuLeftText}`, width: "100%" }}
           >
+             <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -1148,16 +1159,17 @@ const FullScreenMenu = ({
                 style={{ display: `${menuLeftText}` }}
               />
             </div>
+            </div>
 
             {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "xraytab" && (
                 <>
                   {/* 1st Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
                     <Link className="maweidi-link " to="/xray/list">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "xraytablist"
                           ? "seleted-menu"
                           : ""
@@ -1177,9 +1189,9 @@ const FullScreenMenu = ({
                         X-ray List
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 1st Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
                     <span class="dot"></span>
 
                     <Link className="maweidi-link " to="/xray/add">
@@ -1204,13 +1216,13 @@ const FullScreenMenu = ({
                         Add X-ray
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                   {/* 2nd Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/xray">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname ==
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname ==
                           "xraytabtest"
                           ? "seleted-menu"
                           : ""
@@ -1232,11 +1244,11 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                    <span class="dot"></span>
+                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                    {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/xray/orderlist">
                       <span
-                        className={`pl-lg-2  ${menuDropDownFullScreen.subMenuMobile.subname == "xraytabrequest"
+                        className={`pl-lg-3  ${menuDropDownFullScreen.subMenuMobile.subname == "xraytabrequest"
                           ? "seleted-menu"
                           : ""
                           } `}
@@ -1269,7 +1281,7 @@ const FullScreenMenu = ({
           to="blood-donation"
         >
           <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
@@ -1326,7 +1338,7 @@ const FullScreenMenu = ({
           to="/home-service-provider"
         >
           <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
@@ -1380,7 +1392,7 @@ const FullScreenMenu = ({
 
       {allowedhost || isSuperAdmin || alloweddoc ? (
         <div
-          className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
         >
           <div
             className=" row"
@@ -1401,7 +1413,7 @@ const FullScreenMenu = ({
                 />
               </div>
 
-              <Link className="maweidi-link " to="/treatment-sponsor">
+              <Link className="maweidi-link " to="/needy-patients">
                 <span style={{ display: `${menuLeftText}` }}>
                   <p
                     className={`mb-0 pl-lg-3 text-left dashboard-left-icon-text ${menuDropDownFullScreen.name === "treatmentsponsor"
@@ -1427,7 +1439,7 @@ const FullScreenMenu = ({
             <div
               className={` ${menuLeftRightDropDown2} px-0 d-flex align-items-center justify-content-end`}
             >
-              <img
+              {/* <img
                 className="size-small-screen"
                 onClick={() => {
                   setMenuDropDownFullScreen({
@@ -1442,10 +1454,10 @@ const FullScreenMenu = ({
                   }`}
                 alt=""
                 style={{ display: `${menuLeftText}` }}
-              />
+              /> */}
             </div>
 
-            {menuDropDownFullScreen.toggle &&
+            {/* {menuDropDownFullScreen.toggle &&
               menuDropDownFullScreen.name === "treatmentsponsor" && (
                 <>
                   <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
@@ -1464,8 +1476,6 @@ const FullScreenMenu = ({
                             ...prevState,
                             subMenuMobile: {
                               ...prevState.subMenuMobile,
-                              // subtoggle: true, // or any other value you want to update it to
-
                               subtoggle: !prevState.subMenuMobile.subtoggle,
                               subname: "treatmentsponsor",
                             },
@@ -1508,56 +1518,9 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  {/* <div className="sub-menu1-top-padding col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
-                  <img
-                    className=""
-                    src={LeftDropIcon}
-                    alt=""
-                    onClick={() => {
-                      // let sbtoggle = {"subtoggle":false}
-
-                      setMenuDropDownFullScreen((prevState) => ({
-                        ...prevState,
-                        subMenuMobile: {
-                          ...prevState.subMenuMobile,
-                          // subtoggle: true, // or any other value you want to update it to
-
-                          subtoggle: !prevState.subMenuMobile.subtoggle,
-                          subname: "sponsorslist",
-                        },
-                      }));
-                    }}
-                  />
-                  <Link className="maweidi-link " to="/sponsors-list">
-                    <span
-                      className={`pl-lg-2  ${
-                        menuDropDownFullScreen.subMenuMobile.subname ==
-                        "sponsorslist"
-                          ? "seleted-menu"
-                          : ""
-                      } `}
-                      onClick={() => {
-                        // let sbtoggle = {"subtoggle":false}
-
-                        setMenuDropDownFullScreen((prevState) => ({
-                          ...prevState,
-                          subMenuMobile: {
-                            ...prevState.subMenuMobile,
-                            // subtoggle: true, // or any other value you want to update it to
-
-                            subtoggle: !prevState.subMenuMobile.subtoggle,
-                            subname: "sponsorslist",
-                          },
-                        }));
-                        setMobileMenu1(!MobileMenu1);
-                      }}
-                    >
-                      Sponsors List
-                    </span>
-                  </Link>
-                </div> */}
+                  
                 </>
-              )}
+              )} */}
           </div>
         </div>
       ) : null}
@@ -1566,7 +1529,7 @@ const FullScreenMenu = ({
       {isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
           <div
-            className={`mt-lg-4 mt-0 pt-1 d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,

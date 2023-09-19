@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Select, Input } from "antd";
 
 const { Option } = Select;
@@ -20,6 +20,10 @@ const CustomDropDown = ({
   const updatedOptions =
     mode === "multiple" ? [selectAllOption, ...option] : option;
 
+    useEffect(()=>{
+    
+    },[])
+
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);
     handleChangeSelect(allOptions, name);
@@ -29,7 +33,6 @@ const CustomDropDown = ({
     if (Array.isArray(val) && val.includes("all")) {
       handleSelectAll();
     } else {
-    
       handleChangeSelect(val, name);
       if (typeof hospitalDopDown === 'function') {
         hospitalDopDown(val, dayId);
@@ -47,6 +50,8 @@ const CustomDropDown = ({
     }
     return null;
   });
+
+  console.log("valuefirst", value)
 
   return (
     <div>

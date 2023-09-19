@@ -19,10 +19,29 @@ text-decoration: none;
   }
 }
 
-.hover-effect{
-  a:hover{
-    opacity: 0.6;
-  }
+// .hover-effect{
+//   a:hover{
+//     opacity: 0.6;
+//   }
+// }
+
+.dashboard-main-hover{
+ transition: 0.5s all;
+}
+
+.dashboard-main-hover:hover{
+  background-color: #1118271a;
+  border-radius: 5px;
+}
+
+.dashboard-main-hover:hover{
+  background-color: #1118271a;
+  border-radius: 5px;
+}
+
+.dashboard-main-hover:hover{
+  background-color: #1118271a;
+  border-radius: 5px;
 }
 
 .dashboard-logo img {

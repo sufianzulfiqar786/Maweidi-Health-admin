@@ -26,6 +26,8 @@ const AddDoctor = () => {
     setItems(newItems);
   };
 
+
+
   return (
     <>
       <div className="row  px-2 pt-4">

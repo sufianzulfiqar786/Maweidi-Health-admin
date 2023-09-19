@@ -24,48 +24,108 @@ const DashboardCom = () => {
       count: 301,
       detail: "Hospitals",
       img: HospitalIcon,
-      link:"/hospitals",
+      link: "/hospitals",
     },
     {
       id: 2,
       count: 302,
       detail: "Appoinments",
       img: PulseIcon,
-      link:"/appointment",
+      link: "/appointment",
     },
     {
       id: 3,
       count: 308,
       detail: "Doctors",
-      img: BloodIcon ,
-      link:"/doctors",
+      img: BloodIcon,
+      link: "/doctors",
     },
     {
       id: 4,
       count: 301,
       detail: "Laboratories",
       img: LaboratoryIcon,
-      link:"/laboratory",
+      link: "/laboratory",
     },
     {
       id: 5,
       count: 301,
       detail: "Pharmacies",
       img: PharmacyIcon,
-      link:"/pharmacy",
+      link: "/pharmacy",
+    },
+  ];
+
+  const data1 = [
+    {
+      id: 1,
+      text: 'Revenue',
+      total: '12312',
+      progress: 123,
+    },
+    {
+      id: 1,
+      text: 'Orders',
+      total: '1312',
+      progress: 23,
+    },
+    {
+      id: 1,
+      text: 'Purchases',
+      total: '12212',
+      progress: -13,
+    },
+    {
+      id: 1,
+      text: 'New Consumer',
+      total: '1212',
+      progress: 16,
     },
   ];
 
   return (
     <>
-      <div className="row  px-2 pt-4" style={{overflowX:"hidden"}}>
+      <div className="row  px-2 pt-4" style={{ overflowX: "hidden" }}>
         <div className="col-12 mb-3 mb-lg-0">
           <p className="mb-0 dashboard-com-top-text">Dashboard</p>
         </div>
 
         <div className="col-12 mt-1">
           <div className="row">
-            {data.map(({ id, count, detail, img, link }) => {
+            {data1.map(({text, total, progress }) => {
+              return (
+                <div className="px-3 col-3" >
+                  <Link to='/'  >
+                    <div className="dashboard-right-side-top-card my-lg-3 w-100 box-shadow-hover d-flex pl-1 py-3">
+
+                      <div className="px-3 w-100">
+                        <p className=" m-0 p-0  dashboard-left-icon-top-text1" style={{color:'#111827', fontSize:"14px"}}>
+                          {text}
+                        </p>
+                        <div className="dashboard-left-icon-top-text2 pt-4 d-flex justify-content-between w-100">
+                          <div className="" style={{color:'#111827', fontSize:"18px"}}>KWD 21,827.13</div>
+                          <div className="px-2" style={{
+                            backgroundColor:progress>0 ?  '#D1FAE5' : '#FEE2E2',
+                            color:progress>0 ? "#059669" : '#DC2626',
+                            fontSize:'12px',
+                            borderRadius:'10px',
+                            
+                          }}>{ progress>0?  <i class="fa-solid fa-arrow-up pr-1" style={{fontSize:'10px'}}></i> : 
+                          <i class="fa-solid fa-arrow-down pr-1" style={{fontSize:'10px'}}></i>
+                          }{progress}%</div>
+                        </div>
+                        {/* <p className=" m-0 p-0 ">
+                      
+                      </p> */}
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+
+
+            {/* {data.map(({ id, count, detail, img, link }) => {
               return (
                 <div className="px-3 dashboard-card" >
                   <Link to={link} >
@@ -86,7 +146,8 @@ const DashboardCom = () => {
                 </Link>
                 </div>
               );
-            })}
+            })} */}
+
           </div>
         </div>
 
@@ -95,7 +156,7 @@ const DashboardCom = () => {
             <div className="col-lg-8    ">
               <div className=" bar-chart pb-4">
                 <p class="mb-0 bar-chart-text1 pt-3 pb-4 pl-4 ml-3">
-                   Visited Patients
+                  Visited Patients
                 </p>
 
                 <div className="bar-chart-padding ">
@@ -109,16 +170,16 @@ const DashboardCom = () => {
             <div className="col-lg-4 mt-lg-0 mt-4" >
               <div className="Radial-bar-border  " >
                 <p class="mb-0 bar-chart-text1 pt-3 pb-4 d-flex justify-content-center ">
-                Patients By Department
+                  Service By Department
                 </p>
 
                 <div
                   className="d-flex justify-content-center align-items-center "
                   // style={{ height: "78%" }}
-                  style={{minHeight:"85%"}}
+                  style={{ minHeight: "85%" }}
                 >
                   {/* <DashboardRadialBar /> */}
-                  <PieChart/>
+                  <PieChart />
                 </div>
 
                 <div></div>

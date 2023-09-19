@@ -114,6 +114,12 @@ const NewXrayForm = ({
     setIsModalVisible(!isModalVisible);
   };
 
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const allowedhost = Object.keys(role).includes("hospitaladmin")
+  const allowedlab = Object.keys(role).includes("technologist")
+  const allowedphar = Object.keys(role).includes("pharmacist")
+  const isSuperAdmin = Object.keys(role).length === 0 
+
   const handleChangeSelect = (value, name) => {
     setAddPharmacyData({ ...addPharmacyData, [name]: value });
     setFormDataState((pre)=>({...pre, [name]:value}))
@@ -922,7 +928,7 @@ setValue()
         <div className="pl-3">
           <MuiltiplesImages />
         </div>
-        <div className="row pb-5 mb-lg-5 m-0 second-row pl-2 mt-3">
+        { isSuperAdmin ?   <div className="row pb-5 mb-lg-5 m-0 second-row pl-2 mt-3">
           {click ? (
             <div
               className="col-12 mb-5 py-4 d-flex align-items-center"
@@ -978,7 +984,7 @@ setValue()
               </div>
             </div>
           )}
-        </div>
+        </div> : null}
 
         <div className="row my-5 pt-2 pb-3 ">
           <div className="col-lg-6">

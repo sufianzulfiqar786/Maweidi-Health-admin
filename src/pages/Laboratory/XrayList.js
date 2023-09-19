@@ -8,6 +8,7 @@ import AddRoleModal from "../../components/laboratory/laboratorylist/AddRoleModa
 import EditLaboratoryModal from "../../components/laboratory/laboratorylist/EditLaboratoryModal";
 import DeleteModal from "../../components/common/DeleteModal";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
+import { Link } from "react-router-dom";
 
 const XrayList = () => {
   const [rows, setRows] = useState([
@@ -171,7 +172,18 @@ const XrayList = () => {
             </div> */}
           </div>
           <div className="row m-0 p-0 ">
+          <div className="col-6 px-0 w-100 d-flex justify-content-start align-items-end">
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
+            </div>
+            <div className="col-6 px-0 w-100 d-flex justify-content-end align-items-end">
+            <button className="btn-add-new-doc">
+                {" "}
+                <Link className="add-doc-link-color" to="/xray/add">
+                  {" "}
+                  Add X-ray{" "}
+                </Link>{" "}
+              </button>
+            </div>
           </div>
         </div>
 
