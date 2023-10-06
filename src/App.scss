@@ -225,67 +225,73 @@ input {
   background: linear-gradient(323.79deg, #125a77 35.68%, #397d99 92.17%);
 }
 
-.common-btn:hover{
+.common-btn:hover {
   opacity: 0.8;
 }
 
-.appointment-tab{
-  input{
+.appointment-tab {
+  input {
     padding-left: 10px;
   }
 }
 
-.three-side-shadow-hover, .react-datepicker{
+.three-side-shadow-hover,
+.react-datepicker {
   transition: 0.5s all;
 }
 
-.three-side-shadow-hover:hover{
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); 
+.three-side-shadow-hover:hover {
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
-.ant-picker.ant-picker-disabled{
+.ant-picker.ant-picker-disabled {
   background-color: white !important;
 }
 
-input[disabled] , button[disabled]{
+input[disabled],
+button[disabled] {
   cursor: not-allowed;
 }
 
-.ant-select-selector:hover{
-background-color: white !important;
+.ant-select-selector:hover {
+  background-color: white !important;
 }
 
-.Availbility-container{
-  .react-datepicker{
+.Availbility-container {
+  .react-datepicker {
     box-shadow: 0 0 0 1px #E4E3E4;
   }
-  .react-datepicker:hover{
-    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); 
+
+  .react-datepicker:hover {
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
   }
 }
 
-.sign-page, .add-role-default-password{
+.sign-page,
+.add-role-default-password {
+
   input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
     -webkit-background-clip: text;
     -webkit-text-fill-color: #000000;
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px #ffffff29;
-}
+  }
 }
 
-.add-role-default-email{
+.add-role-default-email {
+
   input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
     -webkit-background-clip: text;
     -webkit-text-fill-color: #000000;
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px rgba(46, 46, 46, 0.4);
-}
+  }
 }
 
 // .pharmacy-schedule{
@@ -294,11 +300,11 @@ input:-webkit-autofill:active{
 //   }
 // }
 
-button:focus{
+button:focus {
   outline: none;
 }
 
-.export-me{
+.export-me {
   width: 100px;
   height: 36px;
   background-color: white;
@@ -308,14 +314,97 @@ button:focus{
   font-family: $Montserrat-Regular;
 }
 
-.box-shadow-hover, .box-shadow-hover1{
+.box-shadow-hover,
+.box-shadow-hover1,
+.box-shadow-hover2 {
   transition: 0.5s all;
 }
 
-.box-shadow-hover:hover{
+.box-shadow-hover:hover {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
-.box-shadow-hover1:hover{
+.box-shadow-hover1:hover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.box-shadow-hover2:hover {
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+}
+
+.border-radius-five {
+  border-radius: 5px;
+}
+
+.list-header {
+  font-size: 14px;
+
+  .search-input-field {
+    width: 208px;
+    height: 36px;
+    border: 1px solid #e4e3e4;
+    border-radius: 5px;
+    background-color: white;
+
+
+    input {
+      color: black;
+      background-color: transparent;
+      border: none;
+    }
+  }
+
+  &-btn1 {
+    height: 36px;
+    min-width: 92px;
+    border: 1px solid #e4e3e4;
+    border-radius: 5px;
+    background-color: white;
+    font-family: $Montserrat-Medium;
+    color: #4B5563;
+
+  }
+
+  &-btn2 {
+    height: 36px;
+    min-width: 130px;
+    border: 1px solid #e4e3e4;
+    border-radius: 5px;
+    background: linear-gradient(323.79deg, #125a77 35.68%, #397d99 92.17%);
+    font-family: $Montserrat-Medium;
+    color: white;
+
+  }
+
+}
+
+// .list-header-btn{
+//   height: 36px;
+// }
+
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: #b0b0b1;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tool-tip .tooltiptext {
+  visibility: hidden;
+  min-width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  transform: translate(-50%, -80%); 
+  position: absolute;
+  z-index: 1;
+}
+
+.tool-tip:hover .tooltiptext {
+  visibility: visible;
 }

@@ -86,6 +86,9 @@ const LaboratoryList = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0 
+
   // Search Functionality
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -108,6 +111,8 @@ const LaboratoryList = () => {
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
+
+
 
   return (
     <>
@@ -176,13 +181,13 @@ const LaboratoryList = () => {
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
             </div>
             <div className="col-6 px-0 w-100 d-flex justify-content-end align-items-end">
-            <button className="btn-add-new-doc">
+            { isSuperAdmin ?    <button className="btn-add-new-doc">
                 {" "}
                 <Link className="add-doc-link-color" to="/laboratory/add">
                   {" "}
                   Add Laboratory{" "}
                 </Link>{" "}
-              </button>
+              </button> : null}
             </div>
           </div>
         </div>

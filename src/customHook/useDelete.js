@@ -22,10 +22,10 @@ const useDeleteData = () => {
                 cb(response.data)
             }
             else {
-                CustomToast({
-                    type: "error",
-                    message: `${response?.data?.response}`,
-                });
+                // CustomToast({
+                //     type: "error",
+                //     message: `${response?.data?.response}`,
+                // });
             }
         } catch (error) {
             setError(error);

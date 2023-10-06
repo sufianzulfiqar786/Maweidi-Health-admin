@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import CustomPagination from "../common/CustomPagination";
 import CardHeader from "@mui/material/CardHeader";
 import { Box } from "@mui/material";
+import ListSkeleton from "../../molecules/ListSkeleton/ListSkeleton";
 
 const DataTable = ({
   doctors,
@@ -20,6 +21,7 @@ const DataTable = ({
   totalDoctors,
   rows,
   toDoctors,
+  isLoading,
 }) => {
 
   console.log("totalDoctors", totalDoctors)
@@ -71,7 +73,7 @@ const DataTable = ({
               },
             }}
           >
-            {visibleRows?.map(
+            { !isLoading ? visibleRows?.map(
               (
                 {
                   id,
@@ -131,7 +133,13 @@ const DataTable = ({
                   </TableCell>
                 </TableRow>
               )
-            )}
+            ) :
+            <TableRow>
+              <TableCell colSpan={11}>
+                <ListSkeleton totalRow={4} totalCol={11} image={true} />
+              </TableCell>
+            </TableRow>
+          }
           </TableBody>
         </Table>
       </TableContainer>

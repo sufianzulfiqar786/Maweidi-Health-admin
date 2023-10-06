@@ -20,9 +20,16 @@ const CustomDropDown = ({
   const updatedOptions =
     mode === "multiple" ? [selectAllOption, ...option] : option;
 
-    useEffect(()=>{
-    
-    },[])
+    // useEffect(()=>{
+    //   setTimeout(() => {
+    //     handleSelectZero()
+    //   }, 1);
+    // },[])
+
+    // const handleSelectZero = () => {
+    //   const allOptions = [];
+    //   handleChangeSelect(allOptions, name);
+    // };
 
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);

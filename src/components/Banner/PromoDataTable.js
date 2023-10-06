@@ -283,8 +283,14 @@ const DataTable = ({ searchQuery }) => {
   };
 
   const getBannerList = useFetch(
-    `${process.env.REACT_APP_LIST_BANNER}?per_page=${rowsPerPage}&page=${page}`
+    `${process.env.REACT_APP_LIST_PROMO}?per_page=${rowsPerPage}&page=${page}`
   )
+
+  // const getPromoList = useFetch(
+  //   `${process.env.REACT_APP_LIST_PROMO}?per_page=${rowsPerPage}&page=${page}`
+  // )
+
+  // console.log("getPromoList", getPromoList)
 
   const rows = getBannerList.data
   console.log("roesss", rows?.data)
@@ -302,13 +308,13 @@ const DataTable = ({ searchQuery }) => {
 
   const handleDelete = (Id) => {
 
-    deleteData(`${process.env.REACT_APP_DELETE_BANNER}/${Id}`, () => {
+    deleteData(`${process.env.REACT_APP_DELETE_PROMO}/${Id}`, () => {
       // setDeleteModal(false)
-      getBannerList?.fetchPaginatedData(`${process.env.REACT_APP_LIST_BANNER}?per_page=${rowsPerPage}&page=${page}`)
+      getBannerList?.fetchPaginatedData(`${process.env.REACT_APP_LIST_PROMO}?per_page=${rowsPerPage}&page=${page}`)
       // const filter = rows?.data?.data?.filter(val => val.id !== deleteState)
       CustomToast({
         type: "success",
-        message: "Banner Delete Successfuly!",
+        message: "Promo Delete Successfuly!",
       });
       setDeleteModal(false)
       // setRows(filter)
@@ -403,7 +409,7 @@ const DataTable = ({ searchQuery }) => {
                 },
               }}
             >
-              { !getBannerList?.isLoading ? visibleRows?.map(
+              {!getBannerList?.isLoading ? visibleRows?.map(
                 ({
                   id,
                   Promo,
@@ -424,11 +430,11 @@ const DataTable = ({ searchQuery }) => {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="left" className="number">
-                    {((page -1) * rowsPerPage + index) + 1}
+                      {((page - 1) * rowsPerPage + index) + 1}
                     </TableCell>
 
                     <TableCell align="left">
-                     {title}
+                      {title}
                     </TableCell>
                     {/* <TableCell align="left">{Category}</TableCell> */}
                     <TableCell align="left">{status == 1 ? 'Enabled' : 'Disabled'}</TableCell>
@@ -436,16 +442,16 @@ const DataTable = ({ searchQuery }) => {
                     )}</TableCell> */}
                     {/* <TableCell align="left">{Promo1}</TableCell> */}
                     <TableCell align="center">
-                      <div>{start_time?.slice(0, 5)} </div>
+                      <div>{start_time?.slice(0, 5) || '-'} </div>
                     </TableCell>
                     <TableCell align="center">
-                      <div>{end_time?.slice(0, 5)} </div>
+                      <div>{end_time?.slice(0, 5) || '-'} </div>
                     </TableCell>
                     <TableCell align="center">
-                      <div>{start_date}</div>
+                      <div>{start_date || '-'}</div>
                     </TableCell>
                     <TableCell align="center">
-                      <div>{end_date} </div>
+                      <div>{end_date || '-'} </div>
                     </TableCell>
                     <TableCell align="left">
                       <span
@@ -455,10 +461,17 @@ const DataTable = ({ searchQuery }) => {
                           textDecoration: "underline",
                         }}
                       >
-                         <a className="tool-tip" href={`${link}`}>
-                            {link?.slice(0,10)}
+
+
+
+                        
+                          <a className="tool-tip" href={`${link}`}>
+                            {link?.slice(0,20)}
                             <span class="tooltiptext">{link}</span>
                           </a>
+                         
+                        
+
                       </span>
                     </TableCell>
                     <TableCell align="left">
@@ -466,35 +479,36 @@ const DataTable = ({ searchQuery }) => {
                     </TableCell>
 
                     <TableCell>
-                     <Link to={`${process.env.REACT_APP_IMAGE_URL}/${image}`}>
-                     <img className="" src={GalleryIcon} />
-                     </Link> 
+                      <Link to={`${process.env.REACT_APP_IMAGE_URL}/${image}`}>
+                        <img className="" src={GalleryIcon} />
+                      </Link>
                     </TableCell>
                     <TableCell>
-                    <Link to={`/banner-promo/edit/${id}`}>
-                      <img
-                        className=""
-                        src={EditIcon}
-                        onClick={() => setModal1Open(true)}
-                      />
+                      <Link to={`/promo/edit/${id}`}>
+                        <img
+                          className=""
+                          src={EditIcon}
+                          onClick={() => setModal1Open(true)}
+                        />
                       </Link>
                       <img
                         className=""
-                        onClick={() =>{ setDeleteModal(true)
+                        onClick={() => {
+                          setDeleteModal(true)
                           setUniqueId(id)
                         }}
-                        
+
                         src={DeleteIcon}
                       />
                     </TableCell>
                   </TableRow>
                 )
-              )  :
-              <TableRow>
-              <TableCell colSpan={11}>
-                <ListSkeleton totalRow={4} totalCol={11} image={false} />
-              </TableCell>
-            </TableRow>}
+              ) :
+                <TableRow>
+                  <TableCell colSpan={11}>
+                    <ListSkeleton totalRow={4} totalCol={11} image={false} />
+                  </TableCell>
+                </TableRow>}
             </TableBody>
           </Table>
         </TableContainer>
@@ -692,10 +706,10 @@ const DataTable = ({ searchQuery }) => {
                 Are you sure you want to delete?
               </p>
               <button disabled={deleteProductData?.isLoading} className="mt-lg-4 mt-1 mb-lg-5 mb-2"
-                onClick={()=>{
+                onClick={() => {
                   handleDelete(uniqueId)
                 }}
-              >{ deleteProductData?.isLoading ? <div className="pb-3"><ButtonLoader /> </div> : 'Delete'}</button>
+              >{deleteProductData?.isLoading ? <div className="pb-3"><ButtonLoader /> </div> : 'Delete'}</button>
             </div>
           </div>
         </Modal>

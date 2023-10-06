@@ -24,6 +24,7 @@ import { CustomToast } from '../atoms/toastMessage';
 import usePost from '../customHook/usePost';
 import Availability from './Doctor/Availability';
 import useDeleteData from '../customHook/useDelete';
+import { useNavigate } from 'react-router-dom';
 
 const AddAppointments = () => {
 
@@ -116,7 +117,7 @@ const AddAppointments = () => {
     useEffect(() => {
         if (hospitalData?.success) {
             setHospitals(
-                hospitalData?.data?.data?.map(({ id, name, specialities }) => ({
+                hospitalData?.data?.map(({ id, name, specialities }) => ({
                     id,
                     value: name,
                     label: name,
@@ -218,6 +219,7 @@ const AddAppointments = () => {
     }
 
     const [formattedDate, setFormattedDate] = useState('');
+    const navigate = useNavigate()
 
     useEffect(() => {
         const currentDate = new Date();
@@ -321,7 +323,7 @@ const AddAppointments = () => {
             setValue("patientId", response.data?.id)
             setAppointmentDate({
                 ...appointmentDate, 'patient_id': response?.data?.id
-    
+
             })
             // Show an error message
             CustomToast({
@@ -374,7 +376,7 @@ const AddAppointments = () => {
         console.log("selectDoctor", selectDoctor)
         setValue("specialization", selectDoctor?.specialization_id)
         setValue("fees", selectDoctor?.fees)
-        
+
         // alert(selectDoctor?.specialization_id)
         console.log("selectDoctor///", selectDoctor)
         setAppointmentDate({ ...appointmentDate, 'doctor_id': selectDoctor.id, 'specialization_id': selectDoctor?.specialization_id })
@@ -417,7 +419,7 @@ const AddAppointments = () => {
 
     const onSubmit = () => {
 
-      
+
 
         setFormData({
             kwdId: "",
@@ -445,24 +447,30 @@ const AddAppointments = () => {
                 ...appointmentDate,
                 fees: 2.30,
                 date: appointmentDate.selected_date,
-                note:'werwer'
+                note: 'werwer'
             }
 
-            addAppointmentBooking?.postData((`${process.env.REACT_APP_ADD_APPOINTMENT}`), updatedPostData, () => {
-                
+            addAppointmentBooking?.postData((`${process.env.REACT_APP_ADD_APPOINTMENT}`), updatedPostData, (res) => {
+                console.log("res123", res)
+                if (res?.success === true) {
+                    navigate('/appointment')
+                }
                 // setAppointmentDate('')
                 setKWD_ID('')
                 setValue('')
                 reset()
-                appointmentDatePost?.postData((`${process.env.REACT_APP_GET_DOCTOR_AVAILABILITIES}`), appointmentDate, () => {
+                appointmentDatePost?.postData((`${process.env.REACT_APP_GET_DOCTOR_AVAILABILITIES}`), appointmentDate, (res) => {
+
+                    console.log("firstres", res)
+
                     CustomToast({
                         type: "success",
-                        message: ` Booked Appointment ` ,
+                        message: ` Booked Appointment `,
                     });
                 })
             })
 
-           
+
 
         }
 
@@ -582,6 +590,7 @@ const AddAppointments = () => {
                                                 control={control}
                                                 rules={{
                                                     required: true,
+                                                    pattern: /^\d{12}$/,
                                                 }}
                                                 render={({ field }) => (
                                                     <>
@@ -596,9 +605,19 @@ const AddAppointments = () => {
                                                             }}
                                                         />
 
-                                                        {errors.kwdId && (
+                                                        {/* {errors.kwdId && (
                                                             <span className="error-message">
                                                                 This field is required
+                                                            </span>
+                                                        )} */}
+                                                        {errors.kwdId && errors.kwdId.type === "required" && (
+                                                            <span className="error-message">
+                                                                This field is required
+                                                            </span>
+                                                        )}
+                                                        {errors.kwdId && errors.kwdId.type === "pattern" && (
+                                                            <span className="error-message">
+                                                                Invalid KDW ID
                                                             </span>
                                                         )}
                                                     </>
@@ -1096,8 +1115,8 @@ const AddAppointments = () => {
                                         render={({ field }) => (
                                             <>
                                                 <input
-                                                style={{backgroundColor:'white'}}
-                                                disabled
+                                                    style={{ backgroundColor: 'white' }}
+                                                    // disabled
                                                     type="text"
                                                     name="fees"
                                                     {...field}
@@ -1226,7 +1245,7 @@ const AddAppointments = () => {
                             <div class="col-12 mt-4">
                                 <div className='w-25'>
                                     <button type="submit" class=" common-btn ">
-                                        Book An Appointment
+                                        Add Appointment
                                     </button>
                                 </div>
                             </div>

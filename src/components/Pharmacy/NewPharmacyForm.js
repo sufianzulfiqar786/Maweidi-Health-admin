@@ -119,7 +119,7 @@ const NewPharmacyForm = ({
     setFormDataState((pre)=>({...pre, [name]:value}))
   };
 
-  console.log("AddPharmacyData", formDataState?.state)
+  console.log("AddPharmacyData", formDataState?.certificate)
 
   const formatTimeTo24Hour = (time) => {
     if (!time) return "";
@@ -197,12 +197,16 @@ const NewPharmacyForm = ({
     }
   }, [id]);
 
-  console.log("addTimePostReqsdf", addTimePostReq)
+  console.log("addTimePostReqsdf", formDataState?.state)
 
   const validation = () => {
     if (!addPharmacyData.profile_picture) {
       setErrorMessage(-1);
-    } 
+    } else if(formDataState?.certificate == undefined){
+      setErrorMessage(222)
+    } else if(formDataState?.state == undefined){
+      setErrorMessage(333)
+    }
     // else if (!addPharmacyData.zip) {
     //   setErrorMessage(8);
     // }
@@ -241,14 +245,16 @@ const NewPharmacyForm = ({
         status: 1,
       };
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      Object.keys(completeFormData).forEach((key) => {
+        const value = completeFormData[key];
+        FarmData.append(key, value !== undefined && value !== null ? value : "");
+      });
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      // Object.keys(completeFormData).forEach((key) =>
+      //   FarmData.append(key, completeFormData[key])
+      // );
       
+
      
         postData(
           id ? `${updateApiEndPoint}/${id}` : `${apiEndpoint}`,
@@ -631,8 +637,15 @@ const NewPharmacyForm = ({
                 name="state"
                 value={formDataState?.state || ""}
                 handleChange={handleChangeSelect}
+                req={true}
               />
+               {
+              errorMessage === 333 ? <span className="error-message">
+              This field is required
+            </span> : null
+            }
             </div>
+           
           </div>
           <div className="row mt-4">
             <div className="col-lg-6 pr-lg-1 doc-setting-input">
@@ -857,6 +870,11 @@ const NewPharmacyForm = ({
                   value={formDataState?.certificate || ""}
                 />
               </div>
+              {
+                errorMessage === 222 ? <span className="error-message">
+                This field is required
+              </span> : null
+              }
             </div>
           </div>
 

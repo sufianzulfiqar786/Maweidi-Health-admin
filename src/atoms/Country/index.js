@@ -19,7 +19,7 @@ const SelectCountry = ({ value, name, handleChange, isDisabled, notRequired=true
     <>
       <div class="">
         <p className=" doc-add-filter-text">
-          Country {notRequired === true? <span className="error-message">*</span> : null}{" "}
+          Country{notRequired === true?<span className="error-message">*</span> : null}{" "}
         </p>
         <CustomDropDown
           option={option}

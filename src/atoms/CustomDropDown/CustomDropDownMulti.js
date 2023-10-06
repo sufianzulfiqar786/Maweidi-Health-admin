@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Select, Input } from "antd";
 
 const { Option } = Select;
@@ -7,18 +7,29 @@ const CustomDropDown = ({
   mode,
   value,
   selectLabel = "Select",
-  option,
+  option=[],
   handleChangeSelect,
   disabled,
   name,
   field,
   hospitalDopDown,
   dayId,
-  updatedValue,
 }) => {
+  // console.log(option, "current -->");
   const selectAllOption = { value: "all", label: "Select All" };
   const updatedOptions =
     mode === "multiple" ? [selectAllOption, ...option] : option;
+
+    useEffect(()=>{
+      setTimeout(() => {
+        handleSelectZero()
+      }, 1);
+    },[])
+
+    const handleSelectZero = () => {
+      const allOptions = [];
+      handleChangeSelect(allOptions, name);
+    };
 
   const handleSelectAll = () => {
     const allOptions = option.map((item) => item.value);
@@ -29,10 +40,10 @@ const CustomDropDown = ({
     if (Array.isArray(val) && val.includes("all")) {
       handleSelectAll();
     } else {
-      handleChangeSelect(val, name, updatedValue, dayId);
-      if (typeof hospitalDopDown === "function") {
-        hospitalDopDown(val, dayId, name);
-      }
+      handleChangeSelect(val, name);
+      if (typeof hospitalDopDown === 'function') {
+        hospitalDopDown(val, dayId);
+      }     
     }
   };
 
@@ -46,7 +57,9 @@ const CustomDropDown = ({
     }
     return null;
   });
-  console.log("valueeeee", value);
+
+  console.log("valuefirst", value)
+
   return (
     <div>
       <Select
@@ -54,7 +67,8 @@ const CustomDropDown = ({
         className="custom-dropDown"
         name={name}
         mode={mode}
-        value={value ? value : "Select Hospital"}
+        // value={value || undefined}
+        value={value || ''}
         showSearch
         optionFilterProp="children"
         filterOption={(input, option) =>
@@ -76,6 +90,11 @@ const CustomDropDown = ({
           },
         }}
       >
+        {/* {mode === "multiple" && (
+          <Option key={selectAllOption.value} value={selectAllOption.value}>
+            {selectAllOption.label}
+          </Option>
+        )} */}
         {renderOptions}
       </Select>
     </div>

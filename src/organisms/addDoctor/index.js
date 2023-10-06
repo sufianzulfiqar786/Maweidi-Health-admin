@@ -5,6 +5,7 @@ import usePost from "../../customHook/usePost";
 import { useEffect } from "react";
 import Phone from "../../atoms/phone";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import CustomDropDownMulti from "../../atoms/CustomDropDown/CustomDropDownMulti";
 import { optionSpecialization } from "../../Data/DoctorData";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import IncreDecreBtn from "../../components/doctors/IncreDecreBtn";
@@ -69,6 +70,8 @@ const DoctorForm = ({ id, rawData, handleAddItem, items, handleRemoveItem }) => 
     formState: { errors },
   } = useForm();
 
+console.log("formDataStatewqwe", formDataState?.hospitals?.length)
+
   useEffect(() => {
     if (realHospitalData?.data?.data?.length > 0) {
       const opt =
@@ -86,6 +89,8 @@ const DoctorForm = ({ id, rawData, handleAddItem, items, handleRemoveItem }) => 
 
     setFormDataState({ ...formDataState, [name]: value });
   };
+
+  console.log("formDataStateqwe", formDataState)
 
   const handleSelect = (value, name) => {
     setFormDataState({ ...formDataState, [name]: value });
@@ -136,7 +141,11 @@ const DoctorForm = ({ id, rawData, handleAddItem, items, handleRemoveItem }) => 
     }
     if (!formDataState?.profile_pic) {
       setErrorData(4);
-    } else {
+    } 
+    // else if(!formDataState?.experience_years){
+    //   setErrorData(44);
+    // } 
+    else {
       postData(
         id
           ? `${process.env.REACT_APP_UODATE_DOCTORS}/${id}`
@@ -215,6 +224,9 @@ if(res?.success === true){
     message: "Doctor saved successfuly!",
   })
   setRoleParentValidation(true)
+  if (!items?.length) {
+    navigate("/doctors");
+  }
 }else{
   CustomToast({
     type: "error",
@@ -222,14 +234,7 @@ if(res?.success === true){
   })
 }
           
-          if (!items?.length) {
-            navigate("/doctors");
-          }
-          // if(AddRoleHook?.isLoading){
-          //   alert('sdf')
-          //   navigate("/doctors");
-          // }
-          // console.log("AddRoleHook?.isLoading", AddRoleHook?.isLoading)
+         
         }
       );
     }
@@ -351,7 +356,7 @@ if(res?.success === true){
           <div className="col-12 mt-3">
             <div className="row">
               <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                <p className="mb-2">First Name</p>
+                <p className="mb-2">First Name<span className="text-danger">*</span></p>
                 <Controller
                   name="first_name"
                   control={control}
@@ -382,7 +387,7 @@ if(res?.success === true){
               </div>
 
               <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                <p className="mb-2"> Last Name </p>
+                <p className="mb-2"> Last Name<span className="text-danger">*</span> </p>
                 <Controller
                   name="last_name"
                   control={control}
@@ -415,7 +420,7 @@ if(res?.success === true){
 
             <div className="row mt-3">
               <div className="col-lg-6 pr-lg-1 doc-setting-input">
-                <p className="mb-2"> Email </p>
+                <p className="mb-2"> Email<span className="text-danger">*</span> </p>
 
                 <Controller
                   name="email"
@@ -546,12 +551,12 @@ if(res?.success === true){
 
             <div className="row mt-3">
               <div className="col-lg-6 mt-lg-0 mt-4 pr-lg-1 doc-setting-input">
-                <p className="mb-2"> Gender </p>
+                <p className="mb-2"> Gender<span className="text-danger">*</span> </p>
                 <Controller
                   name="gender"
                   control={control}
                   rules={{
-                    required: false,
+                    required: true,
                   }}
                   render={({ field }) => (
                     <>
@@ -587,7 +592,7 @@ if(res?.success === true){
               </div>
 
               <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                <p className="mb-2"> Hospital </p>
+                <p className="mb-2"> Hospital<span className="text-danger">*</span> </p>
                 <Controller
                   name="hospitals"
                   control={control}
@@ -596,7 +601,7 @@ if(res?.success === true){
                   }}
                   render={({ field }) => (
                     <>
-                      <CustomDropDown
+                      <CustomDropDownMulti
                         handleChangeSelect={(value, name) => {
                           field.onChange(value);
                           handleSelect(value, name);
@@ -622,7 +627,7 @@ if(res?.success === true){
 
             <div className="row mt-3">
               <div className="col-lg-4 pr-lg-1 doc-setting-input">
-                <p className="mb-2"> Specialization </p>
+                <p className="mb-2"> Specialization<span className="text-danger">*</span> </p>
                 <Controller
                   name="specialization_id"
                   control={control}
@@ -653,7 +658,7 @@ if(res?.success === true){
                 />
               </div>
               <div className="col-lg-4 pr-lg-1 mt-lg-0 mt-3 doc-setting-input">
-                <p className="mb-2"> Qualification </p>
+                <p className="mb-2"> Qualification<span className="text-danger">*</span> </p>
                 <Controller
                   name="qualification"
                   control={control}
@@ -689,6 +694,13 @@ if(res?.success === true){
                   formDataState={formDataState}
                   setFormDataState={setFormDataState}
                 />
+                {/* { errorData === 44 ? (
+              <span className="error-message">
+                This field is required
+              </span>
+            ) : (
+              ""
+            )} */}
               </div>
             </div>
 
@@ -809,7 +821,7 @@ if(res?.success === true){
               </div>
 
               <div className="col-lg-6 mt-lg-0 mt-4 pl-lg-1 doc-setting-input">
-                <p className="mb-2"> Language </p>
+                <p className="mb-2"> Language<span className="text-danger">*</span> </p>
                 <Controller
                   name="languages"
                   control={control}
@@ -818,7 +830,7 @@ if(res?.success === true){
                   }}
                   render={({ field }) => (
                     <>
-                      <CustomDropDown
+                      <CustomDropDownMulti
                         handleChangeSelect={(value, name) => {
                           field.onChange(value);
                           handleSelect(value, name);

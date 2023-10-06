@@ -64,6 +64,8 @@ import LabShopDetail from "./Pharmacy/LabShopDetail";
 import LabViewOrderlistDetail from "./Pharmacy/LabViewOrderlistDetail";
 import XRayShopDetail from "./Pharmacy/XRayShopDetail";
 import XrayViewOrderlistDetail from "./Pharmacy/XrayViewOrderlistDetail";
+import Promo from "./BannerPromo/Promo";
+import AddPromo from "./BannerPromo/AddPromo";
 const Dashboard = () => {
   let location = useLocation();
   const dispatch = useDispatch();
@@ -364,6 +366,17 @@ const Dashboard = () => {
                       Id={ValidateRoute(location.pathname).split("/")[3]}
                       />
                     ) 
+                    : ValidateRoute(location.pathname) === "/promo" ? (
+                      <Promo/>
+                    ) 
+                    : ValidateRoute(location.pathname) === "/promo/add" ? (
+                      <AddPromo />
+                    ) 
+                    : location.pathname.startsWith("/promo/edit/") ? (
+                      <AddPromo 
+                      Id={ValidateRoute(location.pathname).split("/")[3]}
+                      />
+                    ) 
                     : ValidateRoute(location.pathname) === "/manageroles" ? (
                       <ManageRoles />
                     ) : ValidateRoute(location.pathname) === "/rolepermission" ? (
@@ -403,6 +416,7 @@ const Dashboard = () => {
                   <div className="row">
                     <SiteFooter />
                   </div>
+                  
                 </div>
               </div>
             </div>

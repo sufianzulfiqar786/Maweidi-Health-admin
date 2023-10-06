@@ -332,7 +332,7 @@ const LabShopDetail = () => {
     <>
       <div className="row px-2 pt-4">
         <div className="col-12  ">
-          <p className="mb-0 dashboard-com-top-text">X-ray</p>
+          <p className="mb-0 dashboard-com-top-text">Laboratory</p>
         </div>
 
         <div className="col-12">
@@ -340,7 +340,7 @@ const LabShopDetail = () => {
             <div className="col-lg-6 col-12 mt-4 pt-1">
               <BreadCrum
                 firstLink="/bloodtest/orderlist"
-                firstText="X-ray"
+                firstText="Laboratory"
                 secondText="BOOKING's"
               />
               {/* <p className="mb-0 doctor-header-top-text">

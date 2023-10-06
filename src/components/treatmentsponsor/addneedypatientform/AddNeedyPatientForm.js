@@ -245,7 +245,7 @@ const AddNeedyPatientForm = ({Id}) => {
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6">
-              <label for="cost-input">Approx. Treatment Cost</label>
+              <label for="cost-input">Approx. Treatment Cost<span className="text-danger">*</span></label>
               {/* <input type="text" id="cost-input" name="cost" /> */}
               <Controller
                 name="approx_treatment_cost"
@@ -350,7 +350,7 @@ const AddNeedyPatientForm = ({Id}) => {
               />
             </div>
             <div class="form-group col-lg-6">
-              <label>Gender</label>
+              <label>Gender<span className="text-danger">*</span></label>
               {/* <CustomSelect options={gender} /> */}
               <Controller
                 name="gender"

@@ -199,7 +199,11 @@ const NewMedicalEquipmentForm = ({
   const validation = () => {
     if (!addPharmacyData.profile_picture) {
       setErrorMessage(-1);
-    } 
+    } else if(formDataState?.certificate == undefined){
+      setErrorMessage(222)
+    } else if(formDataState?.state == undefined){
+      setErrorMessage(333)
+    }
     // else if (!addPharmacyData.zip) {
     //   setErrorMessage(8);
     // }
@@ -221,23 +225,25 @@ const NewMedicalEquipmentForm = ({
 
       const completeFormData = {
         ...formData,
-        profile_picture: addPharmacyData.profile_picture,
+        profile_picture: !id ?  addPharmacyData.profile_picture : '',
         state: addPharmacyData.state,
         facebook: addPharmacyData.facebook,
         instagram: addPharmacyData.instagram,
         linkedin: addPharmacyData.linkedin,
         description: addPharmacyData.description,
-        document: formDataState?.certificate,
+        document: !id ?  formDataState?.certificate : '',
         status:0,
       };
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      Object.keys(completeFormData).forEach((key) => {
+        const value = completeFormData[key];
+        FarmData.append(key, value !== undefined && value !== null ? value : "");
+      });
+      
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      // Object.keys(completeFormData).forEach((key) =>
+      //   FarmData.append(key, completeFormData[key])
+      // );
       
      
         postData(
@@ -621,7 +627,13 @@ const NewMedicalEquipmentForm = ({
                 name="state"
                 value={formDataState?.state || ""}
                 handleChange={handleChangeSelect}
+                req={true}
               />
+               {
+              errorMessage === 333 ? <span className="error-message">
+              This field is required
+            </span> : null
+            }
             </div>
           </div>
           <div className="row mt-4">
@@ -847,6 +859,11 @@ const NewMedicalEquipmentForm = ({
                   value={formDataState?.certificate || ""}
                 />
               </div>
+              {
+                errorMessage === 222 ? <span className="error-message">
+                This field is required
+              </span> : null
+              }
             </div>
           </div>
 

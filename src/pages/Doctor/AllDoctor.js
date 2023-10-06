@@ -58,7 +58,10 @@ const AllDoctor = () => {
       },
     },
   };
-  if (isLoading) return <PageLoader />;
+  // if (isLoading) return <PageLoader />;
+
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0 
 
   return (
     <>
@@ -89,14 +92,13 @@ const AllDoctor = () => {
                 </span>{" "}
                 <img src={DownTriIcon} alt="" />{" "}
               </button>{" "}
-              <button className="btn-add-new-doc">
+              { isSuperAdmin ?   <button className="btn-add-new-doc">
                 {" "}
-                <Link className="add-doc-link-color" to="/doctors/add">
-                  {" "}
+              <Link className="add-doc-link-color" to="/doctors/add">
                   Add New Doctor{" "}
-                </Link>{" "}
-              </button>
-            </div>
+                </Link> 
+              </button> : null}
+            </div> 
 
             <Modal
               className="doctor-filter-modal"
@@ -468,6 +470,7 @@ const AllDoctor = () => {
             handleChangePage={handleChangePage}
             totalDoctors={data?.data?.total}
             toDoctors={data?.data?.to}
+            isLoading={isLoading}
           />
         </div>
       </div>

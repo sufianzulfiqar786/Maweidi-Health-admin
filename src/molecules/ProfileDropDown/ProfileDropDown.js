@@ -46,7 +46,7 @@ const ProfileDropDown = () => {
           <div className="col-8 px-2 d-flex  justify-content-center align-items-start  flex-column">
             <p className="mb-0  profile-drop-down-text1">{user}</p>
 
-            <p className="mb-0 profile-drop-down-text2">Super Admin</p>
+            {/* <p className="mb-0 profile-drop-down-text2">Super Admin</p> */}
           </div>
         </div>
         {

@@ -26,6 +26,7 @@ import {
   optionState,
 } from "../../Data/DoctorData";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import CustomDropDownMulti from "../../atoms/CustomDropDown/CustomDropDownMulti";
 import usePost from "../../customHook/usePost";
 import SelectCountry from "../../atoms/Country";
 import SelectState from "../../atoms/State";
@@ -502,13 +503,13 @@ const AddHospital = ({ Id }) => {
                     <p className="mb-2">
                       {" "}
                       Customer Support Email
-                      <span className="error-message">*</span>{" "}
+                      {/* <span className="error-message">*</span>{" "} */}
                     </p>
                     <Controller
                       name="customer_email"
                       control={control}
                       rules={{
-                        required: true,
+                        required: false,
                         pattern:
                           /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
                       }}
@@ -545,7 +546,7 @@ const AddHospital = ({ Id }) => {
                       name="customer_phone_no"
                       control={control}
                       rules={{
-                        required: true,
+                        required: false,
                       }}
                       render={({ field }) => (
                         <>
@@ -626,7 +627,7 @@ const AddHospital = ({ Id }) => {
                       }}
                       render={({ field }) => (
                         <>
-                          <CustomDropDown
+                          <CustomDropDownMulti
                             handleChangeSelect={(value, name) => {
                               field.onChange(value);
                               handleChangeSelect(value, name);
@@ -816,7 +817,7 @@ const AddHospital = ({ Id }) => {
                         type="text"
                         placeholder="Username"
                         name="twitter"
-                        value={addHospitalData.twitter || ""}
+                        value={addHospitalData.twitter  === 'null' ? '' : addHospitalData.twitter || ""}
                         onChange={handleChangeHospital}
                       />
                     </div>
@@ -841,6 +842,7 @@ const AddHospital = ({ Id }) => {
                               type="text"
                               placeholder="Enter Web URL"
                               {...field}
+                              value={field.value === 'null' ? '' : field.value || ''}
                             />
                             {errors.website && (
                               <span className="error-message">
@@ -889,7 +891,7 @@ const AddHospital = ({ Id }) => {
                               type="text"
                               name="zipcode"
                               {...field}
-                              value={field.value || ""}
+                              value={field.value === 'null' ? '' : field.value || ''}
                               onChange={(e) => {
                                 field.onChange(e.target.value);
                                 handleChangeHospital(e);

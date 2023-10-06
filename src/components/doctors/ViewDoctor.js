@@ -99,11 +99,12 @@ const ViewDoctor = ({ Id }) => {
   const { data, isLoading, error } = useFetch(
     `${process.env.REACT_APP_DOCTOR_DETAIL}/${Id}`
   );
-
+console.log("firstspecialistOptions", data?.data?.hospitals) 
   const getTimeTableData = () => {
     deleteData(
       `${process.env.REACT_APP_GET_DOCTOR_TIMETABLE}/${Id}`, (Data) => {
         // console.log(Data, "API");
+        console.log("firstData", Data)
         setdoctorTimeTable(Data?.data?.schedules)
         setspecialistOptions(data?.data?.hospitals?.map((i) => { return { value: i.name, label: i.name, id: i.id } }))
         console.log("firstddd", Data?.data?.schedules[0]?.time_slots.length > 0)
@@ -219,9 +220,9 @@ const ViewDoctor = ({ Id }) => {
 
       actualDay[i].uniVal = i
       console.log("actualDayaaa", actualDay[i].uniVal)
-      let hospitalName = specialistOptions.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
+      let hospitalName = specialistOptions?.filter((e) => { return e?.id === actualDay[i]?.hospital_id })[0]?.label
 
-      items.push(
+      items?.push(
         <>
 
           <div className={`${countDays === 1 ? "" : "pb-3"} `} style={{ width: "100%", display: 'flex', justifyContent: "space-around", alignItems: "center" }}>

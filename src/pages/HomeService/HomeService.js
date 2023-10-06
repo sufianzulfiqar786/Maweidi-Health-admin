@@ -121,11 +121,7 @@ const HomeService = () => {
   const rows = getHospital?.data
   console.log("row123", rows?.data?.data)
 
-  // const dataaa = rows?.data?.data?.map(m=>([m?.id , m?.experience, m?.time_slot, m?.date, m?.amount_per_hour, m?.service_detail, m?.status === 0 ? "Declined" : m?.status === 1 ? "Approved" : "Not selected"])) ||[]
   const dataaa = rows?.data?.data?.map(m=>([m?.id, m?.user?.first_name, m?.user?.contact, m?.amount_per_hour, m?.time_slot, m?.date, m?.experience, m?.user?.address, m?.service_detail, m?.document ? `${process.env.REACT_APP_IMAGE_URL}/${m?.document}` : '' ,  m?.status === 0 ? "Declined" : m?.status === 1 ? "Approved" : "Not selected"])) ||[]
-
-  // const dataaa1 = rows?.data?.data?.user?.map(m=>([ m?.first_name, m?.contact, m?.address])) ||[]
-  // const dataaa1 = rows?.data?.data?.user?.map(m=>([ m?.first_name, m?.contact, m?.address])) ||[]
 
   const csvData = [
     ["ID", "Name", "Contact", "Amount", "Time", "Date", "Experience", "Address", "Service Details", "Document", "Status"],
@@ -164,7 +160,7 @@ const HomeService = () => {
             />
             </div>
             <div className="col-6 d-flex justify-content-end px-0 pt-4 mt-3">
-       <CSVLink filename={"Home_Service_Provider.csv"} data={csvData}><button className="export-me" disabled={getHospital.isLoading}>Export me</button></CSVLink>
+            <CSVLink filename={"Home_Service_Provider.csv"} data={csvData}><button className="export-me" disabled={getHospital.isLoading}>Export me</button></CSVLink>
             </div>
           </div>
         </div>

@@ -16,6 +16,9 @@ const Pharmacy = () => {
     setSearchQuery(event.target.value);
 };
 
+const role =JSON.parse(localStorage.getItem("userRoles"))
+const isSuperAdmin = Object.keys(role).length === 0 
+
   return (
     <>
       <div className="row  px-2 pt-4">
@@ -33,9 +36,9 @@ const Pharmacy = () => {
               />
             </div>
             <div className="col-lg-3 ">
-          <Link className="w-100 d-flex justify-content-end" to='/pharmacy/add'>
+         { isSuperAdmin ?  <Link className="w-100 d-flex justify-content-end" to='/pharmacy/add'>
             <button className="common-btn ">Add Pharmacy</button>
-            </Link>    
+            </Link> : null  } 
             </div>
           </div>
         </div>

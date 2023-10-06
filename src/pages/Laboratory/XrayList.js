@@ -109,6 +109,9 @@ const XrayList = () => {
     setShowDeleteModal(true);
   };
 
+  const role =JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0 
+
   return (
     <>
       {/* <AddLaboratoryModal
@@ -176,13 +179,13 @@ const XrayList = () => {
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
             </div>
             <div className="col-6 px-0 w-100 d-flex justify-content-end align-items-end">
-            <button className="btn-add-new-doc">
+            { isSuperAdmin ?    <button className="btn-add-new-doc">
                 {" "}
                 <Link className="add-doc-link-color" to="/xray/add">
                   {" "}
                   Add X-ray{" "}
-                </Link>{" "}
-              </button>
+                </Link>
+              </button> : null}
             </div>
           </div>
         </div>

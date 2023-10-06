@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DoctorDataTable from "../../components/doctors/DoctorDataTable";
 import BannerDataTable from "../../components/Banner/BannerDataTable"
+import PromoDataTable from "../../components/Banner/PromoDataTable"
 import "../../assets/css/doctor.scss";
 import '../../assets/css/pharmacy.scss'
 import { Button, Modal, Rate, Select, Slider, DatePicker } from "antd";
@@ -17,8 +18,10 @@ import Searchbar from "../../components/common/Searchbar";
 import Time from "../../atoms/Time/Time";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
+import useFetch from "../../customHook/useFetch";
 
-const Pharmacy = () => {
+const Promo = () => {
 
     const [rows, setRows] = useState([
         {
@@ -321,14 +324,13 @@ const Pharmacy = () => {
             appointmentStatus: "Approved",
             prescription: "Aspirin 500mg",
         },
-    ]);
+    ])
     const [filterOption, setFilterOption] = useState("today"); // default to "today"
     const [searchQuery, setSearchQuery] = useState("");
 
     //  Filter handler
     const handleFilterChange = (event) => {
         setFilterOption(event.target.value);
-
     };
 
     // Search Functionality
@@ -363,32 +365,46 @@ const Pharmacy = () => {
         },
     };
 
+    const exportData = useFetch(
+        `${process.env.REACT_APP_LIST_PROMO}`
+      );
+    
+      const rowss = exportData?.data
+      console.log("row123", rowss?.data?.data)
+    
+      const dataaa = rowss?.data?.data?.map(m=>([m?.id, m?.title, m?.status === 2 ? "Disabled" : m?.status === 1 ? "Enabled" : "Not selected", m?.start_time ? m?.start_time : 'null' , m?.end_time? m?.end_time : 'null' , m?.start_date ? m?.start_date : 'null', m?.end_date ? m?.end_date : 'null', m?.link, m?.description, m?.image ? `${process.env.REACT_APP_IMAGE_URL}/${m?.image}` : '' ])) ||[]
+    
+      const csvData = [
+        ["ID", "Title", "Status", "Start Time", "End Time", "Start Date", "End Date", "Link", "Service Details", "Description", "Image"],
+       ...dataaa
+      ];
+
     return (
         <>
             <div className="row  px-2 pt-4">
                 <div className="col-12  ">
-                    <p className="mb-0 dashboard-com-top-text">Banner</p>
+                    <p className="mb-0 dashboard-com-top-text">Promo</p>
                 </div>
 
                 <div className="col-12  ">
                     <div className="row d-flex align-items-end">
-                        <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+                        {/* <div className="col-lg-6 col-12 mt-lg-0 mt-2">
                             <p className="mb-0 doctor-header-top-text">
                                 <Link className="doc-link " to="/">
                                     DASHBOARD
                                 </Link>
 
                                 <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
-                                <span style={{ color: "#4FA6D1" }}>Banner</span>{" "}
+                                <span style={{ color: "#4FA6D1" }}>Promo</span>{" "}
                             </p>
-                        </div>
+                        </div> */}
 
-                        <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
-                            <Link to='/banner-promo/add'>
-                                <button className="btn-add-new-doc mr-2 " style={{width:'13rem'}}> Add Banner </button>
+                        {/* <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+                            <Link to='/promo/add'>
+                                <button className="btn-add-new-doc mr-2 " style={{width:'13rem'}}> Add Promo </button>
                             </Link>
 
-                        </div>
+                        </div> */}
 
                         <Modal
                             className="doctor-filter-modal"
@@ -594,14 +610,16 @@ const Pharmacy = () => {
 
                     </div>
                 </div>
-
+                <div className="col-12 ">
+                    <ListHeader placeholder='Search Title' btnText='Add Promo' linkbtn='/promo/add' linkBreadCrum='/promo' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Promo_list'/>
+                </div>
                 <div className="col-12  ">
 
                     <div className="row mb-5 pb-5">
 
 
                         <div className="col-12 px-2 pt-4 mt-3">
-                            < BannerDataTable
+                            < PromoDataTable
                                 rows={rows}
 
                                 searchQuery={searchQuery}
@@ -616,4 +634,4 @@ const Pharmacy = () => {
     )
 }
 
-export default Pharmacy
+export default Promo

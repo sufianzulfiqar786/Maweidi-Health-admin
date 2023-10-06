@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // css
 import "../../assets/css/dashboard.scss";
@@ -34,6 +34,8 @@ import TreatmentSponsorIcon from "../../assets/images/dashboard/treatment-sponso
 import TreatmentSponsorBlueIcon from "../../assets/images/dashboard/treatment-sponsor-blue.svg";
 import bluePromo from "../../assets/images/dashboard/Promo.svg";
 import promoIcon from "../../assets/images/dashboard/ps_promo.svg";
+import banner from "../../assets/images/dashboard/banner.png";
+import bannerBlue from "../../assets/images/dashboard/bannerBlue.png";
 import { ValidateRoute, ValidUI } from "../../pages/privateRoutes";
 
 const FullScreenMenu = ({
@@ -57,6 +59,9 @@ const FullScreenMenu = ({
   const alloweddoc = Object.keys(role).includes("doctor")
   const isSuperAdmin = Object.keys(role).length === 0 
   console.log("allowedlab", allowedlab);
+
+  const navigate = useNavigate()
+
   return (
     <div className="hover-effect">
       {isSuperAdmin ||
@@ -69,8 +74,9 @@ const FullScreenMenu = ({
         ? (
         <Link className="maweidi-link ml-md-auto ml-0 " to="/dashboard">
           <div
-            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover cursor-pointer ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
+              navigate('/dashboard') 
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
                 name: "dashboard",
@@ -125,7 +131,7 @@ const FullScreenMenu = ({
         isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0" to="/appointment">
           <div
-            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
+            className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover cursor-pointer ${menuIconCenter} ${menuIconLeftPadding}`}
             onClick={() => {
               setMenuDropDownFullScreen({
                 ...menuDropDownFullScreen,
@@ -183,7 +189,7 @@ const FullScreenMenu = ({
         ? (
           <Link className="maweidi-link ml-md-auto ml-0" to="/hospitals">
             <div
-              className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
+              className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover cursor-pointer ${menuIconCenter} ${menuIconLeftPadding}`}
               onClick={() => {
                 setMenuDropDownFullScreen({
                   ...menuDropDownFullScreen,
@@ -240,7 +246,8 @@ const FullScreenMenu = ({
        allowedhost||
         isSuperAdmin ? (
         <div
-          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
+          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover cursor-pointer ${menuIconCenter} ${menuIconLeftPadding}`}
+        onClick={()=>{navigate('/doctors') }}
         >
           <div
             className=" row "
@@ -377,7 +384,8 @@ const FullScreenMenu = ({
 
       {allowedhost ||alloweddoc || isSuperAdmin ? (
         <div
-          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover ${menuIconCenter} ${menuIconLeftPadding}`}
+          className={`mt-lg-2 mt-0 py-1 d-flex align-items-center dashboard-main-hover cursor-pointer ${menuIconCenter} ${menuIconLeftPadding}`}
+          onClick={()=>{navigate('/patients') }} 
         >
           <div
             className=" row"
@@ -518,7 +526,7 @@ const FullScreenMenu = ({
             className=" row"
             style={{ display: `${menuLeftText}`, width: "100%" }}
           >
-             <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
+             <div className=" d-flex dashboard-main-hover cursor-pointer w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -643,7 +651,10 @@ const FullScreenMenu = ({
                   </div> */}
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/pharmacy/shop') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/pharmacy/shop">
                       <span
@@ -669,9 +680,12 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  {/* 3rd Pharmacy (1) sub option  */}
+                  {/* 4th Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding col-12 dashboard-main-hover mt-lg-2 ml-5  left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding col-12 dashboard-main-hover cursor-pointer mt-lg-2 ml-5  left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/pharmacy/shop/detail') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/pharmacy/shop/detail">
                       <span
@@ -713,7 +727,7 @@ const FullScreenMenu = ({
             className=" row mr-0 w-100"
             style={{ display: `${menuLeftText}`, width: "100%" }}
           >  
-          <div className=" d-flex dashboard-main-hover w-100 py-1 pr-3" >
+          <div className=" d-flex dashboard-main-hover cursor-pointer w-100 py-1 pr-3" >
             <Link
               className="maweidi-link ml-0 "
               style={{ width: "83%" }}
@@ -837,7 +851,10 @@ const FullScreenMenu = ({
                   </div> */}
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'12px'}}
+                  onClick={()=>{navigate('/medical/equipment/shop') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/medical/equipment/shop">
                       <span
@@ -865,7 +882,10 @@ const FullScreenMenu = ({
 
                   {/* 3rd Pharmacy (1) sub option  */}
 
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                   style={{paddingTop:'9px', paddingBottom:'12px'}}
+                   onClick={()=>{navigate('/medical/equipment/shop/detail') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/medical/equipment/shop/detail">
                       <span
@@ -1029,7 +1049,10 @@ const FullScreenMenu = ({
                     </Link>
                   </div> */}
                   {/* 2nd Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/bloodtest') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/bloodtest">
                       <span
@@ -1055,7 +1078,10 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/bloodtest/orderlist') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/bloodtest/orderlist">
                       <span
@@ -1218,7 +1244,10 @@ const FullScreenMenu = ({
                     </Link>
                   </div> */}
                   {/* 2nd Laboratory (1) sub option  */}
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/xray') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/xray">
                       <span
@@ -1244,7 +1273,10 @@ const FullScreenMenu = ({
                     </Link>
                   </div>
 
-                  <div className="sub-menu1-top-padding dashboard-main-hover col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center">
+                  <div className="sub-menu1-top-padding dashboard-main-hover cursor-pointer col-12 mt-lg-2 ml-5 left-drop-down d-flex align-items-center"
+                  style={{paddingTop:'9px', paddingBottom:'11px'}}
+                  onClick={()=>{navigate('/xray/orderlist') }}
+                  >
                     {/* <span class="dot"></span> */}
                     <Link className="maweidi-link " to="/xray/orderlist">
                       <span
@@ -1392,8 +1424,9 @@ const FullScreenMenu = ({
 
       {allowedhost || isSuperAdmin || alloweddoc ? (
         <div
-          className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
-        >
+          className={`mt-lg-2 mt-0 py-1 dashboard-main-hover cursor-pointer d-flex align-items-center ${menuIconCenter} ${menuIconLeftPadding}`}
+          onClick={()=>{navigate('/needy-patients') }}
+       >
           <div
             className=" row"
             style={{ display: `${menuLeftText}`, width: "100%" }}
@@ -1525,7 +1558,7 @@ const FullScreenMenu = ({
         </div>
       ) : null}
 
-      {/* Banner and Promo */}
+      {/* Banner  */}
       {isSuperAdmin ? (
         <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="banner-promo">
           <div
@@ -1550,8 +1583,8 @@ const FullScreenMenu = ({
                   <img
                     className="py-1"
                     src={`${menuDropDownFullScreen.name === "bannerpromo"
-                      ? bluePromo
-                      : promoIcon
+                      ? bannerBlue
+                      : banner
                       }`}
                     alt=""
                   />
@@ -1566,7 +1599,58 @@ const FullScreenMenu = ({
                         } `}
                       style={{ color: "#535353" }}
                     >
-                      Banner and Promo
+                      Banner
+                    </p>
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Link>
+      ) : null}
+
+      {/* Promo  */}
+      {isSuperAdmin ? (
+        <Link className="maweidi-link ml-md-auto ml-0 w-100 " to="/promo">
+          <div
+            className={`mt-lg-2 mt-0 py-1 dashboard-main-hover d-flex align-items-center  w-100 ${menuIconCenter} ${menuIconLeftPadding}`}
+            onClick={() => {
+              setMenuDropDownFullScreen({
+                ...menuDropDownFullScreen,
+                name: "promo",
+                toggle: !menuDropDownFullScreen.toggle,
+              });
+              setMobileMenu1(!MobileMenu1);
+            }}
+          >
+            <div
+              className=" row "
+              style={{ display: `${menuLeftText}`, width: "100%" }}
+            >
+              <div
+                className={`${menuLeftRightDropDown1} d-flex align-items-center w-100  ${menuIconCenter}`}
+              >
+                <div className="  dashboard-left-icon">
+                  <img
+                    className="py-1"
+                    src={`${menuDropDownFullScreen.name === "promo"
+                      ? bluePromo
+                      : promoIcon
+                      }`}
+                    alt=""
+                  />
+                </div>
+
+                <Link className="maweidi-link text-left" to="/promo">
+                  <span style={{ display: `${menuLeftText}` }}>
+                    <p
+                      className={`mb-0 pl-lg-3 dashboard-left-icon-text  ${menuDropDownFullScreen.name === "promo"
+                        ? "seleted-menu"
+                        : ""
+                        } `}
+                      style={{ color: "#535353" }}
+                    >
+                      Promo
                     </p>
                   </span>
                 </Link>

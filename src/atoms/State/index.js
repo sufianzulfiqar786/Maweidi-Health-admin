@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Country, State } from "country-state-city";
 import CustomDropDown from "../CustomDropDown/Index";
 
-const SelectState = ({ value, handleChange, country, name, disabled = false }) => {
+const SelectState = ({ value, handleChange, country, name, disabled = false, req }) => {
   const [disabledState, setDisabledState] = useState(false)
   const Countries = Country.getAllCountries();
   const selectedCountry = () => {
@@ -28,7 +28,7 @@ console.log("optionstate", option)
   return (
     <>
       <div class="">
-        <p className=" doc-add-filter-text">State </p>
+        <p className=" doc-add-filter-text">State{req === true ?<span className="text-danger">*</span> : null}</p>
         <CustomDropDown
           option={option}
           handleChangeSelect={(val) => handleChange(val, name)}

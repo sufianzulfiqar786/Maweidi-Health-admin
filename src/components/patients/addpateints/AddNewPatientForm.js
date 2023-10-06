@@ -26,6 +26,7 @@ const AddNewPatient = ({ Id }) => {
     useState("Adan Hospital");
   const [showMap, setShowMap] = useState(false);
   const [locationProp, setLocationProp] = useState("");
+  const [errorMessage, setErrorMessage] = useState(0);
   const [hospitals, setHospitals] = useState([]);
   const [patientData, setPatientData] = useState([]);
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const AddNewPatient = ({ Id }) => {
   useEffect(() => {
     if (hospitalData?.success) {
       setHospitals(
-        hospitalData?.data?.data?.map(({ id, name }) => ({
+        hospitalData?.data?.map(({ id, name }) => ({
           value: id,
           label: name,
         }))
@@ -74,10 +75,10 @@ const AddNewPatient = ({ Id }) => {
       console.log("firresponsest", response)
       setPreviewImage(response?.data)
       setPatientData(response?.data)
-      setPatientData((pre=>({...pre, ...response?.data?.user})))
+      setPatientData((pre => ({ ...pre, ...response?.data?.user })))
       // setPatientData((pre=>({...pre, 'first_name':response?.data?.user.name})))
       // setPatientData((pre=>({...pre, 'last_name':response?.data?.user.name})))
-      setValue( 'customer_email', response?.data?.user?.email)
+      setValue('customer_email', response?.data?.user?.email)
       // setValue( 'first_name', response?.data?.user?.name)
       // setValue( 'last_name', response?.data?.user?.name)
       Object.entries(response?.data?.user).forEach(([fieldName, fieldValue]) => {
@@ -105,31 +106,36 @@ const AddNewPatient = ({ Id }) => {
       }
     }
 
+    if (!patientData?.visit_date) {
+      setErrorMessage(1)
+    } else {
 
-    // alert('asdf')
-    postData(Id
-      ? `${process.env.REACT_APP_UPDATE_PATIENT}/${Id}`
-      :`${process.env.REACT_APP_ADD_PATIENT}`,
-      formData,
-      (res) => {
-        console.log("ressss", res)
-        // setAddRole({...addRole, 'join_id':res?.data?.id})
+      setErrorMessage(0)
 
-        if (res?.success === true) {
-          CustomToast({
-            type: "success",
-            message: `Patient added successfully`,
-          })
-          setValue('')
-          setPatientData({})
-          reset()
-          navigate("/patients");
+      // alert('asdf')
+      postData(Id
+        ? `${process.env.REACT_APP_UPDATE_PATIENT}/${Id}`
+        : `${process.env.REACT_APP_ADD_PATIENT}`,
+        formData,
+        (res) => {
+          console.log("ressss", res)
+          // setAddRole({...addRole, 'join_id':res?.data?.id})
+
+          if (res?.success === true) {
+            CustomToast({
+              type: "success",
+              message: `Patient added successfully`,
+            })
+            setValue('')
+            setPatientData({})
+            reset()
+            navigate("/patients");
+          }
+
         }
+      );
 
-      }
-    );
-
-
+    }
 
   }
 
@@ -177,7 +183,9 @@ const AddNewPatient = ({ Id }) => {
           <div className="left">
             <div className="image-preview">
 
-              {previewImage ? (
+              {previewImage == "" ? (
+                <img src={camera} onClick={handleUploadClick} />
+              ) : previewImage ? (
                 <img
                   src={previewImage?.user?.profile_pic ? `${process.env.REACT_APP_IMAGE_URL}/${previewImage?.user?.profile_pic}` : previewImage}
                   alt="Preview"
@@ -275,7 +283,7 @@ const AddNewPatient = ({ Id }) => {
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6">
-            <label for="visit-date-input">Visit Date</label>
+            <label for="visit-date-input">Visit Date<span className="text-danger">*</span></label>
             <div className="border" style={{ borderRadius: "5px" }}>
               <DatePicker
                 size="large"
@@ -287,7 +295,13 @@ const AddNewPatient = ({ Id }) => {
                   setPatientData(prev => ({ ...prev, 'visit_date': e.format("YYYY-MM-DD") }))
                 }}
               />
+
             </div>
+            {
+              errorMessage === 1 ? <span className="error-message">
+                This field is required
+              </span> : null
+            }
           </div>
           <div class="form-group col-lg-6">
             <label>Visit Time</label>
@@ -481,12 +495,13 @@ const AddNewPatient = ({ Id }) => {
           </div> */}
           <div class="form-group col-lg-6">
             <label for="kuwait-no-location-input">Kuwait ID no </label>
-          
+
             <Controller
               name="kwd_id"
               control={control}
               rules={{
                 required: true,
+                pattern: /^\d{12}$/,
               }}
               render={({ field }) => (
                 <>
@@ -501,11 +516,23 @@ const AddNewPatient = ({ Id }) => {
                     }}
                   />
 
-                  {errors.kwd_id && (
+                  {/* {errors.kwd_id && (
+                    <span className="error-message">
+                      This field is required
+                    </span>
+                  )} */}
+
+                  {errors.kwd_id && errors.kwd_id.type === "required" && (
                     <span className="error-message">
                       This field is required
                     </span>
                   )}
+                  {errors.kwd_id && errors.kwd_id.type === "pattern" && (
+                    <span className="error-message">
+                      Invalid KDW ID
+                    </span>
+                  )}
+
                 </>
               )}
             />

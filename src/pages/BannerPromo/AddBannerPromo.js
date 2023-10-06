@@ -9,6 +9,7 @@ import CalenderIcon from "../../assets/images/doctor/CalenderIcon.svg";
 import ClockIcon from "../../assets/images/doctor/ClockIcon.svg";
 
 import CustomDropDown from '../../atoms/CustomDropDown/Index';
+import CustomDropDownMulti from '../../atoms/CustomDropDown/CustomDropDownMulti';
 import Time from '../../atoms/Time/Time';
 import UploadFile from '../../molecules/UploadFile/UploadFile';
 import { useState } from 'react';
@@ -184,7 +185,7 @@ console.log("firstId", Id)
                             }}
                             render={({ field }) => (
                                 <>
-                                    <CustomDropDown
+                                    <CustomDropDownMulti
                                         handleChangeSelect={(value, name) => {
                                             field.onChange(value);
                                             console.log("firstplacements", value)
@@ -612,7 +613,7 @@ console.log("firstId", Id)
                     <div className="col-12 pt-3 pb-2 d-flex justify-content-center mt-3">
                         <button disabled={AddBanner?.isLoading} className="apply-filter submit-save-banner"
                             onClick={handleSubmit(handleBannerSubmit)}
-                        >{!AddBanner?.isLoading ? Id ? 'Edit Banner' : 'Add Banner' : <ButtonLoader /> }</button>
+                        >{!AddBanner?.isLoading ? Id ? 'Edit Banner' : 'Add Banner' : <div className='pb-3'><ButtonLoader /></div> }</button>
                     </div>
 
                 </div>

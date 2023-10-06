@@ -207,7 +207,11 @@ setValue()
   const validation = () => {
     if (!addPharmacyData.profile_picture) {
       setErrorMessage(-1);
-    } 
+    } else if(formDataState?.certificate == undefined){
+      setErrorMessage(222)
+    } else if(formDataState?.state == undefined){
+      setErrorMessage(333)
+    }
     // else if (!addPharmacyData.zip) {
     //   setErrorMessage(8);
     // }
@@ -239,13 +243,14 @@ setValue()
         is_laboratory: 0,
       };
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      Object.keys(completeFormData).forEach((key) => {
+        const value = completeFormData[key];
+        FarmData.append(key, value !== undefined && value !== null ? value : "");
+      });
 
-      Object.keys(completeFormData).forEach((key) =>
-        FarmData.append(key, completeFormData[key])
-      );
+      // Object.keys(completeFormData).forEach((key) =>
+      //   FarmData.append(key, completeFormData[key])
+      // );
       
      
         postData(
@@ -632,6 +637,11 @@ setValue()
                 value={formDataState?.state == 'undefined' ? "" : formDataState?.state}
                 handleChange={handleChangeSelect}
               />
+               {
+              errorMessage === 333 ? <span className="error-message">
+              This field is required
+            </span> : null
+            }
             </div>
           </div>
           <div className="row mt-4">
@@ -857,6 +867,11 @@ setValue()
                   value={formDataState?.certificate || ""}
                 />
               </div>
+              {
+                errorMessage === 222 ? <span className="error-message">
+                This field is required
+              </span> : null
+              }
             </div>
           </div>
 
