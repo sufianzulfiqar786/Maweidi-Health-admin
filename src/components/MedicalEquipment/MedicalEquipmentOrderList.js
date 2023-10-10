@@ -667,7 +667,7 @@ const PharmacyOrderList = ({ searchQuery }) => {
                       }
 
 
-                      title={user?.title}
+                      title={user?.name}
                     />
                   </TableCell>
                   <TableCell align="center">{user?.email}</TableCell>

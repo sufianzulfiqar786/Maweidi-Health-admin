@@ -13,6 +13,7 @@ import MedicalEquipmentOrderList from "../../components/MedicalEquipment/Medical
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import usePost from "../../customHook/usePost";
 import { useEffect } from "react";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
 
 const PharmacyShopDetail = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +25,7 @@ const PharmacyShopDetail = () => {
     setSearchQuery(event.target.value);
   };
 
- 
+
 
   const [rows, setRows] = useState([
     {
@@ -329,22 +330,49 @@ const PharmacyShopDetail = () => {
     },
   ]);
 
+  const [orderListState, setOrderListState] = useState()
+  const orderlistPost = usePost();
+
+  useEffect(() => {
+    orderlistPost?.postData(
+      `${process.env.REACT_APP_GET_GET_ORDERS}?pharmacy=${0}`,
+      {},
+      (res) => {
+        console.log("ressss", res?.data?.data)
+        setOrderListState(res)
+      }
+    );
+  }, [])
+
+  console.log("orderListState", orderListState?.data)
+
+  const dataaa = orderListState?.data?.data?.map(m => ([m?.id, m?.user?.name, process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic, m?.user?.email, m?.user?.address ? m?.user?.address : '-', m?.user?.contact, m?.order_items[0]?.product?.title, m?.total_amount, m?.status === 1 ? 'Accepted' : m?.status === 2 ? "Declined" : 'Pending'])) || []
+
+  const csvData = [
+    ["ID", "Name", "Pic", "Email", "Address", "Mobile No.", "Product", "Total", "Status"],
+    ...dataaa
+  ];
+
   return (
     <>
       <div className="row px-2 pt-4">
-        <div className="col-12  ">
+        {/* <div className="col-12  ">
           <p className="mb-0 dashboard-com-top-text">Medical Equipment</p>
+        </div> */}
+
+        <div className="col-12 px-3">
+          <ListHeader mainHeading='MEDICAL EQUIPMENT' placeholder='Search Title' linkbtn='/xray/add' linkBreadCrum='/medical/equipment/shop/detail' blinkBreadCrumText='MEDICAL EQUIPMENT' blinkBreadCrumText1='ORDER LIST' csvData={csvData} disabled={orderlistPost?.isLoading} exportFileName='Medical_Equipment_order_list' />
         </div>
 
         <div className="col-12">
           <div className="row d-flex align-items-end">
-            <div className="col-lg-6 col-12 mt-4 pt-1">
-              <BreadCrum
+            {/* <div className="col-lg-6 col-12 mt-4 pt-1"> */}
+            {/* <BreadCrum
                 firstLink="/medical/equipment/shop/detail"
                 firstText="Medical Equipment"
                 secondText="Booking's"
-              />
-              {/* <p className="mb-0 doctor-header-top-text">
+              /> */}
+            {/* <p className="mb-0 doctor-header-top-text">
                 <Link className="doc-link " to="">
                   DASHBOARD
                 </Link>
@@ -355,7 +383,7 @@ const PharmacyShopDetail = () => {
                 <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
                 <span style={{ color: "#4FA6D1" }}>ORDERED LIST</span>{" "}
               </p> */}
-            </div>
+            {/* </div> */}
 
             <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
               {/* <button className="btn-add-new-doc"> Add Product </button>{" "} */}
@@ -365,13 +393,13 @@ const PharmacyShopDetail = () => {
 
         <div className="col-12  ">
           <div className="row mb-5 pb-5">
-            <div className="col-12  pb-2 d-flex justify-content-start">
+            {/* <div className="col-12  pb-2 d-flex justify-content-start">
               <Searchbar
                 onChange={handleSearchChange}
                 value={searchQuery}
                 placeholder="Search"
               />
-            </div>
+            </div> */}
 
             <div className="col-12 px-2">
               <MedicalEquipmentOrderList rows={rows} searchQuery={searchQuery} />

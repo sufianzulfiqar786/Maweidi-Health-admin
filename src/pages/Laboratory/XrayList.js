@@ -9,6 +9,8 @@ import EditLaboratoryModal from "../../components/laboratory/laboratorylist/Edit
 import DeleteModal from "../../components/common/DeleteModal";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { Link } from "react-router-dom";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
+import useFetch from "../../customHook/useFetch";
 
 const XrayList = () => {
   const [rows, setRows] = useState([
@@ -109,8 +111,22 @@ const XrayList = () => {
     setShowDeleteModal(true);
   };
 
-  const role =JSON.parse(localStorage.getItem("userRoles"))
-  const isSuperAdmin = Object.keys(role).length === 0 
+  const role = JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0
+
+  const exportData = useFetch(
+    `${process.env.REACT_APP_GET_LABORATORY_DATA}?is_laboratory=${0}`
+  );
+
+  const rowss = exportData?.data
+  console.log("row123", rowss?.data)
+
+  const dataaa = rowss?.data?.map(m => ([m?.id, m?.name, process.env.REACT_APP_IMAGE_URL + '/' + m?.profile_picture ,m?.email, m?.address, m?.phone, m?.country, m?.state ? m?.state : 'Not Selected', m?.city, m?.zip ? m?.zip : 'null'])) || []
+
+  const csvData = [
+    ["ID", "Name", "Pic", "Email", "Address", "Mobile No.", "Country", "State", "City", "Zip Code"],
+    ...dataaa
+  ];
 
   return (
     <>
@@ -134,12 +150,8 @@ const XrayList = () => {
         onDelete={handleDeleteClick}
       />
       <div className="row pl-3 pr-2 pt-4 laboratorylist-tab">
-        <div className="col-12">
-          <p className="mb-0 laboratorylist-heading">X Ray</p>
-        </div>
 
-        {/* header  */}
-        <div className="col-12 my-4">
+        {/* <div className="col-12 my-4">
           <div className="row ">
             <div className="col-md-6">
             <BreadCrum
@@ -147,32 +159,9 @@ const XrayList = () => {
                 firstText="X RAY"
                 secondText="X RAY LIST"
               />
-              {/* <p className="laboratorylist-breadcrumb">
-                <span>DASHBOARD</span>
-                <img src={Chevron} />
-                <span> LABORATORY</span>
-                <img src={Chevron} />
-                <span className="current-tab">LABORATORY LIST</span>
-              </p> */}
             </div>
 
-            {/* <div class="col-md-6 text-md-right ">
-              <button
-                onClick={handleAddRole}
-                style={{ marginRight: "15px" }}
-                type="button"
-                class="add-role"
-              >
-                Add a Role
-              </button>
-              <button
-                onClick={handleAddLaboratory}
-                type="button"
-                class="add-laboratory"
-              >
-                Add Laboratory
-              </button>
-            </div> */}
+            
           </div>
           <div className="row m-0 p-0 ">
           <div className="col-6 px-0 w-100 d-flex justify-content-start align-items-end">
@@ -188,6 +177,10 @@ const XrayList = () => {
               </button> : null}
             </div>
           </div>
+        </div> */}
+
+        <div className="col-12 px-4">
+          <ListHeader mainHeading='X-ray' placeholder='Search Title' btnText='Add X-ray' linkbtn='/xray/add' linkBreadCrum='/xray/list' blinkBreadCrumText='X-ray LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='X-ray_list' />
         </div>
 
         {/* Table */}

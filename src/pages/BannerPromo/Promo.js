@@ -382,9 +382,9 @@ const Promo = () => {
     return (
         <>
             <div className="row  px-2 pt-4">
-                <div className="col-12  ">
+                {/* <div className="col-12  ">
                     <p className="mb-0 dashboard-com-top-text">Promo</p>
-                </div>
+                </div> */}
 
                 <div className="col-12  ">
                     <div className="row d-flex align-items-end">
@@ -611,7 +611,7 @@ const Promo = () => {
                     </div>
                 </div>
                 <div className="col-12 ">
-                    <ListHeader placeholder='Search Title' btnText='Add Promo' linkbtn='/promo/add' linkBreadCrum='/promo' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Promo_list'/>
+                    <ListHeader mainHeading='PROMO'  placeholder='Search Title' btnText='Add Promo' linkbtn='/promo/add' linkBreadCrum='/promo' blinkBreadCrumText='PROMO LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Promo_list'/>
                 </div>
                 <div className="col-12  ">
 

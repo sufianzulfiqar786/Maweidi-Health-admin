@@ -7,6 +7,8 @@ import "../../assets/css/patients/allpatients/allpatientsheader.scss";
 import Searchbar from "../../components/common/Searchbar";
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { Link } from "react-router-dom";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
+import useFetch from "../../customHook/useFetch";
 
 const AllPatients = () => {
   const [rows, setRows] = useState([
@@ -110,10 +112,24 @@ const AllPatients = () => {
     setSearchQuery(event.target.value);
   };
 
+  const exportData = useFetch(
+    `${process.env.REACT_APP_GET_PATIENT}`
+  );
+
+  const rowss = exportData?.data
+  console.log("row123", rowss?.data?.data)
+
+  const dataaa = rowss?.data?.data?.map(m=>([m?.id, m?.user?.first_name, m?.user?.profile_pic === ''? 'Not Uploaded' : process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic , m?.kwd_id , m?.user?.contact , m?.user?.email , m?.user.age, m?.user?.gender === 1 ? 'Male' : m?.user?.gender === 0 ? "Female" : 'Other' ])) ||[]
+
+  const csvData = [
+    ["ID", "Patient Name", "Pic", "KWD ID", "Mobile Number", "	Email", "Age", "Gender"],
+   ...dataaa
+  ];
+
   return (
     <>
       <div className="row pl-3 pr-2 pt-4 allpatient-tab">
-        <div className="col-12">
+        {/* <div className="col-12">
           <p className="mb-0 allpatient-heading">Patients List</p>
         </div>
 
@@ -139,6 +155,10 @@ const AllPatients = () => {
           <div className="row m-0 p-0">
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
           </div>
+        </div> */}
+
+        <div className="col-12 ">
+          <ListHeader mainHeading='PATIENTS' placeholder='Search Title' btnText='Add PATIENTS' linkbtn='/patients/add' linkBreadCrum='/patients' blinkBreadCrumText='PATIENTS LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Patients_list' />
         </div>
 
         <div className="col-12 mb-5 pb-5">

@@ -8,6 +8,8 @@ import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { pharmacies } from "../../Data/PharmactData";
 import { Link } from "react-router-dom";
 import MedicalEquipmentDataTable from "../../components/MedicalEquipment/MedicalEquipmentDataTable";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
+import useFetch from "../../customHook/useFetch";
 
 const MedicalEquipment = () => {
   const [filterOption, setFilterOption] = useState("today"); // default to "today"
@@ -15,15 +17,29 @@ const MedicalEquipment = () => {
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-};
+  };
 
-const role =JSON.parse(localStorage.getItem("userRoles"))
-const isSuperAdmin = Object.keys(role).length === 0 
+  const role = JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0
+
+  const exportData = useFetch(
+    `${process.env.REACT_APP_GET_PHARMACY_DATA}?status=${0}`
+  );
+
+  const rowss = exportData?.data
+  console.log("row123", rowss?.data)
+
+  const dataaa = rowss?.data?.map(m => ([m?.id, m?.name, process.env.REACT_APP_IMAGE_URL + '/' + m?.profile_picture , m?.email, m?.address, m?.phone, m?.country, m?.state? m?.state : 'Not Selected', m?.city, m?.zip ? m?.zip : 'null'])) || []
+
+  const csvData = [
+    ["ID", "Name", "Pic", "Email", "Address", "Mobile No.", "Country", "State", "City", "Zip Code"],
+    ...dataaa
+  ];
 
   return (
     <>
       <div className="row  px-2 pt-4">
-        <div className="col-12  ">
+        {/* <div className="col-12  ">
           <p className="mb-0 dashboard-com-top-text">Medical Equipment</p>
         </div>
 
@@ -42,17 +58,21 @@ const isSuperAdmin = Object.keys(role).length === 0
             </Link>  : null}   
             </div>
           </div>
+        </div> */}
+
+        <div className="col-12 ">
+          <ListHeader mainHeading='MEDICAL EQUIPMENT' placeholder='Search Title' btnText='Add MEDICAL EQUIPMENT' linkbtn='/medical/equipment/add' linkBreadCrum='/medical/equipment' blinkBreadCrumText='MEDICAL EQUIPMENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Medical_Equipment_list' />
         </div>
 
         <div className="col-12  ">
           <div className="row mb-5 pb-5">
-            <div className="col-12  pb-2 d-flex justify-content-start">
+            {/* <div className="col-12  pb-2 d-flex justify-content-start">
               <Searchbar
                 onChange={handleSearchChange}
                 value={searchQuery}
                 placeholder="Search"
               />
-            </div>
+            </div> */}
 
             <div className="col-12 px-2">
               <MedicalEquipmentDataTable rows={pharmacies} searchQuery={searchQuery} />
