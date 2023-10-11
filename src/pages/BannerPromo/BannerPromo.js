@@ -17,6 +17,8 @@ import Searchbar from "../../components/common/Searchbar";
 import Time from "../../atoms/Time/Time";
 import UploadFile from "../../molecules/UploadFile/UploadFile";
 import CustomDropDown from "../../atoms/CustomDropDown/Index";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
+import useFetch from "../../customHook/useFetch";
 
 const Pharmacy = () => {
 
@@ -363,16 +365,30 @@ const Pharmacy = () => {
         },
     };
 
+    const exportData = useFetch(
+        `${process.env.REACT_APP_LIST_BANNER}`
+      );
+    
+      const rowss = exportData?.data
+      console.log("row123", rowss?.data?.data)
+    
+      const dataaa = rowss?.data?.map(m=>([m?.id, m?.title, m?.status === 2 ? "Disabled" : m?.status === 1 ? "Enabled" : "Not selected", m?.start_time ? m?.start_time : 'null' , m?.end_time? m?.end_time : 'null' , m?.start_date ? m?.start_date : 'null', m?.end_date ? m?.end_date : 'null', m?.link, m?.description, m?.image ? `${process.env.REACT_APP_IMAGE_URL}/${m?.image}` : '' ])) ||[]
+    
+      const csvData = [
+        ["ID", "Title", "Status", "Start Time", "End Time", "Start Date", "End Date", "Link", "Description", "Image"],
+       ...dataaa
+      ];
+
     return (
         <>
             <div className="row  px-2 pt-4">
-                <div className="col-12  ">
+                {/* <div className="col-12  ">
                     <p className="mb-0 dashboard-com-top-text">Banner</p>
-                </div>
+                </div> */}
 
                 <div className="col-12  ">
                     <div className="row d-flex align-items-end">
-                        <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+                        {/* <div className="col-lg-6 col-12 mt-lg-0 mt-2">
                             <p className="mb-0 doctor-header-top-text">
                                 <Link className="doc-link " to="/">
                                     DASHBOARD
@@ -381,14 +397,14 @@ const Pharmacy = () => {
                                 <img className="mx-lg-3 ml-2 pr-1 pb-1" src={RightArrow} alt="" />{" "}
                                 <span style={{ color: "#4FA6D1" }}>Banner</span>{" "}
                             </p>
-                        </div>
+                        </div> */}
 
-                        <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+                        {/* <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
                             <Link to='/banner-promo/add'>
                                 <button className="btn-add-new-doc mr-2 " style={{width:'13rem'}}> Add Banner </button>
                             </Link>
 
-                        </div>
+                        </div> */}
 
                         <Modal
                             className="doctor-filter-modal"
@@ -434,28 +450,12 @@ const Pharmacy = () => {
                                         ]
 
                                     } />
-                                    {/* <Select
-                                        // defaultValue="lucy"
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                        onChange={() => { }}
-                                        options={[
-                                            {
-                                                label: "Banner ",
-                                            },
-                                            {
-                                                label: "Sales Promotion​",
-                                            },
-                                        ]}
-                                    /> */}
                                 </div>
 
                                 <div className="col-lg-4 pt-lg-0 pt-4 doc-setting-input">
                                     <p className=" doc-add-filter-text ">Status</p>
 
                                     <Select
-                                        // defaultValue="lucy"
                                         style={{
                                             width: "100%",
                                         }}
@@ -481,24 +481,6 @@ const Pharmacy = () => {
                                                 { label: "Main Home​" },
                                             ]}
                                     />
-                                    {/* <Select
-                                        // defaultValue="lucy"
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                        onChange={() => { }}
-                                        options={[
-                                            {
-                                                label: "Laboratory Home",
-                                            },
-                                            {
-                                                label: "Pharmacy Listing",
-                                            },
-                                            {
-                                                label: "Main Home",
-                                            }
-                                        ]}
-                                    /> */}
                                 </div>
 
 
@@ -515,7 +497,6 @@ const Pharmacy = () => {
 
                                         <DatePicker
                                             className=" rounded-0"
-                                            // placeholder={"start"}
                                             format={"DD/MM/YYYY"}
                                             style={{ border: "0", outline: "none" }}
                                         />
@@ -535,7 +516,6 @@ const Pharmacy = () => {
 
                             </div>
 
-                            {/* pl-lg-0 */}
                             <div className="row px-3 mt-4">
                                 <div className="col-lg-4 pt-lg-0 pt-4 doc-setting-input pr-0">
                                     <p className=" doc-add-filter-text ">End Date</p>
@@ -595,12 +575,16 @@ const Pharmacy = () => {
                     </div>
                 </div>
 
+                <div className="col-12 ">
+                    <ListHeader mainHeading='BANNER'  placeholder='Search Title' btnText='Add BANNER' linkbtn='/banner-promo/add' linkBreadCrum='/banner-promo' blinkBreadCrumText='BANNER LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Banner_list'/>
+                </div>
+
                 <div className="col-12  ">
 
                     <div className="row mb-5 pb-5">
 
 
-                        <div className="col-12 px-2 pt-4 mt-3">
+                        <div className="col-12 px-2 ">
                             < BannerDataTable
                                 rows={rows}
 

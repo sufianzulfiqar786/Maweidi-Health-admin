@@ -8,6 +8,7 @@ import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { CSVLink, CSVDownload } from "react-csv";
 import useFetch from "../../customHook/useFetch";
 import ButtonLoader from "../../atoms/buttonLoader";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
 
 const HomeService = () => {
   // const [rows, setRows] = useState([
@@ -121,11 +122,11 @@ const HomeService = () => {
   const rows = getHospital?.data
   console.log("row123", rows?.data?.data)
 
-  const dataaa = rows?.data?.data?.map(m=>([m?.id, m?.user?.first_name, m?.user?.contact, m?.amount_per_hour, m?.time_slot, m?.date, m?.experience, m?.user?.address, m?.service_detail, m?.document ? `${process.env.REACT_APP_IMAGE_URL}/${m?.document}` : '' ,  m?.status === 0 ? "Declined" : m?.status === 1 ? "Approved" : "Not selected"])) ||[]
+  const dataaa = rows?.data?.map(m => ([m?.id, m?.user?.first_name, m?.user?.contact, m?.amount_per_hour, m?.time_slot, m?.date, m?.experience, m?.user?.address, m?.service_detail, m?.document ? `${process.env.REACT_APP_IMAGE_URL}/${m?.document}` : '', m?.status === 0 ? "Declined" : m?.status === 1 ? "Approved" : "Not selected"])) || []
 
   const csvData = [
     ["ID", "Name", "Contact", "Amount", "Time", "Date", "Experience", "Address", "Service Details", "Document", "Status"],
-   ...dataaa
+    ...dataaa
   ];
 
 
@@ -133,22 +134,17 @@ const HomeService = () => {
   return (
     <>
       <div className="row pl-3 pr-2 pt-4 blooddonation-tab">
-        <div className="col-12">
+        {/* <div className="col-12">
           <p className="mb-0 blooddonation-heading">Service Provider Details</p>
-        </div>
+        </div> */}
 
-        <div className="col-12 my-4">
+        {/* <div className="col-12 my-4">
           <div className="row ">
             <div className="col-md-12">
               <BreadCrum
                 firstLink="/home-service-provider"
                 firstText="HOME SERVICE PROVIDER"
               />
-              {/* <p className="blooddonation-breadcrumb">
-                <span>DASHBOARD</span>
-                <img src={Chevron} />
-                <span className="current-tab"> HOME SERVICE PROVIDER</span>
-              </p> */}
             </div>
           </div>
           <div className="row m-0 p-0 w-100 ">
@@ -163,6 +159,10 @@ const HomeService = () => {
             <CSVLink filename={"Home_Service_Provider.csv"} data={csvData}><button className="export-me" disabled={getHospital.isLoading}>Export me</button></CSVLink>
             </div>
           </div>
+        </div> */}
+
+        <div className="col-12 px-3">
+          <ListHeader mainHeading='HOME-SERVICE-PROVIDER' placeholder='Search Title' linkbtn='/xray/add' linkBreadCrum='/home-service-provider' blinkBreadCrumText='HOME-SERVICE-PROVIDER LIST' csvData={csvData} disabled={getHospital?.isLoading} exportFileName='Home_Service_Provider_list' />
         </div>
 
         <div className="col-12 mb-5 pb-5">

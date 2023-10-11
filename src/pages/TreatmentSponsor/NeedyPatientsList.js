@@ -9,6 +9,8 @@ import "../../assets/css/laboratory/laboratorylist/laboratorylist.scss";
 import CancelModal from "../../components/common/CancelModal";
 import AcceptModal from "../../components/common/AcceptModal";
 import { Link } from "react-router-dom";
+import useFetch from "../../customHook/useFetch";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
 const NeedyPatientList = () => {
   const [rows, setRows] = useState([
     {
@@ -137,8 +139,22 @@ const NeedyPatientList = () => {
 
   const handleTick = () => {
     settickCompleted(true);
-
   }
+
+  const exportData = useFetch(
+    `${process.env.REACT_APP_LIST_NEEDY_PATIENT}`
+  );
+
+  const rowss = exportData?.data
+  console.log("row123", rowss?.data)
+
+  const dataaa = rowss?.data?.map(m=>([m?.id, m?.first_name, m?.patient_id , m?.hospital?.name , m?.contact , m?.civil_id, m?.gender ==1? 'Male': m.gender ==3? "Female": 'Other', m.approx_treatment_cost? m.approx_treatment_cost :'-', m?.disease, m.status ===1 ? 'Approved' : 'Pending' ])) ||[]
+
+  const csvData = [
+    ["ID", "Name", "Patient ID no", "Hospital", "Mobile No.", "Civil ID no", "Gender", "Treatment Cost", "Disease", "Status"],
+   ...dataaa
+  ];
+
   return (
     <>
       <NeedPatientEditModal
@@ -161,14 +177,14 @@ const NeedyPatientList = () => {
         onAccept={handleTick}
       />
       <div className="row pl-3 pr-2 pt-4 laboratorylist-tab">
-        <div className="col-12">
+        {/* <div className="col-12">
           <p className="mb-0 laboratorylist-heading">Needy Patients List</p>
-        </div>
+        </div> */}
 
         {/* header  */}
-        <div className="col-12 my-4">
+        {/* <div className="col-12 my-4"> */}
           <div className="row ">
-            <div className="col-md-6">
+            {/* <div className="col-md-6">
               <p className="laboratorylist-breadcrumb">
                 <span>DASHBOARD</span>
                 <img src={Chevron} />
@@ -176,7 +192,7 @@ const NeedyPatientList = () => {
                 <img src={Chevron} />
                 <span className="current-tab">NEEDY PATIENTS LIST</span>
               </p>
-            </div>
+            </div> */}
 
             <div class="col-md-6 text-md-right ">
               {/* <button
@@ -189,7 +205,7 @@ const NeedyPatientList = () => {
               </button> */}
             </div>
           </div>
-          <div className="row m-0 p-0 w-100">
+          {/* <div className="row m-0 p-0 w-100">
           <div className="col-6 px-0 w-100 d-flex justify-content-start align-items-end">
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
             </div>
@@ -202,10 +218,15 @@ const NeedyPatientList = () => {
                 </Link>{" "}
               </button>
             </div>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         {/* Table */}
+
+        <div className="col-12 ">
+              <ListHeader mainHeading='TREATMENT-SPONSOR' placeholder='Search Title' btnText='Add Needy Patient' linkbtn='/treatment-sponsor' linkBreadCrum='/needy-patients' blinkBreadCrumText='NEEDY-PATIENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Needy_Patient_list' />
+            </div>
+
         <div className="col-12 mb-5 pb-5">
           <NeedyPatientDataTable
             onEditClick={handleEditClick}

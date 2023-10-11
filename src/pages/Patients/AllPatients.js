@@ -119,10 +119,10 @@ const AllPatients = () => {
   const rowss = exportData?.data
   console.log("row123", rowss?.data?.data)
 
-  const dataaa = rowss?.data?.data?.map(m=>([m?.id, m?.user?.first_name, m?.user?.profile_pic === ''? 'Not Uploaded' : process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic , m?.kwd_id , m?.user?.contact , m?.user?.email , m?.user.age, m?.user?.gender === 1 ? 'Male' : m?.user?.gender === 0 ? "Female" : 'Other' ])) ||[]
+  const dataaa = rowss?.data?.map(m=>([m?.id, m?.user?.first_name, m?.user?.profile_pic === ''? 'Not Uploaded' : process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic , m?.kwd_id , m?.user?.contact , m?.user?.email , m?.user.age, m?.user?.gender === 1 ? 'Male' : m?.user?.gender === 0 ? "Female" : 'Other' ])) ||[]
 
   const csvData = [
-    ["ID", "Patient Name", "Pic", "KWD ID", "Mobile Number", "	Email", "Age", "Gender"],
+    ["ID", "Patient Name", "Pic", "KWD ID", "Mobile Number", "Email", "Age", "Gender"],
    ...dataaa
   ];
 

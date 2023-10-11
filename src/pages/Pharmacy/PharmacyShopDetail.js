@@ -352,7 +352,7 @@ const PharmacyShopDetail = () => {
 
   console.log("orderListState", orderListState?.data)
 
-  const dataaa = orderListState?.data?.data?.map(m => ([m?.id, m?.user?.name, process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic , m?.user?.email, m?.user?.address ? m?.user?.address : '-', m?.user?.contact, m?.order_items[0]?.product?.title, m?.total_amount, m?.status === 1  ? 'Accepted' : m?.status === 2 ? "Declined" : 'Pending'  ])) || []
+  const dataaa = orderListState?.data?.map(m => ([m?.id, m?.user?.name, process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic , m?.user?.email, m?.user?.address ? m?.user?.address : '-', m?.user?.contact, m?.order_items[0]?.product?.title, m?.total_amount, m?.status === 1  ? 'Accepted' : m?.status === 2 ? "Declined" : 'Pending'  ])) || []
 
   const csvData = [
     ["ID", "Name", "Pic", "Email", "Address", "Mobile No.", "Product", "Total", "Status"],

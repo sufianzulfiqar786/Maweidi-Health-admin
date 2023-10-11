@@ -372,10 +372,10 @@ const Promo = () => {
       const rowss = exportData?.data
       console.log("row123", rowss?.data?.data)
     
-      const dataaa = rowss?.data?.data?.map(m=>([m?.id, m?.title, m?.status === 2 ? "Disabled" : m?.status === 1 ? "Enabled" : "Not selected", m?.start_time ? m?.start_time : 'null' , m?.end_time? m?.end_time : 'null' , m?.start_date ? m?.start_date : 'null', m?.end_date ? m?.end_date : 'null', m?.link, m?.description, m?.image ? `${process.env.REACT_APP_IMAGE_URL}/${m?.image}` : '' ])) ||[]
+      const dataaa = rowss?.data?.map(m=>([m?.id, m?.title, m?.status === 2 ? "Disabled" : m?.status === 1 ? "Enabled" : "Not selected", m?.start_time ? m?.start_time : 'null' , m?.end_time? m?.end_time : 'null' , m?.start_date ? m?.start_date : 'null', m?.end_date ? m?.end_date : 'null', m?.link, m?.description, m?.image ? `${process.env.REACT_APP_IMAGE_URL}/${m?.image}` : '' ])) ||[]
     
       const csvData = [
-        ["ID", "Title", "Status", "Start Time", "End Time", "Start Date", "End Date", "Link", "Service Details", "Description", "Image"],
+        ["ID", "Title", "Status", "Start Time", "End Time", "Start Date", "End Date", "Link", "Description", "Image"],
        ...dataaa
       ];
 
@@ -618,7 +618,7 @@ const Promo = () => {
                     <div className="row mb-5 pb-5">
 
 
-                        <div className="col-12 px-2 pt-4 mt-3">
+                        <div className="col-12 px-2 ">
                             < PromoDataTable
                                 rows={rows}
 

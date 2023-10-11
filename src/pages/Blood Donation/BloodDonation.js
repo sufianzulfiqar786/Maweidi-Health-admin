@@ -6,6 +6,7 @@ import BloodDonationTable from "./../../components/blooddonation/BloodDonationTa
 import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import { CSVLink, CSVDownload } from "react-csv";
 import useFetch from "../../customHook/useFetch";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
 
 const BloodDonation = () => {
   // const [rows, setRows] = useState([
@@ -133,26 +134,26 @@ const BloodDonation = () => {
   );
 
   const rows = getHospital?.data
-//   console.log("roesssasd", rows?.data?.data.map(m=>([m.id , m.name, m.age, m.gender, m.blood_group, m.contact, m.city
-// , m.address, m.status === 0 ? "Unavailable" : "Available" ])))
+  //   console.log("roesssasd", rows?.data?.data.map(m=>([m.id , m.name, m.age, m.gender, m.blood_group, m.contact, m.city
+  // , m.address, m.status === 0 ? "Unavailable" : "Available" ])))
 
-  const dataaa = rows?.data?.data?.map(m=>([m?.id , m?.name, m?.age, m?.gender, m?.blood_group, m?.contact, m?.city
-    , m?.address, m?.status === 0 ? "Unavailable" : "Available"])) ||[]
+  const dataaa = rows?.data?.map(m => ([m?.id, m?.name, m?.age? m?.age : '-', m?.gender? m?.gender : '-', m?.blood_group, m?.contact, m?.city? m?.city : '-'
+    , m?.address? m?.address : '-', m?.status === 0 ? "Unavailable" : "Available"])) || []
 
   const csvData = [
     ["ID", "Name", "Age", "Gender", "Blood Group", "Mobile No", "City", "Address", "Status"],
-   ...dataaa
+    ...dataaa
   ];
 
 
   return (
     <>
       <div className="row pl-3 pr-2 pt-4 blooddonation-tab">
-        <div className="col-12">
+        {/* <div className="col-12">
           <p className="mb-0 blooddonation-heading">Manage Blood Donors</p>
-        </div>
+        </div> */}
 
-        <div className="col-12 my-4">
+        {/* <div className="col-12 my-4">
           <div className="row ">
             <div className="col-md-12">
               <BreadCrum
@@ -160,13 +161,6 @@ const BloodDonation = () => {
                 firstText="BLOOD DONATION"
                 secondText="DONOR DETAILS"
               />
-              {/* <p className="blooddonation-breadcrumb">
-                <span>DASHBOARD</span>
-                <img src={Chevron} />
-                <span> BLOOD DONATION</span>
-                <img src={Chevron} />
-                <span className="current-tab"> DONOR DETAILS</span>
-              </p> */}
             </div>
           </div>
           <div className="row m-0 p-0 w-100 ">
@@ -177,10 +171,14 @@ const BloodDonation = () => {
             <CSVLink filename={"Blood_Donation.csv"}  data={csvData}><button className="export-me" >Export me</button></CSVLink>
             </div>
           </div>
+        </div> */}
+
+        <div className="col-12 px-3">
+          <ListHeader mainHeading='BLOOD-DONATION' placeholder='Search Title' linkbtn='/xray/add' linkBreadCrum='/blood-donation' blinkBreadCrumText='BLOOD-DONATION LIST'  csvData={csvData} disabled={getHospital?.isLoading} exportFileName='Blood_Donation_list' />
         </div>
 
         <div className="col-12 mb-5 pb-5">
-          <BloodDonationTable rows={rows} searchQuery={searchQuery}  />
+          <BloodDonationTable rows={rows} searchQuery={searchQuery} />
         </div>
       </div>
     </>

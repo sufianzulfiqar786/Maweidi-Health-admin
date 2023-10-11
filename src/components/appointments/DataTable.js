@@ -243,7 +243,7 @@ const DataTable = ({
                   </TableCell>
                   <TableCell align="left">{row.date}</TableCell>
                   <TableCell align="left">{row.created_at?.slice(11, 16)}</TableCell>
-                  <TableCell align="left">{row.hospital.name}</TableCell>
+                  <TableCell align="center">{row?.hospital?.name? row?.hospital?.name : '-'}</TableCell>
                   {/* <TableCell align="left">{row.docCivilID}</TableCell> */}
                   <TableCell align="left">{row.doctor?.user?.name}</TableCell>
                   <TableCell align="left">{row?.specialization?.name}</TableCell>
