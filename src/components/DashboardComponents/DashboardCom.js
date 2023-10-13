@@ -83,19 +83,19 @@ const DashboardCom = () => {
       total: '12212',
       progress: -13,
     },
-    // {
-    //   id: 1,
-    //   text: 'Total Users',
-    //   total: '1212',
-    //   progress: 16,
-    // },
+    {
+      id: 1,
+      text: 'Total Users',
+      total: '1212',
+      progress: 16,
+    },
   ];
 
   const [dropdownValueChange, setDropdownValueChange] = useState("Adan Hospital");
 
-  const handleChangeSelect = (value)=>{
+  const handleChangeSelect = (value) => {
     setDropdownValueChange(value)
-      }
+  }
 
   const progress = 10
 
@@ -145,37 +145,37 @@ const DashboardCom = () => {
 
         <div className="col-12 mt-1">
           <div className="row">
-            {data1.map(({text, total, progress }) => {
+            {data1.map(({ text, total, progress }) => {
               return (
-                <div className="px-3 col-4" >
+                <div className="px-3 col-3" >
                   <Link to='/'  >
                     <div className="dashboard-right-side-top-card my-lg-3 w-100 box-shadow-hover d-flex pl-1 py-3">
 
                       <div className="px-3 w-100 ">
                         <div className="d-flex justify-content-between pb-3">
-                        <span className=" m-0 p-0  dashboard-left-icon-top-text1" style={{color:'#111827', fontSize:"14px"}}>
-                          {text}
-                        </span>
+                          <span className=" m-0 p-0  dashboard-left-icon-top-text1" style={{ color: '#111827', fontSize: "14px" }}>
+                            {text}
+                          </span>
 
-                        <div className="px-2" style={{
-                            backgroundColor:progress>0 ?  '#D1FAE5' : '#FEE2E2',
-                            color:progress>0 ? "#059669" : '#DC2626',
-                            fontSize:'12px',
-                            borderRadius:'10px',
-                            
-                          }}>{ progress>0?  <i class="fa-solid fa-arrow-up pr-1" style={{fontSize:'10px'}}></i> : 
-                          <i class="fa-solid fa-arrow-down pr-1" style={{fontSize:'10px'}}></i>
-                          }{progress}%</div>
-                        
+                          <div className="px-2" style={{
+                            backgroundColor: progress > 0 ? '#D1FAE5' : '#FEE2E2',
+                            color: progress > 0 ? "#059669" : '#DC2626',
+                            fontSize: '12px',
+                            borderRadius: '10px',
+
+                          }}>{progress > 0 ? <i class="fa-solid fa-arrow-up pr-1" style={{ fontSize: '10px' }}></i> :
+                            <i class="fa-solid fa-arrow-down pr-1" style={{ fontSize: '10px' }}></i>
+                            }{progress}%</div>
+
                         </div>
 
-<hr  className="m-0 " />
+                        <hr className="m-0 " />
 
                         <div className="dashboard-left-icon-top-text2 pt-3 d-flex justify-content-center w-100">
-                          <div className="" style={{color:'#111827', fontSize:"18px"}}> {text==='Total Users' || text === 'Orders'? ""  : "KWD"} {total}</div>
-                        
+                          <div className="" style={{ color: '#111827', fontSize: "18px" }}> {text === 'Total Users' || text === 'Orders' ? "" : "KWD"} {total}</div>
+
                         </div>
-                       
+
                       </div>
                     </div>
                   </Link>
@@ -214,22 +214,22 @@ const DashboardCom = () => {
           <div className="row ">
             <div className="col-lg-8    " >
               <div className=" bar-chart pb-4 ">
-                <div className="d-flex justify-content-between align-items px-4 mx-2 py-4">
-                <span class="mb-0 bar-chart-text1 ">
-                  Total Revenue
-                </span>
-                <div className="border " style={{width:"250px", borderRadius:'5px'}}>
-                <RangePicker style={{border:'none'}} presets={rangePresets} onChange={onRangeChange} />
-    
-                {/* <CustomDropDownMulti selectLabel='Adan Hospital' option={optionHostpital} handleChangeSelect={handleChangeSelect} /> */}
-                </div>
+                <div className="d-flex justify-content-between align-items-center px-4 mx-2 py-4">
+                  <span class="mb-0 bar-chart-text1 ">
+                    Total Revenue
+                  </span>
+                  <div className="border " style={{ width: "250px", borderRadius: '5px' }}>
+                    <RangePicker style={{ border: 'none' }} presets={rangePresets} onChange={onRangeChange} />
+
+                    {/* <CustomDropDownMulti selectLabel='Adan Hospital' option={optionHostpital} handleChangeSelect={handleChangeSelect} /> */}
+                  </div>
                 </div>
 
                 <div className="bar-chart-padding ">
                   <div className="pt-3">
-                  <DashboardBarChart />
+                    <DashboardBarChart />
                   </div>
-                  
+
                 </div>
 
                 <p class="bar-chart-text2">Revenue</p>
@@ -239,21 +239,27 @@ const DashboardCom = () => {
             <div className="col-lg-4 mt-lg-0 mt-4" >
               <div className="Radial-bar-border  pt-2" >
                 <p class="mb-0 bar-chart-text1 pt-3 pb-4 d-flex justify-content-between align-items-center px-3">
-                  <div>
+                  <div className="d-flex justify-content-between w-100 flex-wrap align-items-center">
                     <div>Total Users</div>
-                    <div className="pt-1"><span style={{fontWeight:"bold"}}>1214</span></div>
+                    <div className="border " style={{ width: "210px", borderRadius: '5px' }}>
+                    <RangePicker style={{ border: 'none' }} presets={rangePresets} onChange={onRangeChange} />
+
+                    {/* <CustomDropDownMulti selectLabel='Adan Hospital' option={optionHostpital} handleChangeSelect={handleChangeSelect} /> */}
                   </div>
-                 <div>
-                 <div className="px-2 " style={{
-                            backgroundColor:progress>0 ?  '#D1FAE5' : '#FEE2E2',
-                            color:progress>0 ? "#059669" : '#DC2626',
-                            fontSize:'12px',
-                            borderRadius:'10px',
-                            
-                          }}>{ progress>0?  <i class="fa-solid fa-arrow-up pr-1" style={{fontSize:'10px'}}></i> : 
-                          <i class="fa-solid fa-arrow-down pr-1" style={{fontSize:'10px'}}></i>
-                          }{progress}%</div>
-                 </div>
+                    {/* <div className="pt-1"><span style={{fontWeight:"bold"}}>1214</span></div> */}
+                  </div>
+                  {/* <div>
+                    <div className="px-2 " style={{
+                      backgroundColor: progress > 0 ? '#D1FAE5' : '#FEE2E2',
+                      color: progress > 0 ? "#059669" : '#DC2626',
+                      fontSize: '12px',
+                      borderRadius: '10px',
+
+                    }}>{progress > 0 ? <i class="fa-solid fa-arrow-up pr-1" style={{ fontSize: '10px' }}></i> :
+                      <i class="fa-solid fa-arrow-down pr-1" style={{ fontSize: '10px' }}></i>
+                      }{progress}%
+                    </div>
+                  </div> */}
                 </p>
 
                 <div
@@ -262,8 +268,8 @@ const DashboardCom = () => {
                   style={{ minHeight: "85%" }}
                 >
                   {/* <DashboardRadialBar /> */}
-                  <div className="mx-3" style={{width:'100%'}}>
-                  <PieChart />
+                  <div className="mx-3" style={{ width: '100%' }}>
+                    <PieChart />
                   </div>
                 </div>
 

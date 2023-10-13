@@ -6,37 +6,37 @@ const DemoColumn = () => {
 
   const data = [
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Hospitals",
       value: 1350,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Doctors",
       value: 1450,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Pharmacies",
       value: 910,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Medical Equipments",
       value: 950,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Laboratories",
       value: 785,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "X-ray",
       value: 945,
     },
     {
-      month: "Jan-Feb",
+      month: "Jan",
       gender: "Service Providers",
       value: 910,
     },
@@ -44,31 +44,44 @@ const DemoColumn = () => {
 
 
 
-    // {
-    //   month: "feb",
-    //   gender: "Hospitals",
-    //   value: 1350,
-    // },
-    // {
-    //   month: "feb",
-    //   gender: "Laboratories1",
-    //   value: 950,
-    // },
-    // {
-    //   month: "feb",
-    //   gender: "Laboratories2",
-    //   value: 950,
-    // },
-    // {
-    //   month: "feb",
-    //   gender: "Laboratorie3s",
-    //   value: 950,
-    // },
-    // {
-    //   month: "feb",
-    //   gender: "Laboratories4",
-    //   value: 950,
-    // },
+    {
+      month: "Feb",
+      gender: "Hospitals",
+      value: 1050,
+    },
+    {
+      month: "Feb",
+      gender: "Doctors",
+      value: 1350,
+    },
+    {
+      month: "Feb",
+      gender: "Pharmacies",
+      value: 710,
+    },
+    {
+      month: "Feb",
+      gender: "Medical Equipments",
+      value: 950,
+    },
+    {
+      month: "Feb",
+      gender: "Laboratories",
+      value: 1185,
+    },
+    {
+      month: "Feb",
+      gender: "X-ray",
+      value: 1045,
+    },
+    {
+      month: "Feb",
+      gender: "Service Providers",
+      value: 810,
+    },
+
+
+   
 
 
 
@@ -304,25 +317,25 @@ const DemoColumn = () => {
 
     color: ({ gender }) => {
       if (gender === "Hospitals") {
-        return "#165DFF";
+        return "#5588FF";
       }
       if (gender === "Laboratories") {
-        return "#0FC6C2";
+        return "#FFCE00";
       }
       if (gender === "Pharmacies") {
-        return "#FADC19";
+        return "#11B3CF";
       }
       if (gender === "Medical Equipments") {
-        return "red";
+        return "#6555C5";
       }
       if (gender === "X-ray") {
-        return "pink";
+        return "#A501F4";
       }
       if (gender === "Service Providers") {
-        return "purple";
+        return "#BAC94A";
       }
       if (gender === "Doctors") {
-        return "brown";
+        return "#35A28F";
       }
     },
 
@@ -340,13 +353,13 @@ const DemoColumn = () => {
         console.log("item", item)
         return (
           <div className=" flex-nowrap  d-flex align-items-center">
-            <span className="dot " style={{ backgroundColor: item === 'Hospitals' ? '#165DFF' : 
-            item === "Doctors" ? "brown" : 
-            item === "Pharmacies" ? "#FADC19" : 
-            item === "Medical Equipments" ? "red" : 
-            item === "X-ray" ? "pink" : 
-            item === "Service Providers" ? "purple" : 
-            item === "Laboratories" ? "#0FC6C2" : 
+            <span className="dot " style={{ backgroundColor: item === 'Hospitals' ? '#5588FF' : 
+            item === "Doctors" ? "#35A28F" : 
+            item === "Pharmacies" ? "#11B3CF" : 
+            item === "Medical Equipments" ? "#6555C5" : 
+            item === "X-ray" ? "#A501F4" : 
+            item === "Service Providers" ? "#BAC94A" : 
+            item === "Laboratories" ? "#FFCE00" : 
             'black' }}></span> <span className="pl-2 pr-4">{item}</span>
           </div>
         )

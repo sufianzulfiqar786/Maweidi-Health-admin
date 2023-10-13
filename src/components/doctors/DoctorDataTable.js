@@ -33,7 +33,7 @@ const DataTable = ({
   console.log("visibleRows", visibleRows);
 
   return (
-    <div className="row ml-0 mx-2 mt-4" style={{ overflowX: "hidden" }}>
+    <div className="row ml-0 mx-2 mt-2" style={{ overflowX: "hidden" }}>
       <TableContainer
         component={Paper}
         sx={{ backgroundColor: "#FFFFFF" }}

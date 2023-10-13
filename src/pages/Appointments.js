@@ -12,6 +12,7 @@ import useFetch from "../customHook/useFetch";
 // img
 import DownIcon from "../assets/images/dashboard/DownIcon.svg";
 import { Link } from "react-router-dom";
+import ListHeader from "../molecules/ListHeader/ListHeader";
 
 const Appointments = () => {
 
@@ -295,18 +296,18 @@ const Appointments = () => {
   useEffect(() => {
     if (appointmentsData?.success) {
       setRows(
-        appointmentsData?.data?.data?.map(({ id, fees, user, doctor, selected_date, selected_time, hospital, status}) => ({
+        appointmentsData?.data?.data?.map(({ id, fees, user, doctor, selected_date, selected_time, hospital, status }) => ({
           number: id,
           patient_id: user?.id,
           patient_name: user?.name,
           date: selected_date,
           time: selected_time,
-          hospital_name: hospital !==null? hospital?.name : "Badr AL Samaa Hospitals",
-          docCivilID: doctor !==null? doctor?.council_registration_no : "40122-67366475-3",
-          doctor_name: doctor !==null? doctor?.user?.name : "Dr. Jane Smith",
+          hospital_name: hospital !== null ? hospital?.name : "Badr AL Samaa Hospitals",
+          docCivilID: doctor !== null ? doctor?.council_registration_no : "40122-67366475-3",
+          doctor_name: doctor !== null ? doctor?.user?.name : "Dr. Jane Smith",
           specialization: "Cardiology",
-          fees: fees !==null? fees : "$50/Patient",
-          appointmentStatus: status !==0 ? "Approved" :"Rejected",
+          fees: fees !== null ? fees : "$50/Patient",
+          appointmentStatus: status !== 0 ? "Approved" : "Rejected",
         }))
       );
     }
@@ -349,6 +350,45 @@ const Appointments = () => {
     setSearchQuery(event.target.value);
   };
 
+  const exportData = useFetch(
+    `${process.env.REACT_APP_GET_APPOINTMENTS}`
+  );
+
+  const exportData1 = useFetch(
+    `${process.env.REACT_APP_GET_APPOINTMENTS}`
+  );
+
+  console.log("exportData1", exportData1?.data?.data?.data)
+
+  const rowss = exportData?.data?.data?.data
+  console.log("row123", rowss?.data)
+
+  const dataaa = exportData1?.data?.data?.data.map(m=>([m?.id, m?.row?.kwd_id || '-', m?.patient_id , m?.user?.name , m?.date , m?.created_at?.slice(11, 16), m?.hospital?.name || '-', m?.doctor?.user?.name, m?.specialization?.name, m?.fees, m?.status === 1 ? 'Approved' : 'Pending' ])) ||[]
+
+  const csvData = [
+    ["ID", "KWD ID", "Patient Id", "Patient Name", "Date", "Time", "Hospital Name", "Doctor Name", "Specialization", "Fees", "Appointment Status"],
+   ...dataaa
+  ];
+
+  const filterOptionData = [
+    {
+      id: 0,
+      text: 'All',
+    },
+    {
+      id: 1,
+      text: 'Today',
+    },
+    {
+      id: 2,
+      text: 'Tomorrow',
+    },
+    {
+      id: 3,
+      text: 'Yesterday',
+    },
+  ]
+
   return (
     <>
       {/* <CheckPatientModal
@@ -375,19 +415,23 @@ const Appointments = () => {
       />
 
       <div className="row pl-3 pr-2 pt-4 appointment-tab">
-        <div className="col-12">
+        {/* <div className="col-12">
           <p className="mb-0 appointment-heading">Appointment</p>
+        </div> */}
+
+        <div className="col-12 ">
+          <ListHeader mainHeading='APPOINTMENT' placeholder='Search Title' btnText='Add Appointment' linkbtn='/appointment/add' linkBreadCrum='/appointment' blinkBreadCrumText='APPOINTMENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Appointment_list' filterOptionData={filterOptionData} filterOption={filterOption} setFilterOption={setFilterOption} />
         </div>
 
         <div className="col-12 my-4">
           <div className="row">
-            <div className="col-md-6">
+            {/* <div className="col-md-6">
               <p className="appointment-breadcrumb">
                 <span> DASHBOARD </span>
                 <img src={Chevron} />
                 <span className="current-tab"> APPOINTMENT</span>
               </p>
-            </div>
+            </div> */}
             <div class="col-md-6 text-md-right">
               {/* <select
                 style={{ marginRight: "15px" }}
@@ -399,7 +443,7 @@ const Appointments = () => {
                 <option value="tomorrow">Tomorrow</option>
               </select> */}
 
-              <div className={`dropdown ${isActive ? 'active' : ''}`}>
+              {/* <div className={`dropdown ${isActive ? 'active' : ''}`}>
                 <button className="doctor-btn patient-btn-filter mr-3"  onClick={()=>{
                       setIsActive(!isActive)
                       
@@ -447,13 +491,13 @@ const Appointments = () => {
               >
                 Add Appointment
               </button> 
-              </Link> 
+              </Link>  */}
             </div>
           </div>
 
-          <div className="row m-0 p-0">
+          {/* <div className="row m-0 p-0">
             <Searchbar onChange={handleSearchChange} value={searchQuery} />
-          </div>
+          </div> */}
         </div>
 
         <div className="col-12  mb-5 pb-5">

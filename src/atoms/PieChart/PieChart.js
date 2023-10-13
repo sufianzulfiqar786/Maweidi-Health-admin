@@ -119,25 +119,25 @@ const PieChart = () => {
 
     color: ({ type }) => {
       if (type === "Hospitals") {
-        return "#165DFF";
+        return "#5588FF";
       }
       if (type === "Laboratories") {
-        return "#0FC6C2";
+        return "#FFCE00";
       }
       if (type === "Pharmacies") {
-        return "#FADC19";
+        return "#11B3CF";
       }
       if (type === "Medical Equipments") {
-        return "red";
+        return "#6555C5";
       }
       if (type === "X-ray") {
-        return "pink";
+        return "#A501F4";
       }
       if (type === "Service Providers") {
-        return "purple";
+        return "#BAC94A";
       }
       if (type === "Doctors") {
-        return "brown";
+        return "#35A28F";
       }
     },
 
@@ -158,13 +158,13 @@ const PieChart = () => {
           return (
             <div className=" flex-nowrap d-flex align-items-center">
               <span className="dot " style={{
-                backgroundColor: item === 'Hospitals' ? '#165DFF' :
-                  item === "Doctors" ? "brown" :
-                    item === "Pharmacies" ? "#FADC19" :
-                      item === "Medical Equipments" ? "red" :
-                        item === "X-ray" ? "pink" :
-                          item === "Service Providers" ? "purple" :
-                            item === "Laboratories" ? "#0FC6C2" :
+                backgroundColor: item === 'Hospitals' ? '#5588FF' :
+                  item === "Doctors" ? "#35A28F" :
+                    item === "Pharmacies" ? "#11B3CF" :
+                      item === "Medical Equipments" ? "#6555C5" :
+                        item === "X-ray" ? "#A501F4" :
+                          item === "Service Providers" ? "#BAC94A" :
+                            item === "Laboratories" ? "#FFCE00" :
                               'black'
               }}></span> <span className="pl-2 pr-4">{item}</span>
             </div>

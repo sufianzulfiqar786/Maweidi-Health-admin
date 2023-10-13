@@ -337,7 +337,7 @@ text-decoration: none;
 .doctor-btn {
   width: 80px;
   height: 38px;
-  border: 1px solid #094963;
+  border: 1px solid #e4e3e4;
   border-radius: 6px;
   font-family: $Montserrat-Medium;
   font-style: normal;
@@ -350,6 +350,15 @@ text-decoration: none;
 
 .doctor-btn:focus {
   outline: none;
+}
+
+.old-dropdown-text1{
+  transition: 1s all;
+  background-color: white;
+}
+
+.old-dropdown-text1:hover{
+  background-color: rgba(17, 24, 39, 0.1019607843);
 }
 
 .patient-btn-filter{

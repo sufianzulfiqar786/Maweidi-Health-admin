@@ -15,6 +15,7 @@ import BreadCrum from "../../atoms/breadcrum/BreadCrum";
 import useFetch from "../../customHook/useFetch";
 import PageLoader from "../../atoms/pageLoader";
 import { useEffect } from "react";
+import ListHeader from "../../molecules/ListHeader/ListHeader";
 
 const AllDoctor = () => {
   const [modal2Open, setModal2Open] = useState(false);
@@ -22,11 +23,11 @@ const AllDoctor = () => {
   const [dirty, setDirty] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
- 
-  const { data, isLoading, error ,fetchPaginatedData} = useFetch(
+
+  const { data, isLoading, error, fetchPaginatedData } = useFetch(
     `${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${page}`,
   );
-  console.log("dataqqq", data?.data?.total); 
+  console.log("dataqqq", data?.data?.total);
   const handleChangePage = (newPage) => {
     setPage(newPage);
     // fetchPaginatedData(`${process.env.REACT_APP_GET_DOCTORS}?per_page=${rowsPerPage}&page=${newPage}`)
@@ -35,7 +36,7 @@ const AllDoctor = () => {
     setSelectedOptions(value);
     setDirty(true);
   };
- 
+
   console.log('data doctor', data)
 
   const marks = {
@@ -60,27 +61,45 @@ const AllDoctor = () => {
   };
   // if (isLoading) return <PageLoader />;
 
-  const role =JSON.parse(localStorage.getItem("userRoles"))
-  const isSuperAdmin = Object.keys(role).length === 0 
+  const role = JSON.parse(localStorage.getItem("userRoles"))
+  const isSuperAdmin = Object.keys(role).length === 0
+
+  const exportData = useFetch(
+    `${process.env.REACT_APP_GET_DOCTORS}`
+  );
+
+  const rowss = exportData?.data
+  console.log("row123", rowss?.data)
+
+  const dataaa = rowss?.data?.map(m => ([m?.user?.id, m?.user?.name, process.env.REACT_APP_IMAGE_URL + m?.user?.profile_pic, m?.user?.email, m?.qualification, m?.experience_years, m?.user?.contact ])) || []
+
+  const csvData = [
+    ["ID", "Name", "Pic", "Email", "Qualification", "Experience (Years)", "Contact"],
+    ...dataaa
+  ];
 
   return (
     <>
       <div className="row  px-2 pt-4">
-        <div className="col-12  ">
+        {/* <div className="col-12  ">
           <p className="mb-0 dashboard-com-top-text">Doctors</p>
+        </div> */}
+
+<div className="col-12 ">
+          <ListHeader mainHeading='DOCTOR' placeholder='Search Title' btnText='Add Doctor' linkbtn='/doctors/add' linkBreadCrum='/doctors' blinkBreadCrumText='DOCTORS LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Doctor_list' />
         </div>
 
         <div className="col-12  ">
           <div className="row d-flex align-items-end">
-            <div className="col-lg-6 col-12 mt-lg-0 mt-2">
+            {/* <div className="col-lg-6 col-12 mt-lg-0 mt-2">
               <BreadCrum
                 firstLink="/doctors"
                 firstText="DOCTORS"
                 secondText="ALL DOCTORS"
               />
-            </div>
+            </div> */}
 
-            <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
+            {/* <div className="col-lg-6 col-12 mt-lg-0 mt-3 d-flex justify-content-end ">
               <button
                 className="btn-add-doc-filter mr-2"
                 onClick={() => setModal2Open(true)}
@@ -98,7 +117,7 @@ const AllDoctor = () => {
                   Add New Doctor{" "}
                 </Link> 
               </button> : null}
-            </div> 
+            </div>  */}
 
             <Modal
               className="doctor-filter-modal"
@@ -130,7 +149,7 @@ const AllDoctor = () => {
                     style={{
                       width: "100%",
                     }}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     options={[
                       {
                         label: "Cardiology​​",
@@ -173,7 +192,7 @@ const AllDoctor = () => {
                     style={{
                       width: "100%",
                     }}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     options={[
                       {
                         label: "Male​​",
@@ -305,7 +324,7 @@ const AllDoctor = () => {
                     style={{
                       width: "100%",
                     }}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     options={[
                       {
                         label: "Cardiology​​",
@@ -330,7 +349,7 @@ const AllDoctor = () => {
                     style={{
                       width: "100%",
                     }}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     options={[
                       {
                         label: "Allergists/Immunologists​​",
@@ -397,7 +416,7 @@ const AllDoctor = () => {
                     style={{
                       width: "100%",
                     }}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     options={[
                       {
                         label: "Allergists/Immunologists​​",
@@ -433,8 +452,8 @@ const AllDoctor = () => {
                     range
                     step={10}
                     defaultValue={[15, 65]}
-                    onChange={() => {}}
-                    onAfterChange={() => {}}
+                    onChange={() => { }}
+                    onAfterChange={() => { }}
                     trackStyle={{ backgroundColor: "#4FA6D1" }}
                     handleStyle={{ backgroundColor: "#4FA6D1" }}
                     railStyle={{ backgroundColor: "#E9ECEF" }}
@@ -449,8 +468,8 @@ const AllDoctor = () => {
                     range
                     step={10}
                     defaultValue={[15, 65]}
-                    onChange={() => {}}
-                    onAfterChange={() => {}}
+                    onChange={() => { }}
+                    onAfterChange={() => { }}
                     trackStyle={{ backgroundColor: "#4FA6D1" }}
                     handleStyle={{ backgroundColor: "#4FA6D1" }}
                     railStyle={{ backgroundColor: "#E9ECEF" }}
