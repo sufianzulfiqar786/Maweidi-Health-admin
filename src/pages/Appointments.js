@@ -363,7 +363,7 @@ const Appointments = () => {
   const rowss = exportData?.data?.data?.data
   console.log("row123", rowss?.data)
 
-  const dataaa = exportData1?.data?.data?.data.map(m=>([m?.id, m?.row?.kwd_id || '-', m?.patient_id , m?.user?.name , m?.date , m?.created_at?.slice(11, 16), m?.hospital?.name || '-', m?.doctor?.user?.name, m?.specialization?.name, m?.fees, m?.status === 1 ? 'Approved' : 'Pending' ])) ||[]
+  const dataaa = exportData1?.data?.data.map(m=>([m?.id, m?.row?.kwd_id || '-', m?.patient_id , m?.user?.name , m?.date , m?.created_at?.slice(11, 16), m?.hospital?.name || '-', m?.doctor?.user?.name, m?.specialization?.name, m?.fees, m?.status === 1 ? 'Approved' : 'Pending' ])) ||[]
 
   const csvData = [
     ["ID", "KWD ID", "Patient Id", "Patient Name", "Date", "Time", "Hospital Name", "Doctor Name", "Specialization", "Fees", "Appointment Status"],

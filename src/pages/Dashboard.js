@@ -66,6 +66,7 @@ import XRayShopDetail from "./Pharmacy/XRayShopDetail";
 import XrayViewOrderlistDetail from "./Pharmacy/XrayViewOrderlistDetail";
 import Promo from "./BannerPromo/Promo";
 import AddPromo from "./BannerPromo/AddPromo";
+import CallAppointment from "../components/appointments/CallAppointment";
 const Dashboard = () => {
   let location = useLocation();
   const dispatch = useDispatch();
@@ -241,6 +242,9 @@ const Dashboard = () => {
                     ) 
                     : ValidateRoute(location.pathname) === "/appointment" ? (
                       <Appointments />
+                    ) 
+                    : ValidateRoute(location.pathname) === "/appointment/call" ? (
+                      <CallAppointment />
                     ) 
                     : ValidateRoute(location.pathname) === "/appointment/add" ? (
                       <AddAppointments />

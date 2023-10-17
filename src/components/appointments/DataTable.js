@@ -21,6 +21,7 @@ import ListSkeleton from "../../molecules/ListSkeleton/ListSkeleton";
 import { Modal } from "antd";
 import { CustomToast } from "../../atoms/toastMessage";
 import useDeleteData from "../../customHook/useDelete";
+import { Link, useNavigate } from "react-router-dom";
 
 const DataTable = ({
   onTickClick,
@@ -81,6 +82,7 @@ const DataTable = ({
   // const startIndex = page * rowsPerPage;
   // const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
   // const visibleRows = filteredRows.slice(startIndex, endIndex);
+  const navigate = useNavigate();
   const [statusChange, setStatusChange] = useState({});
   const [editModal, setEditModal] = useState(false);
   const [page, setPage] = useState(1);
@@ -205,6 +207,7 @@ const DataTable = ({
               <TableCell align="left">KWD ID</TableCell>
               <TableCell align="left">Patient Id</TableCell>
               <TableCell align="left">Patient Name</TableCell>
+              <TableCell align="left">Type</TableCell>
               <TableCell align="left">Date</TableCell>
               <TableCell align="left">Time</TableCell>
               <TableCell align="left">Hospital Name</TableCell>
@@ -241,6 +244,16 @@ const DataTable = ({
                   <TableCell align="left">
                     {row?.user?.name}
                   </TableCell>
+                  
+                  <TableCell  align="left">  <span className="cursor-pointer" onClick={()=>{
+                    navigate('/appointment/call', { state: {
+                      patientId: row?.patient_id,
+                      patientName: row?.user?.name,
+                      patientPic: row?.user?.profile_pic,
+                      doctorName: row.doctor?.user?.name,
+                    } })
+                  }}>Online</span> </TableCell>
+                  
                   <TableCell align="left">{row.date}</TableCell>
                   <TableCell align="left">{row.created_at?.slice(11, 16)}</TableCell>
                   <TableCell align="center">{row?.hospital?.name? row?.hospital?.name : '-'}</TableCell>

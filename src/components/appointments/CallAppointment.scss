@@ -1,0 +1,240 @@
+@import "../../App.scss";
+
+.video-bottom-margin {
+    margin-bottom: 14%;
+
+    @media (min-width: 0px) and (max-width: 990px) {
+        margin-bottom: 24%;
+    }
+
+}
+
+.call-img {
+    position: relative;
+    height: 91%;
+}
+
+.call-img-footer {
+    height: 9%;
+    background: linear-gradient(323.79deg, #125A77 43.38%, #2D738F 92.17%);
+}
+
+.call-img-body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0;
+    background-color: rgba(0, 0, 0, 0.902);
+
+    &-img {
+        opacity: 0.7;
+        filter: blur(8px);
+        transform: scale(1.1);
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        transition: 1s all;
+
+        &:hover {
+            // filter: none; // Remove the blur on hover
+            transform: scale(1.15); // Return to the original scale on hover
+        }
+    }
+}
+
+.call-img-body-attend {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0;
+    background-color: rgba(0, 0, 0, 0.902);
+
+    &-img {
+        transform: scale(1.1);
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+        transition: 1s all;
+
+        &:hover {
+            // filter: none; // Remove the blur on hover
+            transform: scale(1.15); // Return to the original scale on hover
+        }
+    }
+}
+
+.call-img-body1 {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.call-img-body-attend1 {
+    position: absolute;
+    bottom: -5%;
+    left: 3%;
+    transform: translate(0%, 0%);
+}
+
+.call-img-body-attend2 {
+    position: absolute;
+    bottom: -5%;
+    // left: 3%;
+    transform: translate(0%, 0%);
+    background-image: linear-gradient(to bottom, rgba(255, 0, 0, 0), rgb(0, 0, 0));
+    width: 100%;
+    height: 30%;
+    z-index: 5;
+}
+
+.call-img-body-call {
+    width: 15em;
+    height: 15em;
+
+    &-img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        border: 10px solid #d4cdc9;
+    }
+}
+
+.call-img-body-img-text1 {
+    font-size: 28px;
+    font-family: $Poppins-Medium;
+}
+
+.call-img-body-img-text2 {
+    font-size: 15px;
+    font-family: $Poppins-Regular;
+}
+
+.call-img-body-attend-img-text1 {
+    font-size: 28px;
+    font-family: $Poppins-Medium;
+    z-index: 1000;
+}
+
+.call-img-body-attend-img-text2 {
+    font-size: 14px;
+    font-family: $Poppins-Regular;
+    z-index: 1000;
+}
+
+.circle {
+    border-radius: 50%;
+    background-color: white;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 47%;
+    left: 18%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: scaleIn 2s infinite cubic-bezier(.36, .11, .89, .32);
+    z-index: -1;
+}
+
+.circle1 {
+    border-radius: 50%;
+    background-color: white;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 47%;
+    left: 18%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: scaleIn 2s infinite cubic-bezier(.36, .11, .89, .32);
+    z-index: -1;
+}
+
+.circle2 {
+    border-radius: 50%;
+    background-color: white;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 47%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: scaleIn 2s infinite cubic-bezier(.36, .11, .89, .32);
+    z-index: -1;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(.5, .5);
+        opacity: .5;
+    }
+
+    to {
+        transform: scale(2.5, 2.5);
+        opacity: 0;
+    }
+}
+
+.mic-call {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.614);
+    border-radius: 10px;
+    margin-top: 9px;
+
+    img {
+        // object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.call-icon {
+    width: 123px;
+    height: 45px;
+    background-color: #EB5757;
+    border-radius: 10px;
+    margin-top: 9px;
+    padding: 3px 0 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+        transform: rotate(135deg);
+        font-size: 27px;
+    }
+
+}
+
+.call-icon-end {
+    width: 365px;
+    height: 43px;
+    border-radius: 13px;
+    border: 1px solid #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span{
+        font-size: 25px;
+        font-family: $Poppins-Medium;
+        color: white;
+    }
+}
+
+.video-call {
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.614);
+    border-radius: 10px;
+    margin-top: 9px;
+
+    img {
+        // object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+}
