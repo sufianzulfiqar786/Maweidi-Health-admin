@@ -1364,7 +1364,7 @@ const FullScreenMenu = ({
       ) : null}
 
       {/* Home Service Provider */}
-      { isSuperAdmin ? (
+      { isSuperAdmin || allowedhost ? (
         <Link
           className="maweidi-link ml-md-auto ml-0 w-100 "
           to="/home-service-provider"

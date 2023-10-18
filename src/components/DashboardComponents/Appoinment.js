@@ -504,7 +504,7 @@ const App = () => {
         </div>
 
         <div className="col-4 d-flex justify-content-end align-items-center">
-          <p className="mb-0 appoinment-count-text">{data.length} Patients</p>
+          {/* <p className="mb-0 appoinment-count-text">{data.length} Patients</p> */}
         </div>
       </div>
 

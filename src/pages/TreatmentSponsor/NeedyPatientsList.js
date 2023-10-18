@@ -224,7 +224,7 @@ const NeedyPatientList = () => {
         {/* Table */}
 
         <div className="col-12 ">
-              <ListHeader mainHeading='TREATMENT-SPONSOR' placeholder='Search Title' btnText='Add Needy Patient' linkbtn='/treatment-sponsor' linkBreadCrum='/needy-patients' blinkBreadCrumText='NEEDY-PATIENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Needy_Patient_list' />
+              <ListHeader mainHeading='TREATMENT-SPONSOR' placeholder='Search Title' btnText='Add Needy Patient' btnShow={true} linkbtn='/treatment-sponsor' linkBreadCrum='/needy-patients' blinkBreadCrumText='NEEDY-PATIENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Needy_Patient_list' />
             </div>
 
         <div className="col-12 mb-5 pb-5">

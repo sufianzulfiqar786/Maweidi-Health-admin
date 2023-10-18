@@ -6,38 +6,38 @@ const DemoColumn = () => {
 
   const data = [
     {
-      month: "Jan",
-      gender: "Hospitals",
+      range: "Jan", // may be days or in month ( Please flow the Google sheet )
+      type: "Hospitals",
       value: 1350,
     },
     {
-      month: "Jan",
-      gender: "Doctors",
+      range: "Jan",
+      type: "Doctors",
       value: 1450,
     },
     {
-      month: "Jan",
-      gender: "Pharmacies",
+      range: "Jan",
+      type: "Pharmacies",
       value: 910,
     },
     {
-      month: "Jan",
-      gender: "Medical Equipments",
+      range: "Jan",
+      type: "Medical Equipments",
       value: 950,
     },
     {
-      month: "Jan",
-      gender: "Laboratories",
+      range: "Jan",
+      type: "Laboratories",
       value: 785,
     },
     {
-      month: "Jan",
-      gender: "X-ray",
+      range: "Jan",
+      type: "X-ray",
       value: 945,
     },
     {
-      month: "Jan",
-      gender: "Service Providers",
+      range: "Jan",
+      type: "Service Providers",
       value: 910,
     },
 
@@ -45,38 +45,38 @@ const DemoColumn = () => {
 
 
     {
-      month: "Feb",
-      gender: "Hospitals",
+      range: "Feb",
+      type: "Hospitals",
       value: 1050,
     },
     {
-      month: "Feb",
-      gender: "Doctors",
+      range: "Feb",
+      type: "Doctors",
       value: 1350,
     },
     {
-      month: "Feb",
-      gender: "Pharmacies",
+      range: "Feb",
+      type: "Pharmacies",
       value: 710,
     },
     {
-      month: "Feb",
-      gender: "Medical Equipments",
+      range: "Feb",
+      type: "Medical Equipments",
       value: 950,
     },
     {
-      month: "Feb",
-      gender: "Laboratories",
+      range: "Feb",
+      type: "Laboratories",
       value: 1185,
     },
     {
-      month: "Feb",
-      gender: "X-ray",
+      range: "Feb",
+      type: "X-ray",
       value: 1045,
     },
     {
-      month: "Feb",
-      gender: "Service Providers",
+      range: "Feb",
+      type: "Service Providers",
       value: 810,
     },
 
@@ -87,215 +87,215 @@ const DemoColumn = () => {
 
   ]
 
-  const genderTotals = {};
+  const typeTotals = {};
 
-  // Calculate totals for each gender
+  // Calculate totals for each type
   data.forEach(item => {
-    const { gender, value } = item;
-    genderTotals[gender] = (genderTotals[gender] || 0) + value;
+    const { type, value } = item;
+    typeTotals[type] = (typeTotals[type] || 0) + value;
   });
 
-  console.log("Object.keys(genderTotals)", Object.keys(genderTotals))
+  console.log("Object.keys(typeTotals)", Object.keys(typeTotals))
 
   // const data = [
   //   {
-  //     month: "Jan",
-  //     gender: "Hospitals",
+  //     range: "Jan",
+  //     type: "Hospitals",
   //     value: 1350,
   //   },
   //   {
-  //     month: "Jan",
-  //     gender: "Laboratories",
+  //     range: "Jan",
+  //     type: "Laboratories",
   //     value: 950,
   //   },
   //   {
-  //     month: "Jan",
-  //     gender: "Pharmacies",
+  //     range: "Jan",
+  //     type: "Pharmacies",
   //     value: 1050,
   //   },
 
   //   {
-  //     month: "Feb",
-  //     gender: "Hospitals",
+  //     range: "Feb",
+  //     type: "Hospitals",
   //     value: 1450,
   //   },
   //   {
-  //     month: "Feb",
-  //     gender: "Laboratories",
+  //     range: "Feb",
+  //     type: "Laboratories",
   //     value: 1150,
   //   },
   //   {
-  //     month: "Feb",
-  //     gender: "Pharmacies",
+  //     range: "Feb",
+  //     type: "Pharmacies",
   //     value: 950,
   //   },
 
   //   {
-  //     month: "Mar",
-  //     gender: "Hospitals",
+  //     range: "Mar",
+  //     type: "Hospitals",
   //     value: 1450,
   //   },
   //   {
-  //     month: "Mar",
-  //     gender: "Laboratories",
+  //     range: "Mar",
+  //     type: "Laboratories",
   //     value: 850,
   //   },
   //   {
-  //     month: "Mar",
-  //     gender: "Pharmacies",
+  //     range: "Mar",
+  //     type: "Pharmacies",
   //     value: 900,
   //   },
 
   //   {
-  //     month: "Apr",
-  //     gender: "Hospitals",
+  //     range: "Apr",
+  //     type: "Hospitals",
   //     value: 1550,
   //   },
   //   {
-  //     month: "Apr",
-  //     gender: "Laboratories",
+  //     range: "Apr",
+  //     type: "Laboratories",
   //     value: 850,
   //   },
   //   {
-  //     month: "Apr",
-  //     gender: "Pharmacies",
+  //     range: "Apr",
+  //     type: "Pharmacies",
   //     value: 1250,
   //   },
 
   //   {
-  //     month: "May",
-  //     gender: "Hospitals",
+  //     range: "May",
+  //     type: "Hospitals",
   //     value: 1450,
   //   },
   //   {
-  //     month: "May",
-  //     gender: "Laboratories",
+  //     range: "May",
+  //     type: "Laboratories",
   //     value: 1050,
   //   },
   //   {
-  //     month: "May",
-  //     gender: "Pharmacies",
+  //     range: "May",
+  //     type: "Pharmacies",
   //     value: 850,
   //   },
 
   //   {
-  //     month: "Jun",
-  //     gender: "Hospitals",
+  //     range: "Jun",
+  //     type: "Hospitals",
   //     value: 1250,
   //   },
   //   {
-  //     month: "Jun",
-  //     gender: "Laboratories",
+  //     range: "Jun",
+  //     type: "Laboratories",
   //     value: 1450,
   //   },
   //   {
-  //     month: "Jun",
-  //     gender: "Pharmacies",
+  //     range: "Jun",
+  //     type: "Pharmacies",
   //     value: 1050,
   //   },
 
   //   {
-  //     month: "Jul",
-  //     gender: "Hospitals",
+  //     range: "Jul",
+  //     type: "Hospitals",
   //     value: 950,
   //   },
   //   {
-  //     month: "Jul",
-  //     gender: "Laboratories",
+  //     range: "Jul",
+  //     type: "Laboratories",
   //     value: 850,
   //   },
   //   {
-  //     month: "Jul",
-  //     gender: "Pharmacies",
+  //     range: "Jul",
+  //     type: "Pharmacies",
   //     value: 950,
   //   },
 
   //   {
-  //     month: "Aug",
-  //     gender: "Hospitals",
+  //     range: "Aug",
+  //     type: "Hospitals",
   //     value: 850,
   //   },
   //   {
-  //     month: "Aug",
-  //     gender: "Laboratories",
+  //     range: "Aug",
+  //     type: "Laboratories",
   //     value: 950,
   //   },
   //   {
-  //     month: "Aug",
-  //     gender: "Pharmacies",
+  //     range: "Aug",
+  //     type: "Pharmacies",
   //     value: 1150,
   //   },
 
   //   {
-  //     month: "Sep",
-  //     gender: "Hospitals",
+  //     range: "Sep",
+  //     type: "Hospitals",
   //     value: 1450,
   //   },
   //   {
-  //     month: "Sep",
-  //     gender: "Laboratories",
+  //     range: "Sep",
+  //     type: "Laboratories",
   //     value: 850,
   //   },
   //   {
-  //     month: "Sep",
-  //     gender: "Pharmacies",
+  //     range: "Sep",
+  //     type: "Pharmacies",
   //     value: 1350,
   //   },
 
   //   {
-  //     month: "Oct",
-  //     gender: "Hospitals",
+  //     range: "Oct",
+  //     type: "Hospitals",
   //     value: 1550,
   //   },
   //   {
-  //     month: "Oct",
-  //     gender: "Laboratories",
+  //     range: "Oct",
+  //     type: "Laboratories",
   //     value: 890,
   //   },
   //   {
-  //     month: "Oct",
-  //     gender: "Pharmacies",
+  //     range: "Oct",
+  //     type: "Pharmacies",
   //     value: 1050,
   //   },
 
   //   {
-  //     month: "Nov",
-  //     gender: "Hospitals",
+  //     range: "Nov",
+  //     type: "Hospitals",
   //     value: 1150,
   //   },
   //   {
-  //     month: "Nov",
-  //     gender: "Laboratories",
+  //     range: "Nov",
+  //     type: "Laboratories",
   //     value: 950,
   //   },
   //   {
-  //     month: "Nov",
-  //     gender: "Pharmacies",
+  //     range: "Nov",
+  //     type: "Pharmacies",
   //     value: 1350,
   //   },
 
   //   {
-  //     month: "Dec",
-  //     gender: "Hospitals",
+  //     range: "Dec",
+  //     type: "Hospitals",
   //     value: 1450,
   //   },
   //   {
-  //     month: "Dec",
-  //     gender: "Laboratories",
+  //     range: "Dec",
+  //     type: "Laboratories",
   //     value: 1050,
   //   },
   //   {
-  //     month: "Dec",
-  //     gender: "Pharmacies",
+  //     range: "Dec",
+  //     type: "Pharmacies",
   //     value: 1250,
   //   },
   // ];
 
   const config = {
     data,
-    xField: "month",
+    xField: "range",
     yField: "value",
-    seriesField: "gender",
+    seriesField: "type",
     isGroup: true,
     isStack: false,
     animation: false,
@@ -315,26 +315,26 @@ const DemoColumn = () => {
       radius: [8, 8, 0, 0],
     },
 
-    color: ({ gender }) => {
-      if (gender === "Hospitals") {
+    color: ({ type }) => {
+      if (type === "Hospitals") {
         return "#5588FF";
       }
-      if (gender === "Laboratories") {
+      if (type === "Laboratories") {
         return "#FFCE00";
       }
-      if (gender === "Pharmacies") {
+      if (type === "Pharmacies") {
         return "#11B3CF";
       }
-      if (gender === "Medical Equipments") {
+      if (type === "Medical Equipments") {
         return "#6555C5";
       }
-      if (gender === "X-ray") {
+      if (type === "X-ray") {
         return "#A501F4";
       }
-      if (gender === "Service Providers") {
+      if (type === "Service Providers") {
         return "#BAC94A";
       }
-      if (gender === "Doctors") {
+      if (type === "Doctors") {
         return "#35A28F";
       }
     },
@@ -349,7 +349,7 @@ const DemoColumn = () => {
 
     <div className="col-12 px-2 pt-4 mt-2">
      <div className="row">
-     {Object.keys(genderTotals)?.map((item, index) => {
+     {Object.keys(typeTotals)?.map((item, index) => {
         console.log("item", item)
         return (
           <div className=" flex-nowrap  d-flex align-items-center">

@@ -158,7 +158,7 @@ const AllPatients = () => {
         </div> */}
 
         <div className="col-12 ">
-          <ListHeader mainHeading='PATIENTS' placeholder='Search Title' btnText='Add PATIENTS' linkbtn='/patients/add' linkBreadCrum='/patients' blinkBreadCrumText='PATIENTS LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Patients_list' />
+          <ListHeader mainHeading='PATIENTS' placeholder='Search Title' btnShow={true} btnText='Add PATIENTS' linkbtn='/patients/add' linkBreadCrum='/patients' blinkBreadCrumText='PATIENTS LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Patients_list' />
         </div>
 
         <div className="col-12 mb-5 pb-5">

@@ -420,7 +420,7 @@ const Appointments = () => {
         </div> */}
 
         <div className="col-12 ">
-          <ListHeader mainHeading='APPOINTMENT' placeholder='Search Title' btnText='Add Appointment' linkbtn='/appointment/add' linkBreadCrum='/appointment' blinkBreadCrumText='APPOINTMENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Appointment_list' filterOptionData={filterOptionData} filterOption={filterOption} setFilterOption={setFilterOption} />
+          <ListHeader mainHeading='APPOINTMENT' placeholder='Search Title' btnShow={true} btnText='Add Appointment' linkbtn='/appointment/add' linkBreadCrum='/appointment' blinkBreadCrumText='APPOINTMENT LIST' csvData={csvData} disabled={exportData?.isLoading} exportFileName='Appointment_list' filterOptionData={filterOptionData} filterOption={filterOption} setFilterOption={setFilterOption} />
         </div>
 
         <div className="col-12 my-4">

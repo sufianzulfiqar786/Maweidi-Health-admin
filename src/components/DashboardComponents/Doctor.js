@@ -52,7 +52,7 @@ const App = () => {
     <>
       <div className="row px-4 py-3 ">
         <div className="col-8 d-flex justify-content-start align-items-center ">
-          <p className="mb-0  appoinment-text">Hospital Appointment </p>
+          <p className="mb-0  appoinment-text">All Appointment </p>
         </div>
 
         <div className="col-4 d-flex justify-content-end align-items-center">

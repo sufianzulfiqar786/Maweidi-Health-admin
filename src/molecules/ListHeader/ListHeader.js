@@ -7,7 +7,7 @@ import "../../assets/css/blooddonation.scss";
 import { useState } from 'react';
 import DownIcon from "../../assets/images/dashboard/DownIcon.svg";
 
-const ListHeader = ({ mainHeading, placeholder, btnText, linkBreadCrum, blinkBreadCrumText, linkbtn, csvData, disabled, exportFileName, blinkBreadCrumText1, filterOption, setFilterOption, filterOptionData }) => {
+const ListHeader = ({ mainHeading, placeholder, btnText, linkBreadCrum, blinkBreadCrumText, linkbtn, csvData, disabled, exportFileName, blinkBreadCrumText1, filterOption, setFilterOption, filterOptionData, btnShow }) => {
 
   const role = JSON.parse(localStorage.getItem("userRoles"))
   const isSuperAdmin = Object.keys(role).length === 0
@@ -64,7 +64,7 @@ const ListHeader = ({ mainHeading, placeholder, btnText, linkBreadCrum, blinkBre
             Export</button>
         </CSVLink>
 
-        {btnText ? isSuperAdmin ? <Link to={linkbtn}>  <button className='list-header-btn2 ml-2'>
+        {btnText ? isSuperAdmin || btnShow === true ? <Link to={linkbtn}>  <button className='list-header-btn2 ml-2'>
           <i class="fa-solid fa-circle-plus pr-2 pt-1"></i>
           {btnText}
         </button>

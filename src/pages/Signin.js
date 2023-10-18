@@ -94,10 +94,10 @@ const Signin = () => {
             message: `${response?.response}`,
           })
         }
-        console.log("datadddd", data?.success)
-        console.log("tokenwww", response?.data)
+        console.log("datadddd", data, response)
+        console.log("tokenwww", response)
 
-        if(data?.success === true){
+        if(response?.success === true){
 
         localStorage.setItem("token", response?.data?.token);
 
