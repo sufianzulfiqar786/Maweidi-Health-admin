@@ -34,10 +34,10 @@ const usePost = () => {
       setData(response.data);
     } catch (error) {
       setError(error);
-      CustomToast({
-        type: "error",
-        message: `${error}`,
-      });
+      // CustomToast({
+      //   type: "error",
+      //   message: `${error}`,
+      // });
     } finally {
       setIsLoading(false);
     }

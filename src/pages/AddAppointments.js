@@ -671,7 +671,7 @@ const AddAppointments = () => {
 
 
                             </div>
-                            <div className="col-lg-6">
+                            {/* <div className="col-lg-6">
                                 <div class="form-group">
                                     <p>Patient ID</p>
                                     <Controller
@@ -696,16 +696,11 @@ const AddAppointments = () => {
                                                     }}
                                                 />
 
-                                                {/* {errors.patientId && (
-                                                    <span className="error-message">
-                                                        This field is required
-                                                    </span>
-                                                )} */}
                                             </>
                                         )}
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             <div class="col-lg-6">
                                 <div class="form-group" style={{ marginTop: "11px" }}>
                                     <Controller

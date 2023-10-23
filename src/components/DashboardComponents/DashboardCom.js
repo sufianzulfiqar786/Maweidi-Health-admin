@@ -67,19 +67,19 @@ const DashboardCom = () => {
   const data1 = [
     {
       id: 1,
-      text: 'Revenue',
+      text: 'Total Revenue',
       total: '12312',
       progress: 123,
     },
     {
       id: 1,
-      text: 'Orders',
+      text: 'Completed Orders',
       total: '1312',
       progress: 23,
     },
     {
       id: 1,
-      text: 'Purchases',
+      text: 'Orders Revenue',
       total: '12212',
       progress: -13,
     },
@@ -172,7 +172,7 @@ const DashboardCom = () => {
                         <hr className="m-0 " />
 
                         <div className="dashboard-left-icon-top-text2 pt-3 d-flex justify-content-center w-100">
-                          <div className="" style={{ color: '#111827', fontSize: "18px" }}> {text === 'Total Users' || text === 'Orders' ? "" : "KWD"} {total}</div>
+                          <div className="" style={{ color: '#111827', fontSize: "18px" }}> {text === 'Total Users' || text === 'Completed Orders' ? "" : "KWD"} {total}</div>
 
                         </div>
 
@@ -216,7 +216,7 @@ const DashboardCom = () => {
               <div className=" bar-chart pb-4 ">
                 <div className="d-flex justify-content-between align-items-center px-4 mx-2 py-4">
                   <span class="mb-0 bar-chart-text1 ">
-                    Total Revenue
+                    Revenue by entity
                   </span>
                   <div className="border " style={{ width: "250px", borderRadius: '5px' }}>
                     <RangePicker style={{ border: 'none' }} presets={rangePresets} onChange={onRangeChange} />

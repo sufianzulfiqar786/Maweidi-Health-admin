@@ -207,7 +207,7 @@ const DataTable = ({
               <TableCell align="left">KWD ID</TableCell>
               <TableCell align="left">Patient Id</TableCell>
               <TableCell align="left">Patient Name</TableCell>
-              <TableCell align="left">Type</TableCell>
+              {/* <TableCell align="left">Type</TableCell> */}
               <TableCell align="left">Date</TableCell>
               <TableCell align="left">Time</TableCell>
               <TableCell align="left">Hospital Name</TableCell>
@@ -245,14 +245,14 @@ const DataTable = ({
                     {row?.user?.name}
                   </TableCell>
                   
-                  <TableCell  align="left">  <span className="cursor-pointer" onClick={()=>{
+                  {/* <TableCell  align="left">  <span className="cursor-pointer" onClick={()=>{
                     navigate('/appointment/call', { state: {
                       patientId: row?.patient_id,
                       patientName: row?.user?.name,
                       patientPic: row?.user?.profile_pic,
                       doctorName: row.doctor?.user?.name,
                     } })
-                  }}>Online</span> </TableCell>
+                  }}>Online</span> </TableCell> */}
                   
                   <TableCell align="left">{row.date}</TableCell>
                   <TableCell align="left">{row.created_at?.slice(11, 16)}</TableCell>
